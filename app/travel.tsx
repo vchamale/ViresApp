@@ -1,5 +1,5 @@
-import { FC } from "react";
-import { FlatList, Pressable, SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { FC, useCallback, useState } from "react";
+import { FlatList, Pressable, RefreshControl, SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { useRouter } from "expo-router";
 import { useGetAllSipmentsQuery } from "@api/shipmentApi";
 import Space from "@components/Space";
@@ -7,12 +7,20 @@ import Space from "@components/Space";
 type TravelPropsT = {}
 
 const Travel: FC<TravelPropsT> = ({ }) => {
+  // State
+  const [refreshing, setRefreshing] = useState(false);
 
   // hooks
   const router = useRouter();
 
   // Api calls
-  const { data: shipments, isLoading, isError } = useGetAllSipmentsQuery({});
+  const { data: shipments, isLoading, isError, refetch } = useGetAllSipmentsQuery({});
+
+  // Functions
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    refetch().finally(() => setRefreshing(false));
+  }, [refetch]);
 
   if (isLoading) {
     return (
@@ -66,6 +74,9 @@ const Travel: FC<TravelPropsT> = ({ }) => {
                 <Text>Weight: {item.weight} kg</Text>
               </View>
             )}
+            refreshControl={
+              <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+            }
           />
         </View>
       </View>

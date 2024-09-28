@@ -30,12 +30,14 @@ const CreateShipment = () => {
       const newShipment = {
         origin_id: parseInt(origin),
         destination_id: parseInt(destination),
+        container_id: 1,
         driver_id: parseInt(driverId),
         truck_id: parseInt(truckId),
         price: parseFloat(price),
         weight: parseFloat(weight),
         notes,
         shipment_status_id: 1,
+        status_updated: new Date()
       };
 
       await createShipment(newShipment).unwrap();
