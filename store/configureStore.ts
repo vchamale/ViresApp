@@ -1,6 +1,7 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { authApi } from "./api/authApi";
 import rootReducers from "./reducers";
+import { shipmentApi } from "@api/shipmentApi";
 
 const store = configureStore({
   reducer: rootReducers,
@@ -8,7 +9,8 @@ const store = configureStore({
     getDefaultMiddleware({
       serializableCheck: false
     })
-      .concat(authApi.middleware),
+      .concat(authApi.middleware)
+      .concat(shipmentApi.middleware),
   preloadedState: {},
   devTools: !Object.is(process.env.NODE_ENV, 'production')
 });

@@ -1,3 +1,4 @@
+import { useGetAllSipmentsQuery } from "@api/shipmentApi";
 import Space from "@components/Space";
 import { useRouter } from "expo-router";
 import { FC } from "react";
@@ -9,6 +10,10 @@ const Travel: FC<TravelPropsT> = ({}) => {
 
   // hooks
   const router = useRouter();
+
+  // Api calls
+  const { data: shipments } = useGetAllSipmentsQuery({});
+  console.log('shipments ', JSON.stringify(shipments))
 
   return (
     <SafeAreaView>
