@@ -1,3 +1,4 @@
+import DashboardButton from "@components/DashboardButton";
 import Space from "@components/Space";
 import { useRouter } from "expo-router";
 import { FC } from "react";
@@ -77,86 +78,16 @@ const Home: FC<HomePropsT> = ({ navigation }) => {
             flexDirection: "row",
           }}
         >
-          <View
-            style={{
-              width: "45%",
-              marginLeft: 10,
-              marginRight: 5,
-            }}
-          >
-            <Pressable
-              onPress={() => {
-                router.push("./shipments/shipment");
-              }}
-            >
-              <View
-                style={{
-                  flexDirection: "row",
-                  justifyContent: "center",
-                }}
-              >
-                <View
-                  style={{
-                    flexDirection: "column",
-                  }}
-                >
-                  <View
-                    style={{
-                      backgroundColor: "#5db075",
-                      padding: 60,
-                      borderRadius: 8,
-                    }}
-                  >
-                    <Text>img</Text>
-                  </View>
-                  <Space vertical size={10} />
-                  <Text style={{ textAlign: "center", color: "#5db075" }}>
-                    Viajes
-                  </Text>
-                </View>
-              </View>
-            </Pressable>
-          </View>
-          <View
-            style={{
-              width: "45%",
-              marginLeft: 10,
-              marginRight: 5,
-            }}
-          >
-            <Pressable
-              onPress={() => {
-                router.push("./clients/customer");
-              }}
-            >
-              <View
-                style={{
-                  flexDirection: "row",
-                  justifyContent: "center",
-                }}
-              >
-                <View
-                  style={{
-                    flexDirection: "column",
-                  }}
-                >
-                  <View
-                    style={{
-                      backgroundColor: "#5db075",
-                      padding: 60,
-                      borderRadius: 8,
-                    }}
-                  >
-                    <Text>img</Text>
-                  </View>
-                  <Space vertical size={10} />
-                  <Text style={{ textAlign: "center", color: "#5db075" }}>
-                    Clientes
-                  </Text>
-                </View>
-              </View>
-            </Pressable>
-          </View>
+          <DashboardButton
+            route={"/shipments/shipment"}
+            label={"Viajes"}
+            icon={"truck"}
+          />
+          <DashboardButton
+            route={"/clients/customer"}
+            label={"Clientes"}
+            icon={"people"}
+          />
         </View>
       </View>
     </SafeAreaView>
