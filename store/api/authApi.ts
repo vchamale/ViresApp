@@ -3,7 +3,7 @@ import { api } from '../../config/config';
 
 type LoginT = {
   email: string;
-  clave: string;
+  password: string;
 };
 
 type SignUpT = {
@@ -29,7 +29,7 @@ export const authApi = createApi({
     login: build.mutation<{ data: any }, Partial<LoginT>>({
       query(body) {
         return {
-          url: '/token',
+          url: '/login',
           method: 'POST',
           body
         };
@@ -38,7 +38,7 @@ export const authApi = createApi({
     signUp: build.mutation<SignUpT, Partial<SignUpT>>({
       query(body) {
         return {
-          url: 'signUp',
+          url: 'register',
           method: 'POST',
           body
         };

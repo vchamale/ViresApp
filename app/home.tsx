@@ -3,6 +3,7 @@ import Space from "@components/Space";
 import { useRouter } from "expo-router";
 import { FC } from "react";
 import { Pressable, SafeAreaView, Text, TextInput, View } from "react-native";
+import { Button } from 'bds-design-craft';
 
 type HomePropsT = {
   navigation: any;

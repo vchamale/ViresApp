@@ -113,7 +113,7 @@ const Shipment: FC<ShipmentPropsT> = ({}) => {
       <TouchableOpacity
         style={styles.fab}
         onPress={() => {
-          router.navigate("./shipments/create-shipment");
+          router.push("/shipments/create-shipment");
         }}
       >
         <Text style={styles.fabText}>+</Text>
