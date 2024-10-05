@@ -57,7 +57,7 @@ const CreateShipment = () => {
         tenant_id: 1,
         container_id: 1,
         driver_id: 2,
-        truck_id: 1, //parseInt(truckId),
+        truck_id: 1,   //parseInt(truckId),
         price: parseFloat(price),
         weight: parseFloat(weight),
         notes,
