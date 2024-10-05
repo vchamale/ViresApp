@@ -1,8 +1,19 @@
+// R/RN
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, Alert, SafeAreaView, Pressable, ScrollView } from 'react-native';
-import { useCreateShipmentMutation } from '@api/shipmentApi';
+import { View, Text, TextInput, Button, StyleSheet, Alert, SafeAreaView, Pressable, FlatList } from 'react-native';
+// Expo stuff
 import { useRouter } from 'expo-router';
+// API
+import { useCreateShipmentMutation } from '@api/shipmentApi';
+import { useGetAllDestinationsQuery } from '@api/destinationApi';
+import { useGetAllOriginsQuery } from '@api/originApi';
+import { useGetAllTrucksQuery } from '@api/truckApi';
+// Components
 import Space from '@components/Space';
+import Dropdown from '@components/Dropdown';
+import StepIndicator from '@components/StepIndicator';
+import CustomHeader from '@components/CustomHeader';
+import { useGetAllClientsQuery } from '@api/clientApi';
 
 const CreateShipment = () => {
   // State
@@ -13,13 +24,26 @@ const CreateShipment = () => {
   const [price, setPrice] = useState('');
   const [weight, setWeight] = useState('');
   const [notes, setNotes] = useState('');
+  const [currentStep, setCurrentStep] = useState(0);
+
+  // Vars
+  const steps = ['Agregar Cliente', 'Ruta de Viaje', 'Detalle del Contenedor', 'Detalle del Transporte'];
 
   // hooks
   const router = useRouter();
 
   // API Calls
+
+  // Querys
+  const { currentData: destinations } = useGetAllDestinationsQuery({});
+  const { currentData: origins } = useGetAllOriginsQuery({});
+  const { currentData: trucks } = useGetAllTrucksQuery({});
+  const { currentData: clients } = useGetAllClientsQuery({});
+
+  // Mutations
   const [createShipment] = useCreateShipmentMutation();
 
+  // Functions
   const handleCreateShipment = async () => {
     if (!origin || !destination || !driverId || !truckId || !price || !weight) {
       Alert.alert('Error', 'All fields are required.');
@@ -28,11 +52,12 @@ const CreateShipment = () => {
 
     try {
       const newShipment = {
-        origin_id: parseInt(origin),
-        destination_id: parseInt(destination),
+        origin_id: 1, //parseInt(origin),
+        destination_id: 1, //parseInt(destination),
+        tenant_id: 1,
         container_id: 1,
-        driver_id: parseInt(driverId),
-        truck_id: parseInt(truckId),
+        driver_id: 2,
+        truck_id: 1, //parseInt(truckId),
         price: parseFloat(price),
         weight: parseFloat(weight),
         notes,
@@ -49,89 +74,97 @@ const CreateShipment = () => {
     }
   };
 
+  const handleStepPress = (index: number) => {
+    setCurrentStep(index);
+  };
+
   return (
     <SafeAreaView style={{
       flex: 1
     }}>
       <View style={styles.container}>
-        <Text style={{
-          fontSize: 45,
-          fontWeight: 'condensedBold'
-        }}>Crear Viaje</Text>
+        <CustomHeader 
+          title={steps[currentStep]} 
+          onBackPress={() => {
+            router.back();
+          }}
+        />
         <Space vertical size={25} />
-        <Pressable onPress={() => {
-          router.back();
-        }}>
-          <Text style={{
-            color: '#5db075',
-            fontSize: 25
-          }}>Atras</Text>
-        </Pressable>
+        <View style={{...styles.containerSteps }}>
+          <StepIndicator steps={steps} currentStep={currentStep} onStepPress={handleStepPress} />
+          <Text style={{ ...styles.currentStepText, color: '#000' }}>Current Step: {steps[currentStep]}</Text>
+        </View>
         <Space vertical size={25} />
-        <ScrollView>
+        <FlatList
+          data={[{ key: 'form' }]}
+          keyExtractor={(item) => item.key}
+          renderItem={() => (
+            <>
+            <Text style={styles.label}>Cliente</Text>
+            <Dropdown 
+              items={clients}
+              placeholder="Selecciona un cliente"
+              renderItemText={(item) => `${item.name}`}
+              onItemSelected={(item) => console.log('Elemento seleccionado:', item)}
+              linkText="Agregar nuevo cliente"
+              onLinkPress={() => console.log('Botón tipo link presionado')}
+            />
+            <Text style={styles.label}>Origen</Text>
+            <Dropdown 
+              items={origins}
+              placeholder="Selecciona una origen"
+              renderItemText={(item) => `${item.name}`}
+              onItemSelected={(item) => console.log('Elemento seleccionado:', item)}
+              linkText="Agregar nuevo origen"
+              onLinkPress={() => console.log('Botón tipo link presionado')}
+            />
+            <Text style={styles.label}>Destino</Text>
+            <Dropdown 
+              items={destinations}
+              placeholder="Selecciona una destino"
+              renderItemText={(item) => `${item.address}`}
+              onItemSelected={(item) => console.log('Elemento seleccionado:', item)}
+              linkText="Agregar nuevo destino"
+              onLinkPress={() => console.log('Botón tipo link presionado')}
+            />
+            <Text style={styles.label}>Trailer</Text>
+            <Dropdown 
+              items={trucks}
+              placeholder="Selecciona una trailer"
+              renderItemText={(item) => `${item.plate}`}
+              onItemSelected={(item) => console.log('Elemento seleccionado:', item)}
+              linkText="Agregar nuevo trailer"
+              onLinkPress={() => console.log('Botón tipo link presionado')}
+            />
 
-          <Text style={styles.label}>Origin ID</Text>
-          <TextInput
-            style={styles.input}
-            value={origin}
-            onChangeText={setOrigin}
-            keyboardType="numeric"
-            placeholder="Enter Origin ID"
-          />
+            <Text style={styles.label}>Price</Text>
+            <TextInput
+              style={styles.input}
+              value={price}
+              onChangeText={setPrice}
+              keyboardType="decimal-pad"
+              placeholder="Enter Price"
+            />
 
-          <Text style={styles.label}>Destination ID</Text>
-          <TextInput
-            style={styles.input}
-            value={destination}
-            onChangeText={setDestination}
-            keyboardType="numeric"
-            placeholder="Enter Destination ID"
-          />
+            <Text style={styles.label}>Weight (kg)</Text>
+            <TextInput
+              style={styles.input}
+              value={weight}
+              onChangeText={setWeight}
+              keyboardType="decimal-pad"
+              placeholder="Enter Weight"
+            />
 
-          <Text style={styles.label}>Driver ID</Text>
-          <TextInput
-            style={styles.input}
-            value={driverId}
-            onChangeText={setDriverId}
-            keyboardType="numeric"
-            placeholder="Enter Driver ID"
+            <Text style={styles.label}>Notes</Text>
+            <TextInput
+              style={styles.input}
+              value={notes}
+              onChangeText={setNotes}
+              placeholder="Enter any notes"
+            />
+            </>
+          )}
           />
-
-          <Text style={styles.label}>Truck ID</Text>
-          <TextInput
-            style={styles.input}
-            value={truckId}
-            onChangeText={setTruckId}
-            keyboardType="numeric"
-            placeholder="Enter Truck ID"
-          />
-
-          <Text style={styles.label}>Price</Text>
-          <TextInput
-            style={styles.input}
-            value={price}
-            onChangeText={setPrice}
-            keyboardType="decimal-pad"
-            placeholder="Enter Price"
-          />
-
-          <Text style={styles.label}>Weight (kg)</Text>
-          <TextInput
-            style={styles.input}
-            value={weight}
-            onChangeText={setWeight}
-            keyboardType="decimal-pad"
-            placeholder="Enter Weight"
-          />
-
-          <Text style={styles.label}>Notes</Text>
-          <TextInput
-            style={styles.input}
-            value={notes}
-            onChangeText={setNotes}
-            placeholder="Enter any notes"
-          />
-        </ScrollView>
         <Button title="Create Shipment" onPress={handleCreateShipment} />
       </View>
     </SafeAreaView>
@@ -157,6 +190,15 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
     borderRadius: 4,
   },
+  containerSteps: {
+    height: 100,
+    width: 1000,
+  },
+  currentStepText: {
+    textAlign: 'center',
+    fontSize: 18,
+    marginTop: 20,
+  }
 });
 
 export default CreateShipment;

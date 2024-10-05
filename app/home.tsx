@@ -2,6 +2,7 @@ import Space from "@components/Space";
 import { useRouter } from "expo-router";
 import { FC } from "react";
 import { Pressable, SafeAreaView, Text, TextInput, View } from "react-native";
+import { Button } from 'bds-design-craft';
 
 type HomePropsT = {
   navigation: any;
@@ -20,6 +21,10 @@ const Home: FC<HomePropsT> = ({ navigation }) => {
         justifyContent: 'space-between'
       }}>
         <View></View>
+        <Button label='Test Button' onPress={() => {
+          console.log('test')
+          console.log('test 2')
+        }} />
         <View style={{
           marginRight: 10
         }}>
