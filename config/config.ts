@@ -10,6 +10,9 @@ export const api = {
     destination: `${baseApi.vires}/api/destinations`,
     origin: `${baseApi.vires}/api/origins`,
     truck: `${baseApi.vires}/api/trucks`,
-    client: `${baseApi.vires}/api/clients`
+    client: `${baseApi.vires}/api/clients`,
+    currency: `${baseApi.vires}/api/currencies`,
+    driver: `${baseApi.vires}/api/drivers`,
+    container: `${baseApi.vires}/api/containers`
   }
 };

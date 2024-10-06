@@ -10,6 +10,7 @@
       "@hooks/*": ["hooks/*"],
       "@constants/*": ["constants/*"],
       "@assets/*": ["assets/*"],
+      "@types/*": ["types/*"],
       "@util/*": ["util/*"],
     }
   },

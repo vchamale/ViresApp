@@ -12,6 +12,8 @@ import {
 import { useRouter } from "expo-router";
 import { useGetAllSipmentsQuery } from "@api/shipmentApi";
 import Space from "@components/Space";
+import CustomHeader from "@components/CustomHeader";
+import StatusIcon from "@components/StatusIcon";
 
 type ShipmentPropsT = {};
 
@@ -52,56 +54,52 @@ const Shipment: FC<ShipmentPropsT> = ({}) => {
     );
   }
 
+  console.log('shipments ', shipments)
+
   return (
     <SafeAreaView
       style={{
         flex: 1,
+        backgroundColor: '#fff'
       }}
     >
       <View
         style={{
           padding: 15,
+          flex: 1
         }}
       >
-        <View>
-          <Text
-            style={{
-              fontSize: 45,
-              fontWeight: "condensedBold",
-            }}
-          >
-            Viajes
-          </Text>
-          <Space vertical size={35} />
-          <Pressable
-            onPress={() => {
-              router.back();
-            }}
-          >
-            <Text
-              style={{
-                color: "#5db075",
-                fontSize: 25,
-              }}
-            >
-              Atras
-            </Text>
-          </Pressable>
+        <CustomHeader
+          title={'Viajes'} 
+          onBackPress={() => {
+            router.back();
+          }}
+          showHelpButton={true}
+        />
+        <View style={{ flex: 1 }}>
           <FlatList
             data={shipments}
-            keyExtractor={(item) => item.shipment_id.toString()}
+            keyExtractor={(item) => item.shipmentId.toString()}
             renderItem={({ item }) => (
               <View style={styles.card}>
-                <Text style={styles.title}>Shipment #{item.shipment_id}</Text>
-                <Text>Status: {item.shipment_status?.description}</Text>
-                <Text>Origin: {item.origin?.name}</Text>
-                <Text>Destination: {item.destination?.name}</Text>
+                <StatusIcon status={item.shipmentStatus?.description} />
+                <Space vertical size={10} />
+                <Text style={{ textAlign: 'center', fontWeight: 'bold' }}>{item.container.containerNumber}</Text>
+                <View style={{ flexDirection: 'row' }}>
+                  <Text style={{ fontWeight: 'bold' }}>Origen:</Text>
+                  <Space horizontal size={5} />
+                  <Text>{item.origin?.name}</Text>
+                </View>
+                <View style={{ flexDirection: 'row' }}>
+                  <Text style={{ fontWeight: 'bold' }}>Destino:</Text>
+                  <Space horizontal size={5} />
+                  <Text>{item.destination?.name}</Text>
+                </View>
+
                 <Text>
-                  Driver: {item.driver?.names} {item.driver?.last_names}
+                  Driver: {item.user?.names} {item.user?.last_names}
                 </Text>
                 <Text>Truck Plate: {item.truck?.plate}</Text>
-                <Text>Price: Q{item.price}</Text>
-                <Text>Weight: {item.weight} kg</Text>
               </View>
             )}
             refreshControl={
@@ -113,7 +111,8 @@ const Shipment: FC<ShipmentPropsT> = ({}) => {
       <TouchableOpacity
         style={styles.fab}
         onPress={() => {
-          router.push("/shipments/create-shipment");
+          // router.push("/shipments/create-shipment");
+          router.push("/shipments/create/add-shipment-client");
         }}
       >
         <Text style={styles.fabText}>+</Text>
@@ -129,7 +128,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   card: {
-    backgroundColor: "#f9f9f9",
+    backgroundColor: "#97bea370",
     padding: 15,
     marginVertical: 8,
     marginHorizontal: 16,

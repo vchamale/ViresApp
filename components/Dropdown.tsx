@@ -11,11 +11,11 @@ interface DropdownProps<T> {
   placeholderColor?: string;
   renderItemText: (item: T) => string;
   onItemSelected: (item: T) => void;
-  linkText: string;
-  onLinkPress: () => void;
+  linkText?: string;
+  onLinkPress?: () => void;
 }
 
-const Dropdown = <T extends { id: number }>({
+const Dropdown = <T extends {}>({
   items,
   placeholder,
   placeholderColor,
@@ -27,7 +27,7 @@ const Dropdown = <T extends { id: number }>({
   const [selectedItem, setSelectedItem] = useState<T | null>(null);
   const [isDropdownOpen, setDropdownOpen] = useState(false);
   const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0, width: 0 });
-  const dropdownButtonRef = useRef<View>(null); // Referencia para medir la posición del botón
+  const dropdownButtonRef = useRef<TouchableOpacity>(null); 
 
   const handleItemPress = (item: T) => {
     setSelectedItem(item);
@@ -37,7 +37,6 @@ const Dropdown = <T extends { id: number }>({
 
   const handleOpenDropdown = () => {
     if (dropdownButtonRef.current) {
-      // Mide la posición del botón del dropdown
       dropdownButtonRef.current.measure((x, y, width, height, pageX, pageY) => {
         setDropdownPosition({ top: pageY + height, left: pageX, width: width });
       });
@@ -51,18 +50,15 @@ const Dropdown = <T extends { id: number }>({
 
   return (
     <View style={styles.container}>
-      {/* Botón del dropdown */}
       <TouchableOpacity
         style={styles.dropdownButton}
         onPress={handleOpenDropdown}
-        ref={dropdownButtonRef} // Asignamos la referencia al botón
+        ref={dropdownButtonRef}
       >
         <Text style={selectedItem ? styles.dropdownText : styles.placeholder}>
           {selectedItem ? renderItemText(selectedItem) : placeholder}
         </Text>
       </TouchableOpacity>
-
-      {/* Modal que se abre en la posición medida del botón */}
       <Modal
         transparent
         visible={isDropdownOpen}
@@ -83,7 +79,7 @@ const Dropdown = <T extends { id: number }>({
             >
               <FlatList
                 data={items}
-                keyExtractor={(item) => item?.id?.toString()}
+                keyExtractor={() => Math.random().toString()}
                 renderItem={({ item }) => (
                   <TouchableOpacity
                     style={styles.dropdownItem}
@@ -93,6 +89,7 @@ const Dropdown = <T extends { id: number }>({
                   </TouchableOpacity>
                 )}
                 ListFooterComponent={
+                  linkText ?
                   <TouchableOpacity onPress={onLinkPress} style={styles.linkContainer}>
                     <View style={styles.footerLink}>
                       <Text style={styles.linkText}>{linkText}</Text>
@@ -100,6 +97,7 @@ const Dropdown = <T extends { id: number }>({
                       <AntDesign name="plus" size={20} color="blue" />
                     </View>
                   </TouchableOpacity>
+                  : null
                 }
               />
             </View>

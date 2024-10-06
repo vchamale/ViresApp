@@ -6,6 +6,9 @@ import { destinationApi } from "@api/destinationApi";
 import { originApi } from "@api/originApi";
 import { truckApi } from "@api/truckApi";
 import { clientApi } from "@api/clientApi";
+import { currencyApi } from "@api/currencyApi";
+import { driverApi } from "@api/driverApi";
+import { containerApi } from "@api/containerApi";
 
 const store = configureStore({
   reducer: rootReducers,
@@ -18,7 +21,10 @@ const store = configureStore({
       .concat(destinationApi.middleware)
       .concat(originApi.middleware)
       .concat(clientApi.middleware)
-      .concat(truckApi.middleware),
+      .concat(truckApi.middleware)
+      .concat(currencyApi.middleware)
+      .concat(driverApi.middleware)
+      .concat(containerApi.middleware),
   preloadedState: {},
   devTools: !Object.is(process.env.NODE_ENV, 'production')
 });

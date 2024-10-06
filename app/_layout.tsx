@@ -14,6 +14,7 @@ import { Provider } from "react-redux";
 import store from "store/configureStore";
 import { ActivityIndicator, View } from "react-native";
 import checkToken from "utils/checkToken";
+import { SnackbarProvider } from "@components/context/SnackbarContext";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -57,14 +58,16 @@ const RootLayout = () => {
   return (
     <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
       <Provider store={store}>
-        <Stack
-          initialRouteName={initialRoute ?? "sign-in"}
-          screenOptions={(_) => ({ headerShown: false })}
-        >
-          <Stack.Screen name="sign-in" />
-          <Stack.Screen name="home" />
-          <Stack.Screen name="+not-found" />
-        </Stack>
+        <SnackbarProvider>
+          <Stack
+            initialRouteName={initialRoute ?? "sign-in"}
+            screenOptions={(_) => ({ headerShown: false })}
+          >
+            <Stack.Screen name="sign-in" />
+            <Stack.Screen name="home" />
+            <Stack.Screen name="+not-found" />
+          </Stack>
+        </SnackbarProvider>
       </Provider>
     </ThemeProvider>
   );
