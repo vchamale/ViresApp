@@ -44,10 +44,17 @@ export type PriceT = {
   currency: CurrencyT | null;
 }
 
+export type ShipmentStatusT = {
+  description: "Creado" | "Ruta" | "Entregado" | "Finalizado" | "Cobrado" | "Cancelado" | "Eliminado";
+  shipmentStatusId: number;
+}
+
 export type ShipmentT = {
+  shipmentId: number;
   client?: ClientT | null;
   origin?: OriginT | null;
   destination?: DestinationT | null;
+  shipmentStatus?: ShipmentStatusT | null;
   container: ContainerT | null;
   weight: number;
   price: PriceT;

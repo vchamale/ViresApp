@@ -10,13 +10,17 @@ import { clientApi } from "@api/clientApi";
 import { currencyApi } from "@api/currencyApi";
 import { driverApi } from "@api/driverApi";
 import { containerApi } from "@api/containerApi";
+import { documentApi } from "@api/documentApi";
+import { makeApi } from "@api/makeApi";
 
 const rootReducers = combineReducers({
   [authApi.reducerPath]: authApi.reducer,
   [shipmentApi.reducerPath]: shipmentApi.reducer,
+  [documentApi.reducerPath]: documentApi.reducer,
   [destinationApi.reducerPath]: destinationApi.reducer,
   [originApi.reducerPath]: originApi.reducer,
   [truckApi.reducerPath]: truckApi.reducer,
+  [makeApi.reducerPath]: makeApi.reducer,
   [clientApi.reducerPath]: clientApi.reducer,
   [currencyApi.reducerPath]: currencyApi.reducer,
   [driverApi.reducerPath]: driverApi.reducer,

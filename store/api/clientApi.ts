@@ -8,10 +8,22 @@ export const clientApi = createApi({
     timeout: 3000,
     headers: { 'Content-type': 'application/json' }
   }),
+  tagTypes: ['Client'],
   endpoints: build => ({
     getAllClients: build.query<any, any>({
-      query: () => `/`,
-      
+      query: ({ search }) => {
+        const params: Record<string, string> = {};
+
+        if (search) params.search = search;
+
+        const queryString = new URLSearchParams(params).toString();
+        return `/?${queryString}`;
+      },
+      providesTags: ['Client'],
+    }),
+    getClientById: build.query<any, string | number>({
+      query: (id) => `/${id}`,
+      providesTags: (result, error, id) => [{ type: 'Client', id }],
     }),
     createClient: build.mutation<{ data: any }, Partial<any>>({
       query(body) {
@@ -20,16 +32,18 @@ export const clientApi = createApi({
           method: 'POST',
           body
         };
-      }
+      },
+      invalidatesTags: ['Client'],
     }),
     updateClient: build.mutation<any, Partial<any>>({
-      query(body) {
+      query({ id, body}) {
         return {
-          url: '/',
+          url: `/${id}`,
           method: 'PUT',
           body
         };
-      }
+      },
+      invalidatesTags: ['Client'],
     }),
     deleteClient: build.mutation<any, Partial<any>>({
       query({ id }) {
@@ -37,9 +51,10 @@ export const clientApi = createApi({
           url: `/${id}`,
           method: 'DELETE'
         };
-      }
+      },
+      invalidatesTags: ['Client'],
     })
   })
 });
 
-export const { useCreateClientMutation, useUpdateClientMutation, useGetAllClientsQuery } = clientApi;
+export const { useCreateClientMutation, useUpdateClientMutation, useGetAllClientsQuery, useLazyGetAllClientsQuery, useGetClientByIdQuery } = clientApi;

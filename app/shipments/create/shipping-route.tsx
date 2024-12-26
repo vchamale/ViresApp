@@ -1,6 +1,6 @@
 // R/RN
 import React, { useState } from 'react';
-import { View, Text, Button, StyleSheet, SafeAreaView, FlatList } from 'react-native';
+import { View, Text, Button, StyleSheet, SafeAreaView, FlatList, TouchableOpacity } from 'react-native';
 // Expo stuff
 import { useRouter } from 'expo-router';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
@@ -14,6 +14,8 @@ import { useAppDispatch, useAppSelector } from '@hooks/useRedux';
 import { addOrigin, addShipmentRoute, shipmentSelector } from '@slice/shipmentSlice';
 import { useSnackbar } from '@components/context/SnackbarContext';
 import { DestinationT, OriginT } from '@types/Shipment';
+import BackgroundView from '@components/BackgroundView';
+import Space from '@components/Space';
 
 const ShippingRoute = () => {
   // State
@@ -71,57 +73,64 @@ const ShippingRoute = () => {
   }
 
   return (
-    <SafeAreaView style={{
-      flex: 1
-    }}>
-      <View style={styles.container}>
-        <CustomHeader 
-          title={'Ruta de viaje'} 
-          onBackPress={() => {
-            router.back();
-          }}
-        />
-        <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
-          <FontAwesome6 name='route' size={100} color='#5db075' />
-        </View>
-        <FlatList
-          contentContainerStyle={styles.flatListContainer}
-          data={[{ key: 'form' }]}
-          keyExtractor={(item) => item.key}
-          renderItem={() => (
-            <>
-            <Text style={styles.label}>Origen</Text>
-            <Dropdown 
-              items={origins}
-              placeholder="Selecciona una origen"
-              renderItemText={(item) => `${item.name}`}
-              onItemSelected={(item: OriginT) => handleOriginSelected(item)}
-              linkText="Agregar nuevo origen"
-              onLinkPress={() => console.log('Botón tipo link presionado')}
-            />
-            <Text style={styles.label}>Destino</Text>
-            <Dropdown 
-              items={destinations}
-              placeholder="Selecciona una destino"
-              renderItemText={(item) => `${item.address}`}
-              onItemSelected={(item: DestinationT) => handleDestinationSelected(item)}
-              linkText="Agregar nuevo destino"
-              onLinkPress={() => console.log('Botón tipo link presionado')}
-            />
-            </>
-          )}
+    <BackgroundView>
+      <SafeAreaView style={{
+        flex: 1
+      }}>
+        <View style={styles.container}>
+          <CustomHeader 
+            title={'Ruta de viaje'}
+            backgroundColor='#71a780'
+            color='#fff'
+            onBackPress={() => {
+              router.back();
+            }}
           />
-        <Button title="Continuar" onPress={handleContinueButton} />
-      </View>
-    </SafeAreaView>
+          <Space vertical size={50} />
+          <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
+            <FontAwesome6 name='route' size={100} color='#fff' />
+          </View>
+          <Space vertical size={180} />
+          <FlatList
+            contentContainerStyle={styles.flatListContainer}
+            data={[{ key: 'form' }]}
+            keyExtractor={(item) => item.key}
+            renderItem={() => (
+              <>
+              <Text style={styles.label}>Origen</Text>
+              <Dropdown 
+                items={origins}
+                placeholder="Selecciona una origen"
+                renderItemText={(item) => `${item.name}`}
+                onItemSelected={(item: OriginT) => handleOriginSelected(item)}
+                linkText="Agregar nuevo origen"
+                onLinkPress={() => console.log('Botón tipo link presionado')}
+              />
+              <Text style={styles.label}>Destino</Text>
+              <Dropdown 
+                items={destinations}
+                placeholder="Selecciona una destino"
+                renderItemText={(item) => `${item.address}`}
+                onItemSelected={(item: DestinationT) => handleDestinationSelected(item)}
+                linkText="Agregar nuevo destino"
+                onLinkPress={() => console.log('Botón tipo link presionado')}
+              />
+              </>
+            )}
+            />
+          <TouchableOpacity style={styles.createButton} onPress={handleContinueButton}>
+            <Text style={styles.buttonText}>Continuar</Text>
+          </TouchableOpacity>
+        </View>
+      </SafeAreaView>
+    </BackgroundView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
-    backgroundColor: '#fff',
+    padding: 20
   },
   flatListContainer: {
     flexGrow: 1,
@@ -129,6 +138,7 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 16,
     fontWeight: 'bold',
+    color: '#71a780',
     marginBottom: 8,
   },
   input: {
@@ -147,7 +157,18 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 18,
     marginTop: 20,
-  }
+  },
+  createButton: {
+    marginHorizontal: 50,
+    backgroundColor: "#2073cdbd",
+    paddingVertical: 10,
+    borderRadius: 4,
+  },
+  buttonText: {
+    color: "#fff",
+    textAlign: 'center',
+    fontWeight: "bold",
+  },
 });
 
 export default ShippingRoute;

@@ -1,30 +1,51 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView, StatusBar, StatusBarStyle } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
 type HeaderProps = {
   title: string;
+  statusBar?: {
+    barStyle: StatusBarStyle;
+    backgroundColor: string;
+  };
+  color?: string;
+  backgroundColor?: string;
   onBackPress?: () => void;
   onHelpPress?: () => void;
+  onEditPress?: () => void;
   showBackButton?: boolean;
+  showEditButton?: boolean;
   showHelpButton?: boolean;
 };
 
-const CustomHeader: React.FC<HeaderProps> = ({ title, onBackPress, onHelpPress, showBackButton = true, showHelpButton = false }) => {
+const CustomHeader: React.FC<HeaderProps> = ({ title, backgroundColor, color, statusBar, onBackPress, onHelpPress, onEditPress, showBackButton = true, showHelpButton = false, showEditButton = false }) => {
   return (
-    <View style={styles.headerContainer}>
+    <SafeAreaView style={[styles.headerContainer, backgroundColor ? { backgroundColor: backgroundColor }: null]}>
+      {
+        statusBar && (
+          <StatusBar
+            barStyle={statusBar.barStyle}
+            backgroundColor={statusBar.backgroundColor}
+          />
+        )
+      }
       {showBackButton && (
         <TouchableOpacity onPress={onBackPress} style={styles.backButton}>
-          <Ionicons name="arrow-back" size={24} color="#5db075" />
+          <Ionicons name="arrow-back" size={24} color={ color ?? "#71a780"} />
         </TouchableOpacity>
       )}
-      <Text style={styles.title}>{title}</Text>
+      <Text style={[styles.title, color ? { color } : null ]}>{title}</Text>
       {showHelpButton && (
         <TouchableOpacity onPress={onHelpPress} style={styles.helpButton}>
-          <Ionicons name="help-circle-outline" size={34} color="#5db075" />
+          <Ionicons name="help-circle-outline" size={34} color={color ?? "#71a780"} />
         </TouchableOpacity>
       )}
-    </View>
+      {showEditButton && (
+        <TouchableOpacity onPress={onEditPress} style={styles.helpButton}>
+          <Ionicons name="create-sharp" size={28} color={color ?? "#71a780"} />
+        </TouchableOpacity>
+      )}
+    </SafeAreaView>
   );
 };
 
@@ -46,7 +67,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 18,
-    color: '#5db075',
+    color: '#71a780',
     fontWeight: 'bold',
   },
 });

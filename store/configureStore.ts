@@ -9,6 +9,8 @@ import { clientApi } from "@api/clientApi";
 import { currencyApi } from "@api/currencyApi";
 import { driverApi } from "@api/driverApi";
 import { containerApi } from "@api/containerApi";
+import { documentApi } from "@api/documentApi";
+import { makeApi } from "@api/makeApi";
 
 const store = configureStore({
   reducer: rootReducers,
@@ -18,10 +20,12 @@ const store = configureStore({
     })
       .concat(authApi.middleware)
       .concat(shipmentApi.middleware)
+      .concat(documentApi.middleware)
       .concat(destinationApi.middleware)
       .concat(originApi.middleware)
       .concat(clientApi.middleware)
       .concat(truckApi.middleware)
+      .concat(makeApi.middleware)
       .concat(currencyApi.middleware)
       .concat(driverApi.middleware)
       .concat(containerApi.middleware),

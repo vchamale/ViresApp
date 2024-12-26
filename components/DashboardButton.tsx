@@ -18,6 +18,7 @@ const DashboardButton = ({ label, route, icon }: DashboardButtonProps) => {
         width: "45%",
         marginLeft: 10,
         marginRight: 5,
+        marginVertical: 10
       }}
     >
       <Pressable

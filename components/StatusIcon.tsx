@@ -15,7 +15,7 @@ const StatusIcon: React.FC<StatusIconProps> = ({ status }) => {
   return (
     <View style={styles.headerContainer}>
       <TouchableOpacity style={styles.statusIcon}>
-        <FontAwesome6 name={icon.name} size={40} color={icon.color} />
+        <FontAwesome6 name={icon.iconName} size={40} color={icon.color} />
       </TouchableOpacity>
       <Space vertical size={15} />
       <Text style={styles.title}>{status}</Text>

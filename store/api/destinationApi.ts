@@ -8,10 +8,22 @@ export const destinationApi = createApi({
     timeout: 3000,
     headers: { 'Content-type': 'application/json' }
   }),
+  tagTypes: ['Destination'],
   endpoints: build => ({
     getAllDestinations: build.query<any, any>({
-      query: () => `/`,
-      
+      query: ({ search }) => {
+        const params: Record<string, string> = {};
+
+        if (search) params.search = search;
+
+        const queryString = new URLSearchParams(params).toString();
+        return `/?${queryString}`;
+      },
+      providesTags: ['Destination'],
+    }),
+    getDestinationsById: build.query<any, string | number>({
+      query: (id) => `/${id}`,
+      providesTags: (result, error, id) => [{ type: 'Destination', id }],
     }),
     createDestination: build.mutation<{ data: any }, Partial<any>>({
       query(body) {
@@ -20,16 +32,18 @@ export const destinationApi = createApi({
           method: 'POST',
           body
         };
-      }
+      },
+      invalidatesTags: ['Destination'],
     }),
     updateDestination: build.mutation<any, Partial<any>>({
-      query(body) {
+      query({ id, body }) {
         return {
-          url: '/',
+          url: `/${id}`,
           method: 'PUT',
           body
         };
-      }
+      },
+      invalidatesTags: ['Destination'],
     }),
     deleteDestination: build.mutation<any, Partial<any>>({
       query({ id }) {
@@ -37,9 +51,10 @@ export const destinationApi = createApi({
           url: `/${id}`,
           method: 'DELETE'
         };
-      }
+      },
+      invalidatesTags: ['Destination'],
     })
   })
 });
 
-export const { useCreateDestinationMutation, useUpdateDestinationMutation, useGetAllDestinationsQuery } = destinationApi;
+export const { useCreateDestinationMutation, useUpdateDestinationMutation, useGetAllDestinationsQuery, useGetDestinationsByIdQuery, useLazyGetAllDestinationsQuery } = destinationApi;

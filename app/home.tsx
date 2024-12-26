@@ -23,7 +23,16 @@ const Home: FC<HomePropsT> = ({ navigation }) => {
             justifyContent: "space-between",
           }}
         >
-          <View></View>
+          <View>
+            <Text style={{
+              fontWeight: '700',
+              fontSize: 20
+            }}>Hola Kevin</Text>
+            <Space vertical size={10} />
+            <Text style={{
+              color: '#525358'
+            }}>Sabado, 7 de Diciembre</Text>
+          </View>
           <View
             style={{
               marginRight: 10,
@@ -46,7 +55,24 @@ const Home: FC<HomePropsT> = ({ navigation }) => {
           </View>
         </View>
         <Space vertical size={10} />
-        <View
+        <View style={{
+          flex: 1,
+          backgroundColor: '#88c69a',
+          borderRadius: 20,
+          padding: 20
+        }}>
+          <Text style={{
+            color: '#fff',
+            fontWeight: '900',
+            fontSize: 20
+          }}>Viaje en Curso</Text>
+          <Text style={{
+            color: '#fff',
+            fontWeight: '900',
+            fontSize: 20
+          }}>No tienes viajes en curso</Text>
+        </View>
+        {/* <View
           style={{
             width: "100%",
             borderColor: "#ddd9d9eb",
@@ -72,11 +98,13 @@ const Home: FC<HomePropsT> = ({ navigation }) => {
             placeholderTextColor="#989393"
             keyboardType="default"
           />
-        </View>
+        </View> */}
         <Space vertical size={50} />
         <View
           style={{
-            flexDirection: "row",
+            flex: 1,
+            flexDirection: 'row',
+            flexWrap: 'wrap'
           }}
         >
           <DashboardButton
@@ -84,10 +112,30 @@ const Home: FC<HomePropsT> = ({ navigation }) => {
             label={"Viajes"}
             icon={"truck"}
           />
-          <DashboardButton
-            route={"/clients/customer"}
+          {/* <DashboardButton
+            route={"/clients/client"}
             label={"Clientes"}
             icon={"people"}
+          />
+          <DashboardButton
+            route={"/profile/configuration"}
+            label={"Configuración"}
+            icon={"tools"}
+          />
+          <DashboardButton
+            route={"/test"}
+            label={"Test"}
+            icon={"tools"}
+          /> */}
+          <DashboardButton
+            route={"/destination"}
+            label={"destination"}
+            icon={"tools"}
+          />
+          <DashboardButton
+            route={"/origin"}
+            label={"origin"}
+            icon={"tools"}
           />
         </View>
       </View>

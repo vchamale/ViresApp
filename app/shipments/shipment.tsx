@@ -2,121 +2,201 @@ import { FC, useCallback, useState } from "react";
 import {
   FlatList,
   Pressable,
-  RefreshControl,
   SafeAreaView,
   StyleSheet,
   Text,
+  TextInput,
   TouchableOpacity,
   View,
+  Platform,
+  RefreshControl,
 } from "react-native";
 import { useRouter } from "expo-router";
-import { useGetAllSipmentsQuery } from "@api/shipmentApi";
-import Space from "@components/Space";
+import DateTimePicker from "@react-native-community/datetimepicker";
+import { useGetAllSipmentsQuery, useLazyGetAllSipmentsQuery } from "@api/shipmentApi";
 import CustomHeader from "@components/CustomHeader";
-import StatusIcon from "@components/StatusIcon";
+import Space from "@components/Space";
+import SearchBox from "@components/SearchBox";
+import IconMapper from "@components/IconMapper";
+import CalendarBox from "@components/CalendarBox";
+import { ActivityIndicator } from "@react-native-material/core";
+import ShipmentCard from "@components/ShipmentCard";
+import { ShipmentT } from "@types/Shipment";
 
-type ShipmentPropsT = {};
-
-const Shipment: FC<ShipmentPropsT> = ({}) => {
+const Shipment: FC = () => {
   // State
   const [refreshing, setRefreshing] = useState(false);
+  const [startDate, setStartDate] = useState<Date | null>(null);
+  const [endDate, setEndDate] = useState<Date | null>(null);
+  const [containerSearch, setContainerSearch] = useState<string>("");
+  const [showStartDatePicker, setShowStartDatePicker] = useState(false);
+  const [showEndDatePicker, setShowEndDatePicker] = useState(false);
 
   // hooks
   const router = useRouter();
 
   // Api calls
-  const {
-    data: shipments,
-    isLoading,
-    isError,
-    refetch,
-  } = useGetAllSipmentsQuery({});
+  const [trigger, { data: shipments, isLoading, isError }] = useLazyGetAllSipmentsQuery();
 
   // Functions
   const onRefresh = useCallback(() => {
     setRefreshing(true);
-    refetch().finally(() => setRefreshing(false));
-  }, [refetch]);
+    trigger({})
+      .unwrap()
+      .finally(() => setRefreshing(false));
+  }, [trigger]);
 
-  if (isLoading) {
+  const handleSearch = () => {
+    trigger({});
+  };
+
+  const handleCreateNewShipment = () => {
+    router.push("/shipments/create/add-shipment-client");
+  };
+
+  const renderItem = ({ item }: { item: ShipmentT }) => {
     return (
-      <View style={styles.center}>
-        <Text>Loading...</Text>
-      </View>
-    );
-  }
+    <ShipmentCard
+      status={item.shipmentStatus?.description?.toLowerCase() as string}
+      containerNumber={item.container?.containerNumber as string}
+      destination={item.destination?.name as string}
+      date={new Date().toDateString()}
+      onViewPress={() => router.push({
+        pathname: `/shipments/[id]`,
+        params: { id: item.shipmentId, shipment: JSON.stringify(item) }
+      })}
+    />
+  )};
 
-  if (isError) {
-    return (
-      <View style={styles.center}>
-        <Text>Error loading shipments</Text>
-      </View>
-    );
-  }
-
-  console.log('shipments ', shipments)
+  // if (isError) {
+  //   return (
+  //     <View style={styles.center}>
+  //       <Text>Algo ocurrió, favor intentar de nuevo</Text>
+  //     </View>
+  //   );
+  // }
 
   return (
-    <SafeAreaView
-      style={{
-        flex: 1,
-        backgroundColor: '#fff'
-      }}
-    >
-      <View
-        style={{
-          padding: 15,
-          flex: 1
-        }}
-      >
+    <SafeAreaView style={{ flex: 1, backgroundColor: "#fff" }}>
+      <View style={{ padding: 15, flex: 1 }}>
         <CustomHeader
-          title={'Viajes'} 
+          title="Viajes"
           onBackPress={() => {
             router.back();
           }}
           showHelpButton={true}
         />
-        <View style={{ flex: 1 }}>
-          <FlatList
-            data={shipments}
-            keyExtractor={(item) => item.shipmentId.toString()}
-            renderItem={({ item }) => (
-              <View style={styles.card}>
-                <StatusIcon status={item.shipmentStatus?.description} />
-                <Space vertical size={10} />
-                <Text style={{ textAlign: 'center', fontWeight: 'bold' }}>{item.container.containerNumber}</Text>
-                <View style={{ flexDirection: 'row' }}>
-                  <Text style={{ fontWeight: 'bold' }}>Origen:</Text>
-                  <Space horizontal size={5} />
-                  <Text>{item.origin?.name}</Text>
-                </View>
-                <View style={{ flexDirection: 'row' }}>
-                  <Text style={{ fontWeight: 'bold' }}>Destino:</Text>
-                  <Space horizontal size={5} />
-                  <Text>{item.destination?.name}</Text>
-                </View>
-
-                <Text>
-                  Driver: {item.user?.names} {item.user?.last_names}
-                </Text>
-                <Text>Truck Plate: {item.truck?.plate}</Text>
-              </View>
+        <Space vertical size={15} />
+        <Text style={{ color: '#5db075', fontWeight: '700' }}>No. Contenedor</Text>
+        <Space vertical size={5} />
+        <SearchBox 
+          iconName="container" 
+          placeholder="Buscar contenedor" 
+          iconColor="#5db075"
+          placeholderTextColor="#5db07587"
+          value={containerSearch} 
+          onChangeText={setContainerSearch}
+        />
+        <View style={{ flexDirection: 'row' }}>
+          <View style={{ width: '50%', paddingRight: 10 }}>
+            <Space vertical size={15} />
+            <Text style={{ color: '#5db075', fontWeight: '700' }}>Fecha Inicial</Text>
+            <Space vertical size={5} />
+            <CalendarBox 
+              onPress={() => {
+                setShowEndDatePicker(false);
+                setShowStartDatePicker(prevVal => !prevVal)
+              }} 
+              selectedDate={startDate}
+              iconName="calendar"
+              iconColor="#5db075"
+            />
+            {showStartDatePicker && (
+              <DateTimePicker
+                style={{
+                  width: '200%'
+                }}
+                value={startDate || new Date()}
+                mode="date"
+                display={Platform.OS === "ios" ? "inline" : "default"}
+                onChange={(event, selectedDate) => {
+                  setShowStartDatePicker(false);
+                  if (selectedDate) setStartDate(selectedDate);
+                }}
+              />
             )}
-            refreshControl={
-              <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-            }
-          />
+          </View>
+          <View style={{ width: '50%' }}>
+            <Space vertical size={15} />
+              <Text style={{ color: '#5db075', fontWeight: '700' }}>Fecha Final</Text>
+              <Space vertical size={5} />
+              <CalendarBox
+                onPress={() => {
+                  setShowStartDatePicker(false);
+                  setShowEndDatePicker(prevVal => !prevVal)
+                }}
+                selectedDate={endDate}
+                iconName="calendar"
+                iconColor="#5db075"
+              />
+              {showEndDatePicker && (
+                  <DateTimePicker
+                    style={{
+                      width: '200%',
+                      marginLeft: '-100%'
+                    }}
+                    value={endDate || new Date()}
+                    mode="date"
+                    display={Platform.OS === "ios" ? "inline" : "default"}
+                    onChange={(event, selectedDate) => {
+                      setShowEndDatePicker(false);
+                      if (selectedDate) setEndDate(selectedDate);
+                    }}
+                  />
+                )}
+          </View>
         </View>
+        <Space vertical size={20} />
+        <View style={{ flexDirection: 'row' }}>
+          <View style={{ width: '50%', paddingRight: 10 }}>
+            <TouchableOpacity
+              style={styles.createButton}
+              onPress={handleCreateNewShipment}
+            >
+              <Text style={styles.buttonText}>Nuevo Viaje</Text>
+            </TouchableOpacity>
+          </View>
+          <View style={{ width: '50%' }}>
+            <TouchableOpacity style={styles.searchButton} onPress={handleSearch}>
+              <Text style={styles.buttonText}>Buscar</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+        <Space vertical size={15} />
+        {
+          isError &&
+            <View style={styles.center}>
+              <Text>Algo ocurrió, favor intentar de nuevo</Text>
+            </View>
+        }
+        {
+          isLoading 
+            ? <ActivityIndicator />
+            : <></>
+        }
+        {
+          shipments?.length &&
+            <FlatList
+              data={shipments}
+              keyExtractor={(item) => item?.container?.containerNumber as string}
+              contentContainerStyle={styles.table}
+              renderItem={renderItem}
+              refreshControl={
+                <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+              }
+            />
+        }
       </View>
-      <TouchableOpacity
-        style={styles.fab}
-        onPress={() => {
-          // router.push("/shipments/create-shipment");
-          router.push("/shipments/create/add-shipment-client");
-        }}
-      >
-        <Text style={styles.fabText}>+</Text>
-      </TouchableOpacity>
     </SafeAreaView>
   );
 };
@@ -127,42 +207,67 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  card: {
-    backgroundColor: "#97bea370",
-    padding: 15,
-    marginVertical: 8,
-    marginHorizontal: 16,
-    borderRadius: 8,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 2,
-  },
-  title: {
-    fontSize: 18,
-    fontWeight: "bold",
-  },
-  fab: {
-    position: "absolute",
-    width: 60,
-    height: 60,
-    borderRadius: 30,
-    backgroundColor: "#6200ee",
-    justifyContent: "center",
+  filtersContainer: {
+    flexDirection: "row",
     alignItems: "center",
-    bottom: 30,
-    right: 10,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
-    shadowRadius: 4,
-    elevation: 5,
+    flexWrap: "wrap",
   },
-  fabText: {
+  input: {
+    height: 40,
+    borderColor: "#5db075",
+    borderWidth: 1,
+    borderRadius: 4,
+    justifyContent: "center",
+    paddingHorizontal: 8,
+  },
+  containerSearchInput: {
+    height: 40,
+    borderColor: "#ccc",
+    borderWidth: 1,
+    borderRadius: 4,
+    paddingHorizontal: 8,
+  },
+  searchButton: {
+    backgroundColor: "#5db075",
+    paddingVertical: 10,
+    borderRadius: 5,
+  },
+  createButton: {
+    backgroundColor: "#007BFF",
+    paddingVertical: 10,
+    borderRadius: 4,
+  },
+  buttonText: {
     color: "#fff",
-    fontSize: 28,
+    textAlign: 'center',
     fontWeight: "bold",
+  },
+  table: {
+    flexGrow: 1,
+    marginTop: 10,
+  },
+  row: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingVertical: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: "#ddd",
+  },
+  cell: {
+    flex: 1,
+    textAlign: "center",
+  },
+  cellText: {
+    fontSize: 14,
+    color: "#333",
+  },
+  headerText: {
+    fontWeight: "bold",
+    fontSize: 13,
+    color: "#fff",
+    backgroundColor: "#5db075",
+    paddingVertical: 10,
   },
 });
 

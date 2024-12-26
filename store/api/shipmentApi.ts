@@ -41,4 +41,4 @@ export const shipmentApi = createApi({
   })
 });
 
-export const { useCreateShipmentMutation, useUpdateShipmentMutation, useGetAllSipmentsQuery } = shipmentApi;
+export const { useCreateShipmentMutation, useUpdateShipmentMutation, useGetAllSipmentsQuery, useLazyGetAllSipmentsQuery } = shipmentApi;

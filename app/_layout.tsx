@@ -64,7 +64,7 @@ const RootLayout = () => {
             screenOptions={(_) => ({ headerShown: false })}
           >
             <Stack.Screen name="sign-in" />
-            <Stack.Screen name="home" />
+            <Stack.Screen name="(tabs)" />
             <Stack.Screen name="+not-found" />
           </Stack>
         </SnackbarProvider>

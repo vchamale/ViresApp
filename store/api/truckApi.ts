@@ -8,10 +8,22 @@ export const truckApi = createApi({
     timeout: 3000,
     headers: { 'Content-type': 'application/json' }
   }),
+  tagTypes: ['Vehicle'],
   endpoints: build => ({
     getAllTrucks: build.query<any, any>({
-      query: () => `/`,
-      
+      query: ({ search }) => {
+        const params: Record<string, string> = {};
+
+        if (search) params.search = search;
+
+        const queryString = new URLSearchParams(params).toString();
+        return `/?${queryString}`;
+      },
+      providesTags: ['Vehicle'],
+    }),
+    getTruckById: build.query<any, string | number>({
+      query: (id) => `/${id}`,
+      providesTags: (result, error, id) => [{ type: 'Vehicle', id }],
     }),
     createTruck: build.mutation<{ data: any }, Partial<any>>({
       query(body) {
@@ -20,16 +32,18 @@ export const truckApi = createApi({
           method: 'POST',
           body
         };
-      }
+      },
+      invalidatesTags: ['Vehicle'],
     }),
     updateTruck: build.mutation<any, Partial<any>>({
-      query(body) {
+      query({ id, body }) {
         return {
-          url: '/',
+          url: `/${id}`,
           method: 'PUT',
           body
         };
-      }
+      },
+      invalidatesTags: ['Vehicle'],
     }),
     deleteTruck: build.mutation<any, Partial<any>>({
       query({ id }) {
@@ -37,9 +51,10 @@ export const truckApi = createApi({
           url: `/${id}`,
           method: 'DELETE'
         };
-      }
+      },
+      invalidatesTags: ['Vehicle'],
     })
   })
 });
 
-export const { useCreateTruckMutation, useUpdateTruckMutation, useGetAllTrucksQuery } = truckApi;
+export const { useCreateTruckMutation, useUpdateTruckMutation, useGetAllTrucksQuery, useGetTruckByIdQuery, useLazyGetAllTrucksQuery } = truckApi;

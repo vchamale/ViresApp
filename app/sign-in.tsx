@@ -2,18 +2,23 @@ import { useLoginMutation } from "@api/authApi";
 import Space from "@components/Space";
 import { useRouter } from "expo-router";
 import { useRef, useState } from "react";
-import { ActivityIndicator, Pressable, SafeAreaView, Text, TextInput, View } from "react-native";
+import {
+  ActivityIndicator,
+  Pressable,
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { Snackbar } from "@react-native-material/core";
+import IconMapper from "@components/IconMapper";
 
-
-type Props = {
-  navigation: any;
-};
-
-const SignIn: React.FC<Props> = ({ navigation }) => {
+const SignIn: React.FC = () => {
   // State
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [isEmptyEmailAlert, setEmptyEmailAlert] = useState<boolean>(false);
   const [isEmptyPasswordAlert, setEmptyPasswordAlert] = useState<boolean>(false);
   const [isLoading, setLoading] = useState<boolean>(false);
@@ -23,42 +28,34 @@ const SignIn: React.FC<Props> = ({ navigation }) => {
   const emailRef = useRef<TextInput>(null);
   const passwordRef = useRef<TextInput>(null);
 
-  // requests
+  // Requests
   const [login] = useLoginMutation();
 
-  // hooks
+  // Hooks
   const router = useRouter();
 
   // Functions
   const onSubmit = async () => {
     setLoading(true);
     try {
-      // Accessing the state directly for email and password
-      if (!email) {
-        setEmptyEmailAlert(true);
-        setTimeout(() => setEmptyEmailAlert(false), 2000);
-        setLoading(false);
-        return;
-      }
+      // if (!email) {
+      //   setEmptyEmailAlert(true);
+      //   setTimeout(() => setEmptyEmailAlert(false), 2000);
+      //   setLoading(false);
+      //   return;
+      // }
+      // if (!password) {
+      //   setEmptyPasswordAlert(true);
+      //   setTimeout(() => setEmptyPasswordAlert(false), 2000);
+      //   setLoading(false);
+      //   return;
+      // }
 
-      if (!password) {
-        setEmptyPasswordAlert(true);
-        setTimeout(() => setEmptyPasswordAlert(false), 2000);
-        setLoading(false);
-        return;
-      }
-
-      const { data, error } = await login({ email, password });
-      console.log('data ', data, ' error ', error)
-      if (error) {
-        return;
-      }
-
-      if (data?.token) {
-        router.push('/home');
-      }
-
-      // console.log('data ', data, ' error ', error);
+      // // Call login mutation (mocked here)
+      // const response = await login({ email, password });
+      // if (response?.data?.token) {
+        router.push("/(tabs)");
+      // }
     } catch (err) {
       console.error(err);
     } finally {
@@ -67,151 +64,178 @@ const SignIn: React.FC<Props> = ({ navigation }) => {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
-      <View style={{ flex: 1, padding: 10, backgroundColor: 'white' }}>
-        <View style={{
-          flex: 1,
-          flexDirection: 'column',
-          justifyContent: 'center'
-        }}>
-          <View style={{
-            flexDirection: 'row',
-            justifyContent: 'center'
-          }}>
-            <Text
-              style={{
-                fontSize: 25,
-                fontWeight: 'bold',
-                color: '#000',
-                fontFamily: 'Roboto-Regular'
-              }}>
-              Iniciar Sesión
-            </Text>
-          </View>
-          <Space vertical size={30} />
-          <View
-            style={{
-              width: '100%',
-              borderColor: '#ddd9d9eb',
-              backgroundColor: '#e7e7e7c2',
-              borderWidth: 1.5,
-              borderRadius: 10
-            }}>
+    <SafeAreaView style={styles.container}>
+      <Space vertical size={100} />
+      <View style={styles.background}>
+        <View style={styles.header}>
+          <Space vertical size={20} />
+          <Text style={styles.title}>Bienvenido</Text>
+          <Text style={styles.subtitle}>Inicia sesión para continuar</Text>
+        </View>
+        <Space vertical size={30} />
+        <View style={styles.form}>
+          <View style={styles.inputContainer}>
+            <IconMapper iconName="mail-outline" size={20} color="#5db075" />
             <TextInput
               ref={emailRef}
-              style={{
-                color: '#2c4778',
-                fontWeight: '600',
-                fontSize: 15,
-                borderColor: '#fff',
-                borderWidth: 0,
-                padding: 10,
-                paddingRight: 0
-              }}
-              editable={true}
-              onChangeText={(text: string) => { setEmail(text.toLowerCase()) }}  // Using setState directly
-              value={email}  // Binding the value to the state
-              placeholder="Correo"
-              placeholderTextColor="#989393"
+              style={styles.input}
+              placeholder="Correo Electrónico"
+              placeholderTextColor="#5db075"
+              value={email}
+              onChangeText={setEmail}
               keyboardType="email-address"
             />
           </View>
           <Space vertical size={15} />
-          <View
-            style={{
-              width: '100%',
-              borderColor: '#ddd9d9eb',
-              backgroundColor: '#e7e7e7c2',
-              flexDirection: 'row',
-              borderWidth: 1.5,
-              borderRadius: 10
-            }}>
+          <View style={styles.inputContainer}>
+            <IconMapper iconName="lock-closed-outline" size={20} color="#5db075" />
             <TextInput
               ref={passwordRef}
-              secureTextEntry={!isPasswordVisible}
-              style={{
-                width: '80%',
-                color: '#2c4778',
-                fontWeight: '600',
-                fontSize: 15,
-                borderColor: '#fff',
-                borderWidth: 0,
-                padding: 10,
-                paddingRight: 0
-              }}
-              editable={true}
-              onChangeText={setPassword}  // Using setState directly
-              value={password}  // Binding the value to the state
+              style={styles.input}
               placeholder="Contraseña"
-              placeholderTextColor="#989393"
-              keyboardType="default"
+              placeholderTextColor="#5db075"
+              value={password}
+              onChangeText={setPassword}
+              secureTextEntry={!isPasswordVisible}
             />
-            <View style={{
-              justifyContent: 'center'
-            }}>
-              <Pressable
-                onPressIn={() => setPasswordVisible(true)}
-                onPressOut={() => setPasswordVisible(false)}>
-                <Text>{isPasswordVisible ? 'Ocultar' : 'Mostrar'}</Text>
-              </Pressable>
-            </View>
+            <TouchableOpacity
+              style={styles.passwordToggle}
+              onPress={() => setPasswordVisible(!isPasswordVisible)}
+            >
+              <IconMapper
+                iconName={isPasswordVisible ? "eye-off-outline" : "eye-outline"}
+                size={20}
+                color="#5db075"
+              />
+            </TouchableOpacity>
           </View>
-          <Space vertical size={20} />
-          <View>
-            {!isLoading ? (
-              <View style={{
-                width: '100%',
-                borderRadius: 25,
-                backgroundColor: '#5db075',
-                flexDirection: 'row',
-                justifyContent: 'center'
-              }}>
-                <Pressable onPress={onSubmit}>
-                  <Text
-                    style={{
-                      color: '#fff',
-                      fontWeight: '700',
-                      paddingVertical: 15,
-                      fontFamily: 'Roboto-Regular'
-                    }}>
-                    Iniciar Sesión
-                  </Text>
-                </Pressable>
-              </View>
+          <Space vertical size={15} />
+          <TouchableOpacity onPress={() => router.push("./forgot-password")}>
+            <Text style={styles.forgotPasswordText}>¿Olvidaste tu contraseña?</Text>
+          </TouchableOpacity>
+          <Space vertical size={30} />
+          <TouchableOpacity style={styles.loginButton} onPress={onSubmit}>
+            {isLoading ? (
+              <ActivityIndicator size="small" color="#fff" />
             ) : (
-              <ActivityIndicator size={50} />
+              <Text style={styles.loginButtonText}>Iniciar Sesión</Text>
             )}
-          </View>
-          <Space vertical size={20} />
-          <View style={{
-            flexDirection: 'row',
-            justifyContent: 'center'
-          }}>
-            <Pressable
-              onPress={() => navigation.navigate('ForgotPassword')}>
-              <Text style={{ color: '#5db075' }}>
-                ¿Olvidaste tu contraseña?
-              </Text>
-            </Pressable>
-          </View>
+          </TouchableOpacity>
         </View>
-      </View>
-      {
-        isEmptyEmailAlert && 
+        <Space vertical size={30} />
+        <View style={styles.footer}>
+          <Text style={styles.footerText}>¿No tienes cuenta?</Text>
+          <TouchableOpacity onPress={() => router.push("./register")}>
+            <Text style={styles.registerText}>Regístrate</Text>
+          </TouchableOpacity>
+        </View>
+        {isEmptyEmailAlert && (
           <Snackbar
-            message="Debes ingresar tu email."
-            style={{ position: "absolute", start: 16, end: 16, bottom: 30, backgroundColor: 'red' }}
+            message="Debes ingresar tu correo electrónico."
+            style={styles.snackbar}
           />
-      }
-      {
-        isEmptyPasswordAlert && 
+        )}
+        {isEmptyPasswordAlert && (
           <Snackbar
             message="Debes ingresar tu contraseña."
-            style={{ position: "absolute", start: 16, end: 16, bottom: 30, backgroundColor: 'red' }}
+            style={styles.snackbar}
           />
-      }
+        )}
+      </View>
     </SafeAreaView>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#7193654f",
+    justifyContent: "center",
+    alignContent: 'center',
+  },
+  background: {
+    flex: 1,
+    padding: 20,
+    elevation: 4,
+  },
+  header: {
+    alignItems: "center",
+  },
+  title: {
+    fontSize: 30,
+    fontWeight: '900',
+    color: "#fff",
+  },
+  subtitle: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: "#fff",
+  },
+  form: {
+    marginTop: 20,
+  },
+  inputContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    borderWidth: 1,
+    borderColor: "#71a780",
+    borderRadius: 10,
+    paddingHorizontal: 10,
+    height: 50,
+    backgroundColor: "#fff",
+  },
+  input: {
+    flex: 1,
+    marginLeft: 10,
+    color: "#71a780",
+    fontSize: 16,
+  },
+  passwordToggle: {
+    padding: 5,
+  },
+  forgotPasswordText: {
+    color: "#71a780",
+    textAlign: "right",
+    fontSize: 14,
+    marginTop: 5,
+  },
+  loginButton: {
+    backgroundColor: "#71a780",
+    paddingVertical: 15,
+    borderRadius: 10,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 4,
+  },
+  loginButtonText: {
+    color: "#fff",
+    fontSize: 18,
+    fontWeight: "bold",
+  },
+  footer: {
+    alignItems: "center",
+    marginTop: 10,
+  },
+  footerText: {
+    fontSize: 16,
+    color: "#fff",
+  },
+  registerText: {
+    fontSize: 16,
+    color: "#71a780",
+    fontWeight: "bold",
+    marginTop: 5,
+  },
+  snackbar: {
+    position: "absolute",
+    start: 16,
+    end: 16,
+    bottom: 30,
+    backgroundColor: "red",
+  },
+});
 
 export default SignIn;

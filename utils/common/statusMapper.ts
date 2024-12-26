@@ -1,5 +1,5 @@
 type IconMapperT = {
-  name: string;
+  iconName: string;
   color: string;
 }
 
@@ -7,23 +7,39 @@ type StatusMapperT = Record<string, IconMapperT>;
 
 export const statusMapper: StatusMapperT = {
   creado: {
-    name: 'truck',
-    color: 'green',
+    iconName: 'truck-loading',
+    color: '#b889128a',
   },
   enviado: {
-    name: 'truck-loading',
-    color: 'blue',
+    iconName: 'truck-moving',
+    color: '#0b57d094',
   },
   ruta: {
-    name: 'route',
-    color: 'blue',
+    iconName: 'road-circle-check',
+    color: '#f270118f',
+  },
+  finalizado: {
+    iconName: 'truck-check',
+    color: '#0b57d094',
+  },
+  cobrado: {
+    iconName: 'receipt',
+    color: '#0b999c69',
+  },
+  cancelado: {
+    iconName: 'cancel',
+    color: '#ff00008c',
   },
   entregado: {
-    name: 'done-outline',
-    color: 'red',
+    iconName: 'truck-delivery',
+    color: '#038c1882',
+  },
+  eliminado: {
+    iconName: 'delete',
+    color: '#767676ba',
   },
   default: {
-    name: 'warning',
-    color: 'red',
+    iconName: 'warning',
+    color: '#ff00008c',
   }
 };

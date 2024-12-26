@@ -1,9 +1,8 @@
-// R/RN
-import React, { useState, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, TouchableOpacity, FlatList, StyleSheet, Modal, TouchableWithoutFeedback } from 'react-native';
-// Expo
 import AntDesign from '@expo/vector-icons/AntDesign';
 import Space from './Space';
+import { deepEqual } from 'utils/common/deepEqual';
 
 interface DropdownProps<T> {
   items: T[];
@@ -11,6 +10,7 @@ interface DropdownProps<T> {
   placeholderColor?: string;
   renderItemText: (item: T) => string;
   onItemSelected: (item: T) => void;
+  initialSelectedItem?: T; // Propiedad para el elemento inicial
   linkText?: string;
   onLinkPress?: () => void;
 }
@@ -21,16 +21,24 @@ const Dropdown = <T extends {}>({
   placeholderColor,
   renderItemText,
   onItemSelected,
+  initialSelectedItem,
   linkText,
   onLinkPress,
 }: DropdownProps<T>) => {
   const [selectedItem, setSelectedItem] = useState<T | null>(null);
+  const [filteredItems, setFilteredItems] = useState<T[]>(items); // Lista filtrada
   const [isDropdownOpen, setDropdownOpen] = useState(false);
   const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0, width: 0 });
-  const dropdownButtonRef = useRef<TouchableOpacity>(null); 
+  const dropdownButtonRef = useRef<TouchableOpacity>(null);
+
+  useEffect(() => {
+    setSelectedItem(initialSelectedItem);
+    setFilteredItems(items?.filter((item) => !deepEqual(item, initialSelectedItem)));
+  }, [initialSelectedItem, items]);
 
   const handleItemPress = (item: T) => {
     setSelectedItem(item);
+    setFilteredItems(filteredItems?.filter((filteredItem) => filteredItem !== item)); // Filtra la lista
     setDropdownOpen(false);
     onItemSelected(item);
   };
@@ -55,7 +63,7 @@ const Dropdown = <T extends {}>({
         onPress={handleOpenDropdown}
         ref={dropdownButtonRef}
       >
-        <Text style={selectedItem ? styles.dropdownText : styles.placeholder}>
+        <Text style={selectedItem ? styles.dropdownText : { color: placeholderColor ?? styles.placeholder.color }}>
           {selectedItem ? renderItemText(selectedItem) : placeholder}
         </Text>
       </TouchableOpacity>
@@ -78,8 +86,8 @@ const Dropdown = <T extends {}>({
               ]}
             >
               <FlatList
-                data={items}
-                keyExtractor={() => Math.random().toString()}
+                data={filteredItems} // Usar la lista filtrada
+                keyExtractor={(item, index) => `${index}`}
                 renderItem={({ item }) => (
                   <TouchableOpacity
                     style={styles.dropdownItem}
@@ -141,7 +149,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   footerLink: {
-    flexDirection: 'row'
+    flexDirection: 'row',
   },
   linkContainer: {
     padding: 15,
@@ -160,3 +168,4 @@ const styles = StyleSheet.create({
 });
 
 export default Dropdown;
+

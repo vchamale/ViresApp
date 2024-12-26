@@ -1,6 +1,6 @@
 // R/RN
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, Alert, SafeAreaView, Pressable, FlatList } from 'react-native';
+import { View, Text, TextInput, Button, StyleSheet, Alert, SafeAreaView, Pressable, FlatList, TouchableOpacity } from 'react-native';
 // Expo stuff
 import { useRouter } from 'expo-router';
 // API
@@ -20,6 +20,8 @@ import { useAppDispatch } from '@hooks/useRedux';
 import { addTransportDetails } from '@slice/shipmentSlice';
 import { DriverT } from '@types/Driver';
 import { TruckT } from '@types/Truck';
+import BackgroundView from '@components/BackgroundView';
+import { FontAwesome6 } from '@expo/vector-icons';
 
 const AddTransportDetails = () => {
   // State
@@ -77,61 +79,71 @@ const AddTransportDetails = () => {
   };
 
   return (
-    <SafeAreaView style={{
-      flex: 1
-    }}>
-      <View style={styles.container}>
-        <CustomHeader 
-          title={'Detalle del transporte'} 
-          onBackPress={() => {
-            router.back();
-          }}
-        />
-        <FlatList
-          contentContainerStyle={styles.flatListContainer}
-          data={[{ key: 'form' }]}
-          keyExtractor={(item) => item.key}
-          renderItem={() => (
-            <>
-            <Text style={styles.label}>Piloto</Text>
-            <Dropdown 
-              items={drivers}
-              placeholder="Selecciona un Piloto"
-              renderItemText={(item) => `${item.names} ${item.lastNames}`}
-              onItemSelected={(item: DriverT) => handleSelectDriver(item)}
-              linkText="Agregar nuevo piloto"
-              onLinkPress={() => console.log('Botón tipo link presionado')}
-            />
-            <Text style={styles.label}>Trailer</Text>
-            <Dropdown 
-              items={trucks}
-              placeholder="Selecciona una trailer"
-              renderItemText={(item) => `${item.plate}`}
-              onItemSelected={(item: TruckT) => handleSelectTruck(item)}
-              linkText="Agregar nuevo trailer"
-              onLinkPress={() => console.log('Botón tipo link presionado')}
-            />
-            <Text style={styles.label}>Notas</Text>
-            <TextInput
-              style={styles.input}
-              value={notes}
-              onChangeText={setNotes}
-              placeholder="Agregar comentarios para el viaje."
-            />
-            </>
-          )}
+    <BackgroundView>
+      <SafeAreaView style={{
+        flex: 1
+      }}>
+        <View style={styles.container}>
+          <CustomHeader 
+            title={'Detalle del transporte'}
+            backgroundColor='#71a780'
+            color='#fff'
+            onBackPress={() => {
+              router.back();
+            }}
           />
-        <Button title="Crear Viaje" onPress={handleContinueButton} />
-      </View>
-    </SafeAreaView>
+          <Space vertical size={50} />
+          <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
+            <FontAwesome6 name='drivers-license' size={100} color='#fff' />
+          </View>
+          <Space vertical size={100} />
+          <FlatList
+            contentContainerStyle={styles.flatListContainer}
+            data={[{ key: 'form' }]}
+            keyExtractor={(item) => item.key}
+            renderItem={() => (
+              <>
+              <Text style={styles.label}>Piloto</Text>
+              <Dropdown 
+                items={drivers}
+                placeholder="Selecciona un Piloto"
+                renderItemText={(item) => `${item.names} ${item.lastNames}`}
+                onItemSelected={(item: DriverT) => handleSelectDriver(item)}
+                linkText="Agregar nuevo piloto"
+                onLinkPress={() => console.log('Botón tipo link presionado')}
+              />
+              <Text style={styles.label}>Trailer</Text>
+              <Dropdown 
+                items={trucks}
+                placeholder="Selecciona una trailer"
+                renderItemText={(item) => `${item.plate}`}
+                onItemSelected={(item: TruckT) => handleSelectTruck(item)}
+                linkText="Agregar nuevo trailer"
+                onLinkPress={() => console.log('Botón tipo link presionado')}
+              />
+              <Text style={styles.label}>Notas</Text>
+              <TextInput
+                style={styles.input}
+                value={notes}
+                onChangeText={setNotes}
+                placeholder="Agregar comentarios para el viaje."
+              />
+              </>
+            )}
+            />
+          <TouchableOpacity style={styles.createButton} onPress={handleContinueButton}>
+            <Text style={styles.buttonText}>Crear Viaje</Text>
+          </TouchableOpacity>
+        </View>
+      </SafeAreaView>
+    </BackgroundView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
-    backgroundColor: '#fff',
+    padding: 20
   },
   flatListContainer: {
     flexGrow: 1,
@@ -141,6 +153,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     marginBottom: 8,
+    color: '#71a780'
   },
   input: {
     height: 40,
@@ -158,7 +171,18 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 18,
     marginTop: 20,
-  }
+  },
+  createButton: {
+    marginHorizontal: 50,
+    backgroundColor: "#2073cdbd",
+    paddingVertical: 10,
+    borderRadius: 4,
+  },
+  buttonText: {
+    color: "#fff",
+    textAlign: 'center',
+    fontWeight: "bold",
+  },
 });
 
 export default AddTransportDetails;

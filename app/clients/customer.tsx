@@ -1,3 +1,4 @@
+import { useGetAllClientsQuery } from "@api/clientApi";
 import Space from "@components/Space";
 import { useRouter } from "expo-router";
 import { FC } from "react";
@@ -10,6 +11,9 @@ const Customer: FC<CustomerPropsT> = ({ }) => {
 
   // hooks
   const router = useRouter();
+
+  const { data } = useGetAllClientsQuery({})
+  console.log('data ', data)
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
