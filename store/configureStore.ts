@@ -11,6 +11,7 @@ import { driverApi } from "@api/driverApi";
 import { containerApi } from "@api/containerApi";
 import { documentApi } from "@api/documentApi";
 import { makeApi } from "@api/makeApi";
+import { shipmentStatusApi } from "@api/shipmentStatusApi";
 
 const store = configureStore({
   reducer: rootReducers,
@@ -20,6 +21,7 @@ const store = configureStore({
     })
       .concat(authApi.middleware)
       .concat(shipmentApi.middleware)
+      .concat(shipmentStatusApi.middleware)
       .concat(documentApi.middleware)
       .concat(destinationApi.middleware)
       .concat(originApi.middleware)

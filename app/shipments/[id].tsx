@@ -8,11 +8,13 @@ import IconMapper from '@components/IconMapper';
 import { statusMapper } from 'utils/common/statusMapper';
 import CustomHeader from '@components/CustomHeader';
 import BackgroundView from '@components/BackgroundView';
+import { useGetShipmentByIdQuery } from '@api/shipmentApi';
 
 const ShipmentView = () => {
-  const { shipment: shipmentString } = useLocalSearchParams<{ shipment: any, id: string }>();
-  const shipment = JSON.parse(shipmentString);
-  console.log('shipment ', shipment)
+  const { id } = useLocalSearchParams<{ id: string }>();
+
+  const { data: shipment, isLoading, isError } = useGetShipmentByIdQuery(id);
+
   // hooks
   const router = useRouter();
 
@@ -24,10 +26,18 @@ const ShipmentView = () => {
     destination,
     client,
     shipmentStatus,
-    driver,
+    user: driver,
     truck,
     notes,
   } = shipment ?? {};
+  console.log('shipment ', shipment)
+
+  const handleEdit = () => {
+    router.push({
+      pathname: `/shipments/edit/[id]`,
+      params: { id, shipment: JSON.stringify(shipment) }
+    })
+  }
 
   return (
     <BackgroundView>
@@ -41,6 +51,7 @@ const ShipmentView = () => {
               router.back();
             }}
             showEditButton={true}
+            onEditPress={handleEdit}
           />
         <Space vertical size={20} />
         <View style={{
@@ -97,7 +108,7 @@ const ShipmentView = () => {
             }
           </View>
           <View style={{ width: '50%' }}>
-            <TouchableOpacity style={styles.createButton} onPress={() => {}}>
+            <TouchableOpacity style={styles.createButton} onPress={handleEdit}>
               <Text style={styles.buttonText}>Editar</Text>
             </TouchableOpacity>
           </View>
@@ -142,16 +153,10 @@ const ShipmentView = () => {
                 <Text style={styles.text}>{destination?.address || 'N/A'}</Text>
               </View>
               <Space vertical size={10} />
-              <Text style={styles.label}>Cliente</Text>
-              <Space vertical size={5} />
-              <Text style={styles.text}>{client?.name || 'N/A'}</Text>
-              <Text style={styles.text}>{client?.email || 'N/A'}</Text>
-              <Text style={styles.text}>{client?.telephone || 'N/A'}</Text>
-              <Space vertical size={10} />
               <View>
                 <Text style={styles.label}>Piloto</Text>
                 <Space vertical size={5} />
-                <Text style={styles.text}>{driver?.name || 'N/A'}</Text>
+                <Text style={styles.text}>{`${driver?.names} ${driver?.lastNames}` || 'N/A'}</Text>
               </View>
               <Space vertical size={10} />
               <View>

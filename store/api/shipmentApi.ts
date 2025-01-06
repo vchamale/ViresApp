@@ -8,9 +8,24 @@ export const shipmentApi = createApi({
     timeout: 3000,
     headers: { 'Content-type': 'application/json' }
   }),
+  tagTypes: ['Shipment'],
   endpoints: build => ({
-    getAllSipments: build.query<any, any>({
-      query: () => `/`,
+    getAllShipments: build.query<any, any>({
+      query: ({ search, startDate, endDate }) => {
+        const params: Record<string, string> = {};
+
+        if (search) params.search = search;
+        if (startDate) params.startDate = startDate;
+        if (endDate) params.endDate = endDate;
+
+        const queryString = new URLSearchParams(params).toString();
+        return `/?${queryString}`;
+      },
+      providesTags: ['Shipment'],
+    }),
+    getShipmentById: build.query<any, string | number>({
+      query: (id) => `/${id}`,
+      providesTags: (result, error, id) => [{ type: 'Shipment', id }],
     }),
     createShipment: build.mutation<{ data: any }, Partial<any>>({
       query(body) {
@@ -19,16 +34,18 @@ export const shipmentApi = createApi({
           method: 'POST',
           body
         };
-      }
+      },
+      invalidatesTags: ['Shipment'],
     }),
     updateShipment: build.mutation<any, Partial<any>>({
-      query(body) {
+      query({ id, body }) {
         return {
-          url: '/',
+          url: `/${id}`,
           method: 'PUT',
           body
         };
-      }
+      },
+      invalidatesTags: ['Shipment'],
     }),
     deleteShipment: build.mutation<any, Partial<any>>({
       query({ id }) {
@@ -36,9 +53,10 @@ export const shipmentApi = createApi({
           url: `/${id}`,
           method: 'DELETE'
         };
-      }
+      },
+      invalidatesTags: ['Shipment'],
     })
   })
 });
 
-export const { useCreateShipmentMutation, useUpdateShipmentMutation, useGetAllSipmentsQuery, useLazyGetAllSipmentsQuery } = shipmentApi;
+export const { useCreateShipmentMutation, useUpdateShipmentMutation, useGetAllShipmentsQuery, useLazyGetAllShipmentsQuery, useGetShipmentByIdQuery } = shipmentApi;

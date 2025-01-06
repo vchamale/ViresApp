@@ -75,7 +75,7 @@ const EditPolicy: React.FC = () => {
           color="#fff"
           onBackPress={() => router.back()}
         />
-        <CustomAlert 
+        <CustomAlert
           isVisible={isAlertVisible}
           title="Estas seguro de modificar?"
           titleColor="#ff0809bd"

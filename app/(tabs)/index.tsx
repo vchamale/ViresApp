@@ -1,83 +1,71 @@
-import { FC, useEffect, useRef, useState } from "react";
-import {
-  Pressable,
-  SafeAreaView,
-  StyleSheet,
-  Text,
-  View,
-  ImageBackground,
-  TouchableOpacity,
-} from "react-native";
-import PagerView from "react-native-pager-view";
+import React from "react";
+import { View, Text, StyleSheet, Dimensions, ImageBackground, TouchableOpacity, SafeAreaView, Pressable } from "react-native";
+import Carousel from "react-native-reanimated-carousel";
 import { useRouter } from "expo-router";
 import Space from "@components/Space";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
 import { BlurView } from "expo-blur";
-import TruckImage from "../../assets/images/current_trucks.webp";
-import TruckMountingImage from "../../assets/images/truck_mounting.webp";
-import ShipmentFinished from "../../assets/images/shipment_finished.webp";
 
-type HomePropsT = {
-  navigation: any;
-};
+const { width: viewportWidth } = Dimensions.get("window");
 
-const Home: FC<HomePropsT> = () => {
-  // hooks
+const pages = [
+  {
+    key: 1,
+    title: "Viajes en Curso",
+    description: "",
+    imageBackground: require("../../assets/images/current_trucks.webp"),
+    route: "/(tabs)/shipment",
+    searchTerm: "RUTA",
+  },
+  {
+    key: 2,
+    title: "Viajes Creados",
+    description: "",
+    imageBackground: require("../../assets/images/truck_mounting.webp"),
+    route: "/(tabs)/shipment",
+    searchTerm: "CREADO",
+  },
+  {
+    key: 3,
+    title: "Viajes Finalizados",
+    description: "",
+    imageBackground: require("../../assets/images/shipment_finished.webp"),
+    route: "/(tabs)/shipment",
+    searchTerm: "FINALIZADO",
+  },
+];
+
+const Home = () => {
   const router = useRouter();
-
-  // Refs
-  const pagerRef = useRef<PagerView>(null);
-
-  // State
-  const [currentPage, setCurrentPage] = useState(0);
-
-  const pages = [
-    {
-      key: 1,
-      title: "Viajes en Curso",
-      description: "",
-      imageBackground: TruckImage,
-      route: "/current-trips",
-    },
-    {
-      key: 2,
-      title: "Viajes Creados",
-      description: "",
-      imageBackground: TruckMountingImage,
-      route: "/created-trips",
-    },
-    {
-      key: 3,
-      title: "Viajes Finalizados",
-      description: "",
-      imageBackground: ShipmentFinished,
-      route: "/finished-trips",
-    },
-  ];
-
-  const intervalTime = 3000; // Tiempo en milisegundos entre cambios
-
-  useEffect(() => {
-    let currentIndex = 0;
-    const interval = setInterval(() => {
-      currentIndex = (currentIndex + 1) % pages.length;
-      pagerRef.current?.setPage(currentIndex); // Cambia de página
-    }, intervalTime);
-
-    return () => clearInterval(interval); // Limpia el intervalo al desmontar
-  }, [pages.length]);
-
-  const handlePageSelected = (e: any) => {
-    setCurrentPage(e.nativeEvent.position); // Actualiza la página actual al cambiar
-  };
-
-  const handleNavigate = (route: string) => {
-    router.push(route);
-  };
 
   const today = new Date(); // Fecha de hoy
   const formattedDate = format(today, "EEEE, d 'de' MMMM", { locale: es });
+
+  const renderItem = ({ item }: { item: typeof pages[0] }) => (
+    <View style={styles.slide}>
+      <ImageBackground
+        source={item.imageBackground}
+        style={styles.imageBackground}
+        resizeMode="cover"
+      >
+        <BlurView intensity={0} style={styles.blurView}>
+          <Text style={styles.title}>{item.title}</Text>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() =>
+              router.push({
+                pathname: item.route,
+                params: { searchTermParam: item.searchTerm },
+              })
+            }
+          >
+            <Text style={styles.buttonText}>Ir</Text>
+          </TouchableOpacity>
+        </BlurView>
+      </ImageBackground>
+    </View>
+  );
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -100,47 +88,18 @@ const Home: FC<HomePropsT> = () => {
           </View>
         </View>
         <Space vertical size={10} />
-        <PagerView
-          style={styles.container}
-          initialPage={0}
-          ref={pagerRef}
-          onPageSelected={handlePageSelected}
-        >
-          {pages.map((page) => (
-            <View style={[styles.page, styles.pageContainer]} key={page.key}>
-              <ImageBackground
-                source={page.imageBackground}
-                style={styles.imageBackground}
-                resizeMode="cover"
-              >
-                <BlurView intensity={0} style={styles.blurView}>
-                  <Text style={styles.pageTitle}>{page.title}</Text>
-                  <Text style={styles.pageSubtitle}>{page.description}</Text>
-                  <TouchableOpacity
-                    style={styles.navigateButton}
-                    onPress={() => handleNavigate(page.route)}
-                  >
-                    <Text style={styles.navigateButtonText}>Ir</Text>
-                  </TouchableOpacity>
-                </BlurView>
-              </ImageBackground>
-            </View>
-          ))}
-        </PagerView>
-        <Space vertical size={10} />
-        <View style={styles.indicatorContainer}>
-          {pages.map((_, index) => (
-            <View
-              key={index}
-              style={[
-                styles.indicator,
-                currentPage === index && styles.activeIndicator,
-              ]}
-            />
-          ))}
-        </View>
-        <Space vertical size={50} />
-        <View style={{ flex: 1, flexDirection: "row", flexWrap: "wrap" }}></View>
+        <Carousel
+          style={styles.carousel}
+          data={pages}
+          renderItem={renderItem}
+          width={viewportWidth - 20}
+          height={200}
+          autoPlay={true}
+          autoPlayInterval={3000}
+          loop={true}
+          onSnapToItem={(index) => console.log("Current slide:", index)}
+          scrollAnimationDuration={1000}
+        />
       </View>
     </SafeAreaView>
   );
@@ -149,60 +108,49 @@ const Home: FC<HomePropsT> = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-  },
-  page: {
     justifyContent: "center",
     alignItems: "center",
+    backgroundColor: "#fff"
   },
-  pageContainer: {
-    flex: 1,
-    borderRadius: 20,
-    overflow: "hidden",
-  },
-  imageBackground: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    width: "100%",
+  carousel: {
+    flex: 1
   },
   blurView: {
     flex: 1,
     justifyContent: "flex-start",
     alignItems: "flex-start",
-    paddingLeft: 10,
-    paddingTop: 10,
+    // paddingLeft: 10,
+    // paddingTop: 10,
     width: "100%",
-    backgroundColor: "rgba(0, 0, 0, 0.4)",
+    backgroundColor: "rgba(0, 0, 0, 0.4)"
   },
-  pageTitle: {
-    color: "#fff",
-    fontWeight: "900",
-    fontSize: 20,
-    textAlign: "center",
+  slide: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: "center",
+    borderRadius: 10,
+    overflow: "hidden",
+    backgroundColor: "#ddd",
   },
-  pageSubtitle: {
-    color: "#fff",
-    fontWeight: "900",
-    fontSize: 16,
-    textAlign: "center",
-    marginTop: 10,
-  },
-  indicatorContainer: {
-    flexDirection: "row",
+  imageBackground: {
+    width: "100%",
+    height: "100%",
     justifyContent: "center",
     alignItems: "center",
   },
-  indicator: {
-    width: 8,
-    height: 8,
-    borderRadius: 4,
-    backgroundColor: "#ccc",
-    marginHorizontal: 5,
+  title: {
+    color: "#fff",
+    fontWeight: "bold",
+    fontSize: 18,
+    marginTop: 10,
+    marginLeft: 10,
+    // textAlign: "center",
   },
-  activeIndicator: {
-    backgroundColor: "#5db075",
-  },
-  navigateButton: {
+  button: {
+    // marginTop: 10,
+    // backgroundColor: "#5db075",
+    // padding: 10,
+    // borderRadius: 5,
     position: "absolute",
     bottom: 20,
     right: 20,
@@ -211,10 +159,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 25,
     paddingVertical: 10,
   },
-  navigateButtonText: {
+  buttonText: {
     color: "#fff",
-    fontWeight: "800",
-    fontSize: 14,
+    fontWeight: "bold",
     textAlign: "center",
   },
 });

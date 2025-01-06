@@ -6,69 +6,241 @@ import {
   TouchableOpacity,
   SafeAreaView,
   StyleSheet,
+  Pressable,
+  ScrollView,
 } from "react-native";
-import { useRouter, useSearchParams } from "expo-router";
+import { useRouter, useLocalSearchParams } from "expo-router";
 import CustomHeader from "@components/CustomHeader";
 import Space from "@components/Space";
 import BackgroundView from "@components/BackgroundView";
 import Dropdown from "@components/Dropdown";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import CustomAlert from "@components/CustomAlert";
+import { useUpdateShipmentMutation } from "@api/shipmentApi";
+import { useGetAllShipmentsStatusQuery } from "@api/shipmentStatusApi";
+import { useGetAllOriginsQuery } from "@api/originApi";
+import { useGetAllDestinationsQuery } from "@api/destinationApi";
+import { useGetAllClientsQuery } from "@api/clientApi";
+import { useGetAllTrucksQuery } from "@api/truckApi";
+import { useGetAllDriversQuery } from "@api/driverApi";
 
 const EditShipment: React.FC = () => {
-  const { shipment } = useSearchParams(); // Recibe los datos del envío como string
+  const { shipment, id } = useLocalSearchParams(); // Recibe los datos del envío como string
   const parsedShipment = JSON.parse(shipment as string);
 
   const [containerNumber, setContainerNumber] = useState<string>("");
-  const [origin, setOrigin] = useState<string>("");
-  const [destination, setDestination] = useState<string>("");
   const [weight, setWeight] = useState<string>("");
-  const [status, setStatus] = useState<string>("");
+  const [price, setPrice] = useState<string>("");
+  const [client, setClient] = useState<string>("");
+  const [driver, setDriver] = useState<string>("");
+  const [vehicle, setVehicle] = useState<string>("");
+  const [isAlertVisible, setAlertVisible] = useState<boolean>(false);
+  const [isModified, setIsModified] = useState<boolean>(false);
+  const [shipmentStatusSelected, setShipmentStatusSelected] = useState(null);
+  const [originSelected, setOriginSelected] = useState(null);
+  const [destinationSelected, setDestinationSelected] = useState(null);
+  const [clientSelected, setClientSelected] = useState(null);
+  const [vehicleSelected, setVehicleSelected] = useState(null);
+  const [driverSelected, setDriverSelected] = useState(null);
 
   const router = useRouter();
+
+  // mutations
+  const [modifyShipment] = useUpdateShipmentMutation();
+
+  // Queries
+  const { data: shipmentStatusList, isLoading: isShipmentStatusLoading, isError: isShipmentStatusError} = useGetAllShipmentsStatusQuery({});
+  const { data: originList, isLoading: isOriginLoading, isError: isOriginError} = useGetAllOriginsQuery({});
+  const { data: destinationList, isLoading: isDestinationLoading, isError: isDestinationError} = useGetAllDestinationsQuery({});
+  // const { data: clientList, isLoading: isClientLoading, isError: isClientError} = useGetAllClientsQuery({});
+  const { data: vehicleList, isLoading: isVehicleLoading, isError: isVehicleError} = useGetAllTrucksQuery({});
+  const { data: driverList, isLoading: isdriverLoading, isError: isdriverError} = useGetAllDriversQuery({});
 
   // Inicializar los valores con los datos existentes del envío
   useEffect(() => {
     if (parsedShipment) {
       setContainerNumber(parsedShipment.container?.containerNumber || "");
-      setOrigin(parsedShipment.origin?.name || "");
-      setDestination(parsedShipment.destination?.name || "");
       setWeight(parsedShipment.weight?.toString() || "");
-      setStatus(parsedShipment.shipmentStatus?.description || "");
+      setPrice(parsedShipment.price?.toString() || "");
     }
   }, [parsedShipment]);
 
+  useEffect(() => {
+    if (parsedShipment && shipmentStatusList?.length > 0) {
+      const shipmentStatus = shipmentStatusList?.find((shipmentStatus: any) => parsedShipment.shipmentStatusId === shipmentStatus.shipmentStatusId)
+      setShipmentStatusSelected(shipmentStatus);
+    }
+  }, [shipmentStatusList]);
+
+  useEffect(() => {
+    if (parsedShipment && originList?.length > 0) {
+      const origin = originList?.find((origin: any) => parsedShipment.originId === origin.originId)
+      setOriginSelected(origin);
+    }
+  }, [originList]);
+
+  useEffect(() => {
+    if (parsedShipment && destinationList?.length > 0) {
+      const destination = destinationList?.find((destination: any) => parsedShipment.destinationId === destination.destinationId)
+      setDestinationSelected(destination);
+    }
+  }, [destinationList]);
+
+  // useEffect(() => {
+  //   if (parsedShipment && clientList?.length > 0) {
+  //     const client = clientList?.find((client: any) => parsedShipment.clientId === client.clientId)
+  //     setClientSelected(client);
+  //   }
+  // }, [clientList]);
+
+  useEffect(() => {
+    if (parsedShipment && vehicleList?.length > 0) {
+      const vehicle = vehicleList?.find((truck: any) => parsedShipment.truckId === truck.truckId)
+      setVehicleSelected(vehicle);
+    }
+  }, [vehicleList]);
+
+  useEffect(() => {
+    if (parsedShipment && driverList?.length > 0) {
+      const driver = driverList?.find((driver: any) => parsedShipment.user?.userId === driver.userId)
+      setDriverSelected(driver);
+    }
+  }, [vehicleList]);
+
+  useEffect(() => {
+    setIsModified(
+      containerNumber !== parsedShipment.container?.containerNumber ||
+      shipmentStatusSelected?.shipmentStatusId !== parsedShipment.shipmentStatus?.shipmentStatusId ||
+      originSelected?.originId !== parsedShipment.origin?.originId ||
+      destinationSelected?.destinationId !== parsedShipment.destination?.destinationId ||
+      vehicleSelected?.truckId !== parsedShipment.truck?.truckId ||
+      driverSelected?.userId !== parsedShipment.user?.userId ||
+      price !== parsedShipment.price ||
+      weight !== parsedShipment.weight
+    );
+  }, [
+      containerNumber,
+      parsedShipment.container?.containerNumber,
+      shipmentStatusSelected?.shipmentStatusId,
+      parsedShipment.shipmentStatus?.shipmentStatusId,
+      originSelected?.originId,
+      parsedShipment.origin?.originId,
+      destinationSelected?.destinationId,
+      parsedShipment.destination?.destinationId,
+      vehicleSelected?.truckId,
+      parsedShipment.truck?.truckId,
+      driverSelected?.userId,
+      parsedShipment.user?.userId,
+      price,
+      parsedShipment.price,
+      weight,
+      parsedShipment.weight
+    ]);
+
   const handleSubmit = () => {
-    if (!containerNumber || !origin || !destination || !weight || !status) {
+    if (
+        !containerNumber ||
+        !weight ||
+        !price ||
+        !shipmentStatusSelected?.shipmentStatusId ||
+        !originSelected?.originId || 
+        !destinationSelected?.destinationId ||
+        !vehicleSelected?.truckId
+      ) {
       alert("Por favor completa todos los campos obligatorios");
       return;
     }
 
-    const updatedShipment = {
-      containerNumber,
-      origin,
-      destination,
-      weight: parseFloat(weight),
-      status,
-    };
-
-    console.log("Envío actualizado:", updatedShipment);
-
-    // Simulación de envío de datos
-    alert("Envío actualizado correctamente");
-    router.back();
+    setAlertVisible(true)
   };
+
+  const updateShipment = async () => {
+    try {
+      const updatedShipment = {
+        containerNumber,
+        weight: parseFloat(weight),
+        price: parseFloat(price),
+        shipmentStatus: shipmentStatusSelected?.shipmentStatusId,
+        origin: originSelected?.originId,
+        destination: destinationSelected?.destinationId,
+        truck: vehicleSelected?.truckId
+      };
+  
+      console.log("Envío actualizado:", updatedShipment);
+
+      const response = await modifyShipment({ id, body: updatedShipment }).unwrap(); // unwrap para manejar errores
+      console.log('Shipment updated successfully:', response);
+      setAlertVisible(false);
+      router.back();
+    } catch (error) {
+      console.error('Error updating shipment:', error);
+      alert('Hubo un error al actualizar el shipmento.');
+    }
+  };
+
+  const handleShipmentStatusSelected = (item: any) => {
+    setShipmentStatusSelected(item);
+  }
+
+  const handleOriginSelected = (item: any) => {
+    setOriginSelected(item);
+  }
+
+  const handleDestinationSelected = (item: any) => {
+    setDestinationSelected(item);
+  }
+
+  // const handleClientSelected = (item: any) => {
+  //   setClientSelected(item);
+  // }
+
+  const handleVehicleSelected = (item: any) => {
+    setVehicleSelected(item);
+  }
+
+  const handleDriverSelected = (item: any) => {
+    setDriverSelected(item);
+  }
 
   return (
     <BackgroundView>
       <SafeAreaView style={{ flex: 1 }}>
+        <Space vertical size={15} />
         <CustomHeader
           title="Editar Envío"
-          backgroundColor="#5db075"
+          backgroundColor="#71a780"
           color="#fff"
           onBackPress={() => router.back()}
         />
-        <Space vertical size={20} />
-        <View style={styles.container}>
-          <Text style={styles.label}>No. Contenedor *</Text>
+        <CustomAlert
+          isVisible={isAlertVisible}
+          title="Estas seguro de modificar?"
+          titleColor="#ff0809bd"
+          text="Estas a punto de modificar la poliza, deseas continuar?"
+          onClose={() => { setAlertVisible(false) }}
+          buttons={[
+            <Pressable onPress={() => { setAlertVisible(false) }}>
+              <View style={styles.cancelButtonAlert}>
+                <Text style={styles.cancelButtonTextAlert}>Cancelar</Text>
+              </View>
+            </Pressable>,
+            <Pressable onPress={() => { 
+              updateShipment()
+              setAlertVisible(false) 
+              }}>
+              <View style={styles.continueButtonAlert}>
+                <Text style={styles.continueButtonTextAlert}>Modificar</Text>
+              </View>
+            </Pressable>
+          ]}
+        />
+        <Space vertical size={50} />
+        <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
+          <MaterialCommunityIcons name="file-document-edit" size={150} color="#fff" />
+        </View>
+        <Space vertical size={120} />
+        <ScrollView style={styles.container}>
+          <Text style={styles.label}>No. Contenedor</Text>
           <TextInput
             style={styles.input}
             value={containerNumber}
@@ -76,23 +248,64 @@ const EditShipment: React.FC = () => {
             placeholder="Ingrese el número del contenedor"
           />
 
-          <Text style={styles.label}>Origen *</Text>
-          <TextInput
-            style={styles.input}
-            value={origin}
-            onChangeText={setOrigin}
-            placeholder="Ingrese el origen"
+          <Text style={styles.label}>Estado</Text>
+          <Dropdown
+            items={shipmentStatusList}
+            renderItemText={(item) => `${item?.description}`}
+            onItemSelected={(item) => handleShipmentStatusSelected(item)}
+            placeholder="Selecciona un estado"
+            initialSelectedItem={shipmentStatusSelected ?? undefined}
           />
 
-          <Text style={styles.label}>Destino *</Text>
-          <TextInput
-            style={styles.input}
-            value={destination}
-            onChangeText={setDestination}
-            placeholder="Ingrese el destino"
+          <Text style={styles.label}>Origen</Text>
+          <Dropdown
+            items={originList}
+            renderItemText={(item) => `${item?.name}`}
+            onItemSelected={(item) => handleOriginSelected(item)}
+            placeholder="Selecciona punto de partida"
+            initialSelectedItem={originSelected ?? undefined}
           />
 
-          <Text style={styles.label}>Peso (Kg) *</Text>
+          <Text style={styles.label}>Destino</Text>
+          <Dropdown
+            items={destinationList}
+            renderItemText={(item) => `${item?.name}`}
+            onItemSelected={(item) => handleDestinationSelected(item)}
+            placeholder="Selecciona destino"
+            initialSelectedItem={destinationSelected ?? undefined}
+          />
+
+          {/* <Text style={styles.label}>Cliente</Text>
+          <Dropdown
+            items={clientList}
+            placeholder="Selecciona un cliente"
+            placeholderColor='#71a780'
+            renderItemText={(item) => `${item?.name}`}
+            onItemSelected={(item) => handleClientSelected(item)}
+            initialSelectedItem={clientSelected ?? undefined}
+          /> */}
+
+          <Text style={styles.label}>Piloto</Text>
+          <Dropdown
+            items={driverList}
+            placeholder="Selecciona un piloto"
+            placeholderColor='#71a780'
+            renderItemText={(item) => `${item?.names}`}
+            onItemSelected={(item) => handleDriverSelected(item)}
+            initialSelectedItem={driverSelected ?? undefined}
+          />
+
+          <Text style={styles.label}>Vehiculo</Text>
+          <Dropdown
+            items={vehicleList}
+            placeholder="Selecciona un vehiculo"
+            placeholderColor='#71a780'
+            renderItemText={(item) => `${item?.plate}`}
+            onItemSelected={(item) => handleVehicleSelected(item)}
+            initialSelectedItem={vehicleSelected ?? undefined}
+          />
+
+          <Text style={styles.label}>Peso (Kg)</Text>
           <TextInput
             style={styles.input}
             value={weight}
@@ -101,22 +314,24 @@ const EditShipment: React.FC = () => {
             placeholder="Ingrese el peso"
           />
 
-          <Text style={styles.label}>Estado *</Text>
-          <Dropdown
-            items={[
-              { label: "En Proceso", value: "En Proceso" },
-              { label: "Entregado", value: "Entregado" },
-              { label: "Cancelado", value: "Cancelado" },
-            ]}
-            selectedValue={status}
-            onValueChange={(value) => setStatus(value)}
-            placeholder="Selecciona el estado"
+          <Text style={styles.label}>Precio</Text>
+          <TextInput
+            style={styles.input}
+            value={price}
+            onChangeText={setPrice}
+            keyboardType="numeric"
+            placeholder="Ingrese el precio"
           />
 
-          <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
+          <TouchableOpacity style={[
+            styles.submitButton,
+            !isModified && styles.disabledButton,
+            ]} onPress={handleSubmit}
+            disabled={!isModified}
+            >
             <Text style={styles.submitButtonText}>Guardar Cambios</Text>
           </TouchableOpacity>
-        </View>
+        </ScrollView>
       </SafeAreaView>
     </BackgroundView>
   );
@@ -152,6 +367,34 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontWeight: "bold",
   },
+  cancelButtonAlert: {
+    backgroundColor: "#ff0809bd",
+    paddingVertical: 10,
+    paddingHorizontal: 35,
+    borderRadius: 4,
+    marginTop: 20,
+  },
+  cancelButtonTextAlert: {
+    color: "#fff",
+    fontSize: 16,
+    textAlign: "center",
+  },
+  continueButtonAlert: {
+    backgroundColor: "#3f51b5",
+    paddingVertical: 10,
+    paddingHorizontal: 35,
+    borderRadius: 4,
+    marginTop: 20,
+  },
+  continueButtonTextAlert: {
+    color: "#fff",
+    fontSize: 16,
+    textAlign: "center",
+  },
+  disabledButton: {
+    backgroundColor: "#9fa8da",
+    opacity: 0.7,
+  }
 });
 
 export default EditShipment;

@@ -12,10 +12,12 @@ import { driverApi } from "@api/driverApi";
 import { containerApi } from "@api/containerApi";
 import { documentApi } from "@api/documentApi";
 import { makeApi } from "@api/makeApi";
+import { shipmentStatusApi } from "@api/shipmentStatusApi";
 
 const rootReducers = combineReducers({
   [authApi.reducerPath]: authApi.reducer,
   [shipmentApi.reducerPath]: shipmentApi.reducer,
+  [shipmentStatusApi.reducerPath]: shipmentStatusApi.reducer,
   [documentApi.reducerPath]: documentApi.reducer,
   [destinationApi.reducerPath]: destinationApi.reducer,
   [originApi.reducerPath]: originApi.reducer,

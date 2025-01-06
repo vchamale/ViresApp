@@ -1,4 +1,4 @@
-import { FC, useCallback, useState } from "react";
+import { FC, useCallback, useEffect, useState } from "react";
 import {
   FlatList,
   Pressable,
@@ -11,9 +11,9 @@ import {
   Platform,
   RefreshControl,
 } from "react-native";
-import { useRouter } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import { useGetAllSipmentsQuery, useLazyGetAllSipmentsQuery } from "@api/shipmentApi";
+import { useGetAllShipmentsQuery, useLazyGetAllShipmentsQuery } from "@api/shipmentApi";
 import CustomHeader from "@components/CustomHeader";
 import Space from "@components/Space";
 import SearchBox from "@components/SearchBox";
@@ -22,10 +22,14 @@ import CalendarBox from "@components/CalendarBox";
 import { ActivityIndicator } from "@react-native-material/core";
 import ShipmentCard from "@components/ShipmentCard";
 import { ShipmentT } from "@types/Shipment";
+import { format } from "date-fns";
 
 const Shipment: FC = () => {
+
+  const { searchTermParam } = useLocalSearchParams<{ searchTermParam: any }>();
   // State
   const [refreshing, setRefreshing] = useState(false);
+  const [searchTerm, setSearchTerm] = useState<string>("");
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [endDate, setEndDate] = useState<Date | null>(null);
   const [containerSearch, setContainerSearch] = useState<string>("");
@@ -33,25 +37,45 @@ const Shipment: FC = () => {
   const [showEndDatePicker, setShowEndDatePicker] = useState(false);
   const [refetch, setRefetch] = useState<(() => Promise<void>) | null>(null);
 
+  useEffect(() => {
+    if (searchTermParam) {
+      // Ejecutar la consulta solo una vez si viene el parámetro
+      trigger({ search: searchTermParam })
+        .unwrap()
+        .finally(() => {
+          // Elimina el parámetro de la URL después de procesarlo
+          router.replace('/(tabs)/shipment');
+        });
+    }
+  }, [searchTermParam]);
+
   // hooks
   const router = useRouter();
 
   // Api calls
-  const [trigger, { data: shipments, isLoading, isError, error }] = useLazyGetAllSipmentsQuery();
-
-  console.log('error ', error)
-
-  // Functions
-  const onRefresh = useCallback(() => {
-    setRefreshing(true);
-    trigger({})
-      .unwrap()
-      .finally(() => setRefreshing(false));
-  }, [trigger]);
+  const [trigger, { data: shipments, isLoading, isError, error }] = useLazyGetAllShipmentsQuery();
 
   const handleSearch = () => {
-    trigger({});
+    setRefreshing(true);
+    const params: Record<string, string> = {};
+    if (searchTerm) params.search = searchTerm;
+    if (startDate) {
+      const formattedStartDate = format(startDate as Date, 'yyyy-MM-dd');
+      params.startDate = formattedStartDate;
+    }
+    if (endDate) {
+      const formattedEndDate = format(endDate, 'yyyy-MM-dd');
+      params.endDate = formattedEndDate;
+    }
+
+    trigger(params)
+      .unwrap()
+      .finally(() => setRefreshing(false));
   };
+
+  const onRefresh = useCallback(() => {
+    handleSearch()
+  }, [handleSearch]);
 
   const handleCreateNewShipment = () => {
     router.push("/shipments/create/add-shipment-client");
@@ -66,7 +90,7 @@ const Shipment: FC = () => {
       date={new Date().toDateString()}
       onViewPress={() => router.push({
         pathname: `/shipments/[id]`,
-        params: { id: item.shipmentId, shipment: JSON.stringify(item) }
+        params: { id: item.shipmentId }
       })}
     />
   )};
@@ -90,8 +114,8 @@ const Shipment: FC = () => {
           placeholder="Buscar contenedor" 
           iconColor="#71a780"
           placeholderTextColor="#5db07587"
-          value={containerSearch} 
-          onChangeText={setContainerSearch}
+          value={searchTerm} 
+          onChangeText={setSearchTerm}
         />
         <View style={{ flexDirection: 'row' }}>
           <View style={{ width: '50%', paddingRight: 10 }}>
@@ -184,7 +208,7 @@ const Shipment: FC = () => {
           shipments?.length &&
             <FlatList
               data={shipments}
-              keyExtractor={(item) => item?.container?.containerNumber as string}
+              keyExtractor={(item) => `${item?.container?.containerNumber as string}-${item?.shipmentId}`}
               contentContainerStyle={styles.table}
               renderItem={renderItem}
               refreshControl={
