@@ -1,13 +1,10 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { api } from '../../config/config';
+import createBaseQuery from 'store/util/baseQuery';
 
 export const makeApi = createApi({
   reducerPath: 'make',
-  baseQuery: fetchBaseQuery({
-    baseUrl: api.vires.make,
-    timeout: 3000,
-    headers: { 'Content-type': 'application/json' }
-  }),
+  baseQuery: createBaseQuery(api.vires.make),
   tagTypes: ['Make'],
   endpoints: build => ({
     getAllMake: build.query<any, any>({

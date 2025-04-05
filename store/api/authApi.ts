@@ -22,6 +22,7 @@ export const authApi = createApi({
   reducerPath: 'auth',
   baseQuery: fetchBaseQuery({
     baseUrl: api.vires.auth,
+    credentials: 'include',
     timeout: 100000,
     headers: { 'Content-type': 'application/json' }
   }),
@@ -38,13 +39,19 @@ export const authApi = createApi({
     signUp: build.mutation<SignUpT, Partial<SignUpT>>({
       query(body) {
         return {
-          url: 'register',
+          url: '/register',
           method: 'POST',
           body
         };
       }
-    })
+    }),
+    refreshToken: build.query<{ accessToken: string }, { accessToken: string }>({
+      query: () => ({
+        url: '/refresh-token',
+        method: 'POST',
+      }),
+    }),
   })
 });
 
-export const { useLoginMutation, useSignUpMutation } = authApi;
+export const { useLoginMutation, useSignUpMutation, useLazyRefreshTokenQuery } = authApi;

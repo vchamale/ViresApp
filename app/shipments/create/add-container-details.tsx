@@ -1,16 +1,16 @@
 // R/RN
-import React, { useState } from 'react';
+import React, { useEffect } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, SafeAreaView, FlatList, TouchableOpacity } from 'react-native';
 // Expo stuff
 import { useRouter } from 'expo-router';
-import { FontAwesome6, Octicons } from '@expo/vector-icons';
+import { Octicons } from '@expo/vector-icons';
 // API
 import { useGetAllContainersQuery } from '@api/containerApi';
 import { useGetAllCurrencysQuery } from '@api/currencyApi';
 // Slices
-import { addContainerDetails as saveContainerDetails } from '@slice/shipmentSlice';
+import { addContainer, addCurrency, addPolicy, addPrice, addWeight, shipmentSelector } from '@slice/shipmentSlice';
 // Hooks
-import { useAppDispatch } from '@hooks/useRedux';
+import { useAppDispatch, useAppSelector } from '@hooks/useRedux';
 import { useSnackbar } from '@components/context/SnackbarContext';
 // Components
 import Space from '@components/Space';
@@ -20,13 +20,22 @@ import CustomHeader from '@components/CustomHeader';
 import { CurrencyT } from '@types/Currency';
 import { ContainerT } from '@types/Container';
 import BackgroundView from '@components/BackgroundView';
+import { useGetAllDocumentsQuery } from '@api/documentApi';
+import { PolicyT } from '@types/Policy';
+import DropdownWrapper from '@components/DropdownWrapper';
+import { pageControlSelector, setSingleShipmentCreatePage } from '@slice/pageControlSlice';
 
 const AddContainerDetails = () => {
   // State
-  const [container, setContainer] = useState<ContainerT | null>(null);
-  const [price, setPrice] = useState<number>(0);
-  const [weight, setWeight] = useState<number>(0);
-  const [currency, setCurrency] = useState<CurrencyT | null>(null);
+  // const [container, setContainer] = useState<ContainerT | null>(null);
+  // const [policy, setPolicy] = useState<PolicyT | null>(null);
+  // const [price, setPrice] = useState<number>(0);
+  // const [weight, setWeight] = useState<number>(0);
+  // const [currency, setCurrency] = useState<CurrencyT | null>(null);
+
+  // Store
+  const { container, policy, price, weight } = useAppSelector(shipmentSelector);
+  const { isSingleShipmentCreatePage } = useAppSelector(pageControlSelector);
 
   // Vars
 
@@ -37,27 +46,61 @@ const AddContainerDetails = () => {
 
   // API Calls
     // Querys
-    const { currentData: containers } = useGetAllContainersQuery({});
-    const { currentData: currencies } = useGetAllCurrencysQuery({});
+    const { currentData: containers, isError: isErrorContainer, error: errorContainer, isLoading: isLoadingContainer, refetch: refetchContainers, isFetching: isFetchingContainers } = useGetAllContainersQuery({});
+    const { currentData: policies, isError: isErrorPolicies, error: errorPolicies, isLoading: isLoadingPolicies, refetch: refetchPolicies, isFetching: isFetchingPolicies } = useGetAllDocumentsQuery({});
+    const { currentData: currencies, isError: isErrorCurrencies, error: errorCurrencies, isLoading: isLoadingCurrencies, refetch: refetchCurrencies, isFetching: isFetchingCurrencies } = useGetAllCurrencysQuery({});
+
     // Mutations
+
+  // effects
+  useEffect(() => {
+    if (currencies?.length) {
+      console.log('hiii ', currencies?.[0])
+      dispatch(addCurrency(currencies?.[0]));
+    }
+  }, [currencies]);
 
   // Functions
   const handlePriceInput = (text: string) => {
-    setPrice(parseFloat(text));
+    dispatch(addPrice(parseFloat(text)));
+    // setPrice(parseFloat(text));
   };
 
   const handleWeightInput = (text: string) => {
-    setWeight(parseFloat(text));
+    dispatch(addWeight(parseFloat(text)));
+    // setWeight(parseFloat(text));
   };
 
   const handleSelectContainer = (container: ContainerT) => {
-    setContainer(container);
+    console.log('container ', container);
+    if (!container.containerId) {
+    }
+    dispatch(addContainer(container));
+    // setContainer(container);
+  };
+
+  const handleSelectPolicy = (policy: PolicyT) => {
+    dispatch(addPolicy(policy));
+    // setPolicy(policy);
+  };
+
+  const handleSelectCurrency = (currency: CurrencyT) => {
+    dispatch(addCurrency(currency));
+    // setPolicy(policy);
   };
 
   const handleContinueButton = () => {
     if (!container) {
       return showSnackbar({
         message: "Debes seleccionar un contenedor para continuar.",
+        color: "red",
+        duration: 3000
+      });
+    }
+
+    if (!policy) {
+      return showSnackbar({
+        message: "Debes seleccionar una póliza para continuar.",
         color: "red",
         duration: 3000
       });
@@ -79,14 +122,25 @@ const AddContainerDetails = () => {
       });
     }
 
-    dispatch(saveContainerDetails({
-      container,
-      weight,
-      price: {
-        amount: price,
-        currency
-      }
-    }));
+    if (!price.currency) {
+      return showSnackbar({
+        message: "Debes ingresar un tipo de moneda para continuar.",
+        color: "red",
+        duration: 3000
+      });
+    }
+
+    // dispatch(saveContainerDetails({
+    //   container,
+    //   policy,
+    //   weight,
+    //   price: {
+    //     amount: price,
+    //     currency
+    //   }
+    // }));
+
+    // if ()
 
     router.push('/shipments/create/add-transport-details');
   }
@@ -104,6 +158,12 @@ const AddContainerDetails = () => {
             onBackPress={() => {
               router.back();
             }}
+            isSinglePage={isSingleShipmentCreatePage}
+            showChangeViewButton={true}
+            onChangeViewPress={() => {
+              dispatch(setSingleShipmentCreatePage(true));
+              router.replace('/shipments/create/single/create');
+            }}
           />
           <Space vertical size={50} />
           <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
@@ -116,29 +176,39 @@ const AddContainerDetails = () => {
             keyExtractor={(item) => item.key}
             renderItem={() => (
               <>
-                <Text style={styles.label}>No. Contenedor</Text>
-                <Dropdown 
+                <DropdownWrapper
+                  isLoading={isLoadingContainer}
+                  isFetching={isFetchingContainers}
+                  isError={isErrorContainer}
                   items={containers}
                   placeholder="Selecciona un contenedor"
                   renderItemText={(item) => `${item.containerNumber}`}
                   onItemSelected={(item: ContainerT) => handleSelectContainer(item)}
-                  linkText="Agregar nuevo contenedor"
-                  onLinkPress={() => console.log('Botón tipo link presionado')}
+                  refetch={refetchContainers}
+                  label="No. Contenedor"
+                  isEditable={true}
                 />
-                <Text style={styles.label}>No. Póliza</Text>
-                <Dropdown 
-                  items={containers}
+                <DropdownWrapper
+                  isLoading={isLoadingPolicies}
+                  isFetching={isFetchingPolicies}
+                  isError={isErrorPolicies}
+                  items={policies}
                   placeholder="Selecciona o Digita una póliza"
-                  renderItemText={(item) => `${item.containerNumber}`}
-                  onItemSelected={(item: ContainerT) => handleSelectContainer(item)}
+                  renderItemText={(item) => `${item.documentNumber}`}
+                  onItemSelected={(item: PolicyT) => handleSelectPolicy(item)}
+                  refetch={refetchPolicies}
+                  label="No. Póliza"
                   linkText="Agregar Póliza"
                   onLinkPress={() => console.log('Botón tipo link presionado')}
+                  isEditable={true}
                 />
                 <Text style={styles.label}>Peso</Text>
                 <View style={{
+                    flexDirection: 'column',
+                    justifyContent: 'center'
+                  }}>
+                <View style={{
                   flexDirection: 'row',
-                  alignContent: 'flex-end',
-                  alignItems: 'flex-end',
                   height: 40,
                   width: 100,
                   borderColor: '#ccc',
@@ -159,37 +229,45 @@ const AddContainerDetails = () => {
                     keyboardType="decimal-pad"
                     placeholder="0.00"
                   />
-                  <Text style={{
-                    height: 40,
-                    width: '30%',
-                    justifyContent: 'flex-end',
-                    textAlign: 'right',
-                    alignContent: 'flex-end',
-                    alignItems: 'flex-end',
-                    alignSelf: 'flex-end'
-                  }}>Kg</Text>
+                  <View style={{
+                    flex: 1
+                  }}>
+                    <Text style={{
+                      flex: 1,
+                      height: 40,
+                      paddingTop: 10
+                    }}>
+                      Kg
+                    </Text>
+                  </View>
+                  </View>
                 </View>
                 <Text style={styles.label}>Precio</Text>
                 <View style={{
                   flexDirection: 'row'
                 }}>
                   <View style={{
-                    width: 50
+                    flexDirection: 'row'
                   }}>
-                    <Dropdown
+                    <DropdownWrapper
+                      isLoading={isLoadingCurrencies}
+                      isFetching={isFetchingCurrencies}
+                      isError={isErrorCurrencies}
                       items={currencies}
-                      placeholder="Q"
+                      placeholder=""
                       renderItemText={(item) => `${item.simbol}`}
-                      onItemSelected={(item: CurrencyT) => setCurrency(item)}
+                      onItemSelected={(item: CurrencyT) => handleSelectCurrency(item)}
+                      refetch={refetchCurrencies}
+                      initialSelectedItem={currencies?.[0] ?? null}
+                    />
+                    <TextInput
+                      style={styles.inputPrice}
+                      value={price}
+                      onChangeText={handlePriceInput}
+                      keyboardType="decimal-pad"
+                      placeholder="0.00"
                     />
                   </View>
-                  <TextInput
-                    style={styles.input}
-                    value={price}
-                    onChangeText={handlePriceInput}
-                    keyboardType="decimal-pad"
-                    placeholder="0.00"
-                  />
                 </View>
               </>
             )}
@@ -222,6 +300,14 @@ const styles = StyleSheet.create({
     borderColor: '#ccc',
     borderWidth: 1,
     marginBottom: 16,
+    paddingHorizontal: 8,
+    borderRadius: 4,
+  },
+  inputPrice: {
+    height: 45,
+    borderColor: '#ccc',
+    borderWidth: 1,
+    marginTop: 10,
     paddingHorizontal: 8,
     borderRadius: 4,
   },

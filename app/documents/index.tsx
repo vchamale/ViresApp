@@ -1,5 +1,6 @@
 import React, { FC, useCallback, useState } from "react";
 import {
+  ActivityIndicator,
   FlatList,
   Platform,
   RefreshControl,
@@ -30,7 +31,7 @@ const PolicyList: FC = () => {
 
   const router = useRouter();
 
-  const [trigger, { data: policies, isLoading, isError, error }] = useLazyGetAllDocumentsQuery();
+  const [trigger, { data: policies, isLoading, isError, error, isUninitialized }] = useLazyGetAllDocumentsQuery();
 
   // Functions
 
@@ -163,15 +164,42 @@ const PolicyList: FC = () => {
           </View>
         </View>
         <Space vertical size={15} />
-        <FlatList
-          data={policies}
-          keyExtractor={(item) => item.documentId.toString()}
-          contentContainerStyle={styles.listContainer}
-          renderItem={renderItem}
-          refreshControl={
-            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-          }
-        />
+        {
+          isError && (
+            <View style={styles.center}>
+              <Text>Algo ocurrió, favor intentar de nuevo</Text>
+            </View>
+          )
+        }
+        {
+          (isLoading || refreshing)
+            ? <ActivityIndicator />
+            : <></>
+        }
+        {
+          !!policies?.length && !(isLoading || refreshing) && 
+            <FlatList
+              data={policies}
+              keyExtractor={(item) => item.documentId.toString()}
+              contentContainerStyle={styles.listContainer}
+              renderItem={renderItem}
+              refreshControl={
+                <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+              }
+            />
+        }
+        { 
+          (!policies?.length && !isUninitialized && !isLoading && !refreshing) && (
+            <View>
+              <Space vertical size={200} />
+              {
+                searchTerm 
+                  ? <Text style={{ color: '#71a780', fontWeight: '700', textAlign: 'center' }}>No se encontraron pólizas con el filtro seleccionado</Text>
+                  : <Text style={{ color: '#71a780', fontWeight: '700', textAlign: 'center' }}>No se encontraron pólizas</Text>
+              }
+            </View>
+          )
+        }
       </View>
     </SafeAreaView>
   );
@@ -222,6 +250,11 @@ const styles = StyleSheet.create({
     color: "#fff",
     textAlign: "center",
     fontWeight: "bold",
+  },
+  center: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
 

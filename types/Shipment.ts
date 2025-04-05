@@ -1,6 +1,7 @@
 import { ContainerT } from "./Container";
 import { CurrencyT } from "./Currency";
 import { DriverT } from "./Driver";
+import { PolicyT } from "./Policy";
 import { TruckT } from "./Truck";
 
 export type TenantT = {
@@ -50,12 +51,13 @@ export type ShipmentStatusT = {
 }
 
 export type ShipmentT = {
-  shipmentId: number;
+  shipmentId?: number;
   client?: ClientT | null;
   origin?: OriginT | null;
   destination?: DestinationT | null;
   shipmentStatus?: ShipmentStatusT | null;
   container: ContainerT | null;
+  policy: PolicyT | null;
   weight: number;
   price: PriceT;
   driver: DriverT | null;

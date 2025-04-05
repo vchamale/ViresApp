@@ -1,9 +1,7 @@
 import { FC, useCallback, useEffect, useState } from "react";
 import {
   ActivityIndicator,
-  FlatList,
   Pressable,
-  RefreshControl,
   SafeAreaView,
   StyleSheet,
   Text,
@@ -11,10 +9,8 @@ import {
   View,
 } from "react-native";
 import { useRouter } from "expo-router";
-import { useCreateShipmentMutation, useGetAllSipmentsQuery } from "@api/shipmentApi";
+import { useCreateShipmentMutation } from "@api/shipmentApi";
 import Space from "@components/Space";
-import CustomHeader from "@components/CustomHeader";
-import StatusIcon from "@components/StatusIcon";
 import { useAppSelector } from "@hooks/useRedux";
 import { shipmentSelector } from "@slice/shipmentSlice";
 import { FontAwesome6 } from "@expo/vector-icons";
@@ -58,11 +54,12 @@ const SaveShipment: FC<SaveShipmentPropsT> = ({}) => {
   };
 
   const handleCreateShipment = async () => {
+    console.log('shipment ', shipment.container);
+
     try {
       const newShipment = {
         originId: shipment.origin?.originId,
         destinationId: shipment.destination?.destinationId,
-        tenantId: 1,
         containerId: shipment.container?.containerId,
         driverId: shipment.driver?.userId,
         truckId: shipment.truck?.truckId,
@@ -74,10 +71,12 @@ const SaveShipment: FC<SaveShipmentPropsT> = ({}) => {
         currencyId: shipment.price.currency?.currencyId
       };
 
-      await saveShipment(newShipment)
-      setTimeout(() => {
-        setCreatingShipmentLoading(false);
-      }, 500);
+      console.log('newShipment ', newShipment);
+
+      // await saveShipment(newShipment)
+      // setTimeout(() => {
+      //   setCreatingShipmentLoading(false);
+      // }, 500);
     } catch (error) {
       setCreatingShipmentLoading(false);
       console.log('error ', error)
@@ -88,7 +87,7 @@ const SaveShipment: FC<SaveShipmentPropsT> = ({}) => {
     <SafeAreaView
       style={{
         flex: 1,
-        backgroundColor: '#5db075'
+        backgroundColor: '#71a780'
       }}
     >
       <View
@@ -111,16 +110,16 @@ const SaveShipment: FC<SaveShipmentPropsT> = ({}) => {
               padding: 25,
               backgroundColor: '#79c08e9e'
             }}>
-              <FontAwesome6 name='truck-front' size={50} color='#5db075' />
+              <FontAwesome6 name='truck-front' size={50} color='#71a780' />
             </TouchableOpacity>
             <Space vertical size={15} />
           </View>
-          <Text style={{ color: '#5db075', fontSize: 30, fontWeight: 'bold', textAlign: 'center' }}>
+          <Text style={{ color: '#71a780', fontSize: 30, fontWeight: 'bold', textAlign: 'center' }}>
             {isCreatingShipmentLoading ? 'Viaje Creado' : 'Creando Viaje'}
           </Text>
           {
             isCreatingShipmentLoading
-              ? <ActivityIndicator />
+              ? <ActivityIndicator color='#71a780' size={100} />
               :
               <>
                 <Text style={{ fontSize: 15, textAlign: 'center' }}>Se ha creado un nuevo viaje:</Text>

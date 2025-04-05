@@ -11,20 +11,26 @@ import { useGetAllOriginsQuery } from '@api/originApi';
 import Dropdown from '@components/Dropdown';
 import CustomHeader from '@components/CustomHeader';
 import { useAppDispatch, useAppSelector } from '@hooks/useRedux';
-import { addOrigin, addShipmentRoute, shipmentSelector } from '@slice/shipmentSlice';
+import { addDestination, addOrigin, shipmentSelector } from '@slice/shipmentSlice';
 import { useSnackbar } from '@components/context/SnackbarContext';
 import { DestinationT, OriginT } from '@types/Shipment';
 import BackgroundView from '@components/BackgroundView';
 import Space from '@components/Space';
+import DropdownWrapper from '@components/DropdownWrapper';
+import { pageControlSelector, setSingleShipmentCreatePage } from '@slice/pageControlSlice';
 
 const ShippingRoute = () => {
   // State
-  const [origin, setOrigin] = useState<OriginT | null>(null);
-  const [destination, setDestination] = useState<DestinationT | null>(null);
+  // const [origin, setOrigin] = useState<OriginT | null>(null);
+  // const [destination, setDestination] = useState<DestinationT | null>(null);
 
   // Vars
 
-  // Store 
+  // Store
+  const { origin, destination } = useAppSelector(shipmentSelector);
+  const { isSingleShipmentCreatePage } = useAppSelector(pageControlSelector);
+
+  console.log('origin - ', origin, ', destination - ', destination);
 
   // hooks
   const router = useRouter();
@@ -33,18 +39,20 @@ const ShippingRoute = () => {
 
   // API Calls
     // Querys
-    const { currentData: destinations } = useGetAllDestinationsQuery({});
-    const { currentData: origins } = useGetAllOriginsQuery({});
+    const { currentData: destinations, isError: isErrorDestinations, error: errorDestinations, isLoading: isLoadingDestinations, refetch: refetchDestinations, isFetching: isFetchingDestinations } = useGetAllDestinationsQuery({});
+    const { currentData: origins, isError: isErrorOrigins, error: errorOrigins, isLoading: isLoadingOrigins, refetch: refetchOrigins, isFetching: isFetchingOrigins } = useGetAllOriginsQuery({});
 
     // Mutations
 
   // Functions
-  const handleOriginSelected = (origin: OriginT) => {
-    setOrigin(origin);
+  const handleOriginSelected = (originValue: OriginT) => {
+    dispatch(addOrigin(originValue));
+    // setOrigin(origin);
   }
 
-  const handleDestinationSelected = (destination: DestinationT) => {
-    setDestination(destination)
+  const handleDestinationSelected = (destinationValue: DestinationT) => {
+    dispatch(addDestination(destinationValue));
+    // setDestination(destination)
   }
 
   const handleContinueButton = () => {
@@ -64,10 +72,10 @@ const ShippingRoute = () => {
       });
     }
 
-    dispatch(addShipmentRoute({
-      origin,
-      destination
-    }))
+    // dispatch(addShipmentRoute({
+    //   origin,
+    //   destination
+    // }))
 
     router.push('/shipments/create/add-container-details')
   }
@@ -82,6 +90,12 @@ const ShippingRoute = () => {
             title={'Ruta de viaje'}
             backgroundColor='#71a780'
             color='#fff'
+            isSinglePage={isSingleShipmentCreatePage}
+            showChangeViewButton={true}
+            onChangeViewPress={() => {
+              dispatch(setSingleShipmentCreatePage(true));
+              router.replace('/shipments/create/single/create');
+            }}
             onBackPress={() => {
               router.back();
             }}
@@ -98,22 +112,50 @@ const ShippingRoute = () => {
             renderItem={() => (
               <>
               <Text style={styles.label}>Origen</Text>
-              <Dropdown 
+              <DropdownWrapper
+                isLoading={isLoadingOrigins}
+                isFetching={isFetchingOrigins}
+                isError={isErrorOrigins}
+                items={origins}
+                placeholder="Selecciona una origen"
+                placeholderColor='#71a780'
+                renderItemText={(item) => `${item.name}`}
+                onItemSelected={(item: OriginT) => handleOriginSelected(item)}
+                refetch={refetchOrigins}
+                linkText="Agregar nuevo origen"
+                onLinkPress={() => console.log('Botón tipo link presionado')}
+                {...(origin && { initialSelectedItem: origin })}
+              />
+              {/* <Dropdown 
                 items={origins}
                 placeholder="Selecciona una origen"
                 renderItemText={(item) => `${item.name}`}
                 onItemSelected={(item: OriginT) => handleOriginSelected(item)}
                 linkText="Agregar nuevo origen"
                 onLinkPress={() => console.log('Botón tipo link presionado')}
-              />
+              /> */}
               <Text style={styles.label}>Destino</Text>
-              <Dropdown 
+              {/* <Dropdown 
                 items={destinations}
                 placeholder="Selecciona una destino"
                 renderItemText={(item) => `${item.address}`}
                 onItemSelected={(item: DestinationT) => handleDestinationSelected(item)}
                 linkText="Agregar nuevo destino"
                 onLinkPress={() => console.log('Botón tipo link presionado')}
+              /> */}
+              <DropdownWrapper
+                isLoading={isLoadingDestinations}
+                isFetching={isFetchingDestinations}
+                isError={isErrorDestinations}
+                items={destinations}
+                placeholder="Selecciona un destino"
+                placeholderColor='#71a780'
+                renderItemText={(item) => `${item.address}`}
+                onItemSelected={(item: DestinationT) => handleDestinationSelected(item)}
+                refetch={refetchDestinations}
+                linkText="Agregar nuevo destino"
+                onLinkPress={() => console.log('Botón tipo link presionado')}
+                {...(destination && { initialSelectedItem: destination })}
               />
               </>
             )}

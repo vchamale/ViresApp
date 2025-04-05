@@ -69,7 +69,8 @@ const ClientView = () => {
           }}>
           </View>
         </View>
-        <View style={{ flexDirection: 'row', paddingHorizontal: 0 }}>
+        <Space vertical size={20} />
+        <View style={{ flexDirection: 'row', paddingHorizontal: 0, marginRight: 20 }}>
             <View style={{ width: '50%' }} />
             <View style={{ width: '50%' }}>
               <TouchableOpacity style={styles.createButton} onPress={handleEdit}>
@@ -156,7 +157,7 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 4,
     padding: 15,
-    marginBottom: 15,
+    marginBottom: 15
   },
   row: {
     flexDirection: 'row',

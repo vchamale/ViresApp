@@ -1,13 +1,10 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { api } from '../../config/config';
+import createBaseQuery from 'store/util/baseQuery';
 
 export const truckApi = createApi({
   reducerPath: 'truck',
-  baseQuery: fetchBaseQuery({
-    baseUrl: api.vires.truck,
-    timeout: 3000,
-    headers: { 'Content-type': 'application/json' }
-  }),
+  baseQuery: createBaseQuery(api.vires.truck),
   tagTypes: ['Vehicle'],
   endpoints: build => ({
     getAllTrucks: build.query<any, any>({

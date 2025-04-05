@@ -1,13 +1,10 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { api } from '../../config/config';
+import createBaseQuery from 'store/util/baseQuery';
 
 export const currencyApi = createApi({
   reducerPath: 'currency',
-  baseQuery: fetchBaseQuery({
-    baseUrl: api.vires.currency,
-    timeout: 3000,
-    headers: { 'Content-type': 'application/json' }
-  }),
+  baseQuery: createBaseQuery(api.vires.currency),
   endpoints: build => ({
     getAllCurrencys: build.query<any, any>({
       query: () => `/`,

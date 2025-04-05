@@ -6,7 +6,8 @@ const baseApi = {
 export const api = {
   vires: {
     auth: `${baseApi.vires}/api/auth`,
-    shiptment: `${baseApi.vires}/api/shipments`,
+    role: `${baseApi.vires}/api/roles`,
+    shipment: `${baseApi.vires}/api/shipments`,
     shiptmentStatus: `${baseApi.vires}/api/shipments-status`,
     document: `${baseApi.vires}/api/documents`,
     destination: `${baseApi.vires}/api/destinations`,

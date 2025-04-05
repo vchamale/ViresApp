@@ -16,18 +16,23 @@ import CustomHeader from '@components/CustomHeader';
 import { useGetAllClientsQuery } from '@api/clientApi';
 import { useGetAllDriversQuery } from '@api/driverApi';
 import { useSnackbar } from '@components/context/SnackbarContext';
-import { useAppDispatch } from '@hooks/useRedux';
-import { addTransportDetails } from '@slice/shipmentSlice';
+import { useAppDispatch, useAppSelector } from '@hooks/useRedux';
+import { addDriver, addNotes, addTruck, shipmentSelector } from '@slice/shipmentSlice';
 import { DriverT } from '@types/Driver';
 import { TruckT } from '@types/Truck';
 import BackgroundView from '@components/BackgroundView';
 import { FontAwesome6 } from '@expo/vector-icons';
+import { pageControlSelector, setSingleShipmentCreatePage } from '@slice/pageControlSlice';
 
 const AddTransportDetails = () => {
   // State
-  const [driver, setDriver] = useState<DriverT | null>(null);
-  const [truck, setTruck] = useState<TruckT | null>(null);
-  const [notes, setNotes] = useState<string>('');
+  // const [driver, setDriver] = useState<DriverT | null>(null);
+  // const [truck, setTruck] = useState<TruckT | null>(null);
+  // const [notes, setNotes] = useState<string>('');
+
+  // Store
+  const { driver, truck, notes } = useAppSelector(shipmentSelector);
+  const { isSingleShipmentCreatePage } = useAppSelector(pageControlSelector);
 
   // Vars
 
@@ -45,11 +50,18 @@ const AddTransportDetails = () => {
 
   // Functions
   const handleSelectDriver = (driver: DriverT) => {
-    setDriver(driver);
+    dispatch(addDriver(driver));
+    // setDriver(driver);
   }
 
   const handleSelectTruck = (truck: TruckT) => {
-    setTruck(truck);
+    dispatch(addTruck(truck));
+    // setTruck(truck);
+  }
+
+  const handleNotes = (value: string) => {
+    dispatch(addNotes(value));
+    // setTruck(truck);
   }
 
   const handleContinueButton = async () => {
@@ -69,11 +81,11 @@ const AddTransportDetails = () => {
       });
     }
 
-    dispatch(addTransportDetails({
-      truck,
-      driver,
-      notes
-    }));
+    // dispatch(addTransportDetails({
+    //   truck,
+    //   driver,
+    //   notes
+    // }));
 
     router.push('/shipments/create/save-shipment');
   };
@@ -88,6 +100,12 @@ const AddTransportDetails = () => {
             title={'Detalle del transporte'}
             backgroundColor='#71a780'
             color='#fff'
+            isSinglePage={isSingleShipmentCreatePage}
+            showChangeViewButton={true}
+            onChangeViewPress={() => {
+              dispatch(setSingleShipmentCreatePage(true));
+              router.replace('/shipments/create/single/create');
+            }}
             onBackPress={() => {
               router.back();
             }}
@@ -125,7 +143,7 @@ const AddTransportDetails = () => {
               <TextInput
                 style={styles.input}
                 value={notes}
-                onChangeText={setNotes}
+                onChangeText={handleNotes}
                 placeholder="Agregar comentarios para el viaje."
               />
               </>

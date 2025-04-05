@@ -1,10 +1,10 @@
-import { useLoginMutation } from "@api/authApi";
+import { useLazyRefreshTokenQuery, useLoginMutation } from "@api/authApi";
 import Space from "@components/Space";
 import { useRouter } from "expo-router";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   ActivityIndicator,
-  Pressable,
+  BackHandler,
   SafeAreaView,
   StyleSheet,
   Text,
@@ -12,8 +12,12 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { Snackbar } from "@react-native-material/core";
 import IconMapper from "@components/IconMapper";
+import { getDecodedToken, saveToken, saveUserName } from "utils/secureStore";
+import { Screen } from "react-native-screens";
+import { checkDeviceForBiometrics } from "utils/biometrics/checkDeviceForBiometrics";
+import { authenticate } from "utils/biometrics/authenticate";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 const SignIn: React.FC = () => {
   // State
@@ -22,40 +26,68 @@ const SignIn: React.FC = () => {
   const [isEmptyEmailAlert, setEmptyEmailAlert] = useState<boolean>(false);
   const [isEmptyPasswordAlert, setEmptyPasswordAlert] = useState<boolean>(false);
   const [isLoading, setLoading] = useState<boolean>(false);
-  const [isPasswordVisible, setPasswordVisible] = useState<boolean>(false);
+  const [isBiometricSupported, setIsBiometricSupported] = useState<boolean>(false);
 
   // Refs
   const emailRef = useRef<TextInput>(null);
   const passwordRef = useRef<TextInput>(null);
 
-  // Requests
+  // Api calls
   const [login] = useLoginMutation();
+  const [triggerRefreshToken] = useLazyRefreshTokenQuery();
 
   // Hooks
   const router = useRouter();
+
+  // effects
+  useEffect(() => {
+    const handleBackPress = () => {
+      // Bloquea el botón de retroceso en Android
+      return true; // Previene que el sistema cierre la app
+    };
+
+    BackHandler.addEventListener('hardwareBackPress', handleBackPress);
+
+    return () => {
+      BackHandler.removeEventListener('hardwareBackPress', handleBackPress);
+    };
+  }, []);
+
+  useEffect(() => {
+    (async () => {
+      const compatible = await checkDeviceForBiometrics();
+      setIsBiometricSupported(compatible);
+    })();
+  }, []);
 
   // Functions
   const onSubmit = async () => {
     setLoading(true);
     try {
-      // if (!email) {
-      //   setEmptyEmailAlert(true);
-      //   setTimeout(() => setEmptyEmailAlert(false), 2000);
-      //   setLoading(false);
-      //   return;
-      // }
-      // if (!password) {
-      //   setEmptyPasswordAlert(true);
-      //   setTimeout(() => setEmptyPasswordAlert(false), 2000);
-      //   setLoading(false);
-      //   return;
-      // }
+      if (!email) {
+        setEmptyEmailAlert(true);
+        setTimeout(() => setEmptyEmailAlert(false), 2000);
+        setLoading(false);
+        return;
+      }
+      if (!password) {
+        setEmptyPasswordAlert(true);
+        setTimeout(() => setEmptyPasswordAlert(false), 2000);
+        setLoading(false);
+        return;
+      }
 
-      // // Call login mutation (mocked here)
-      // const response = await login({ email, password });
-      // if (response?.data?.token) {
+      // Call login mutation
+      const response: { accessToken: string, refreshToken: string } = await login({ email, password }).unwrap();
+      if (response?.accessToken) {
+        await saveToken('accessToken', response.accessToken);
+        await saveToken('refreshToken', response.refreshToken);
+        const { name } = getDecodedToken(response?.accessToken) ?? {};
+        if (name) {
+          await saveUserName(name);
+        }
         router.push("/(tabs)");
-      // }
+      }
     } catch (err) {
       console.error(err);
     } finally {
@@ -65,83 +97,74 @@ const SignIn: React.FC = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Space vertical size={100} />
-      <View style={styles.background}>
-        <View style={styles.header}>
-          <Space vertical size={20} />
-          <Text style={styles.title}>Bienvenido</Text>
-          <Text style={styles.subtitle}>Inicia sesión para continuar</Text>
-        </View>
-        <Space vertical size={30} />
-        <View style={styles.form}>
-          <View style={styles.inputContainer}>
-            <IconMapper iconName="mail-outline" size={20} color="#5db075" />
-            <TextInput
-              ref={emailRef}
-              style={styles.input}
-              placeholder="Correo Electrónico"
-              placeholderTextColor="#5db075"
-              value={email}
-              onChangeText={setEmail}
-              keyboardType="email-address"
-            />
+      <Screen gestureEnabled={false} style={styles.container}>
+        <Space vertical size={100} />
+        <View style={styles.background}>
+          <View style={styles.header}>
+            <Space vertical size={20} />
+            <Text style={styles.title}>Bienvenido</Text>
+            <Text style={styles.subtitle}>Inicia sesión para continuar</Text>
           </View>
-          <Space vertical size={15} />
-          <View style={styles.inputContainer}>
-            <IconMapper iconName="lock-closed-outline" size={20} color="#5db075" />
-            <TextInput
-              ref={passwordRef}
-              style={styles.input}
-              placeholder="Contraseña"
-              placeholderTextColor="#5db075"
-              value={password}
-              onChangeText={setPassword}
-              secureTextEntry={!isPasswordVisible}
-            />
-            <TouchableOpacity
-              style={styles.passwordToggle}
-              onPress={() => setPasswordVisible(!isPasswordVisible)}
-            >
-              <IconMapper
-                iconName={isPasswordVisible ? "eye-off-outline" : "eye-outline"}
-                size={20}
-                color="#5db075"
-              />
-            </TouchableOpacity>
-          </View>
-          <Space vertical size={15} />
-          <TouchableOpacity onPress={() => router.push("./forgot-password")}>
-            <Text style={styles.forgotPasswordText}>¿Olvidaste tu contraseña?</Text>
-          </TouchableOpacity>
           <Space vertical size={30} />
-          <TouchableOpacity style={styles.loginButton} onPress={onSubmit}>
-            {isLoading ? (
-              <ActivityIndicator size="small" color="#fff" />
-            ) : (
-              <Text style={styles.loginButtonText}>Iniciar Sesión</Text>
+          <View style={styles.form}>
+            <View style={styles.inputContainer}>
+              <IconMapper iconName="mail-outline" size={20} color="#5db075" />
+              <TextInput
+                ref={emailRef}
+                style={styles.input}
+                placeholder="Correo Electrónico"
+                placeholderTextColor="#5db075"
+                value={email}
+                onChangeText={(text) => setEmail(text.toLowerCase())}
+                keyboardType="email-address"
+              />
+            </View>
+            <Space vertical size={15} />
+            <View style={styles.inputContainer}>
+              <IconMapper iconName="lock-closed-outline" size={20} color="#5db075" />
+              <TextInput
+                ref={passwordRef}
+                style={styles.input}
+                placeholder="Contraseña"
+                placeholderTextColor="#5db075"
+                value={password}
+                onChangeText={setPassword}
+                secureTextEntry
+              />
+            </View>
+            <Space vertical size={30} />
+            <TouchableOpacity style={styles.loginButton} onPress={onSubmit}>
+              {isLoading ? (
+                <ActivityIndicator size="small" color="#fff" />
+              ) : (
+                <Text style={styles.loginButtonText}>Iniciar Sesión</Text>
+              )}
+            </TouchableOpacity>
+
+            {isBiometricSupported && (
+              <TouchableOpacity
+              style={{ alignItems: 'center', padding: 30 }}
+              onPress={async () => {
+                try {
+                  const isAuthenticated = await authenticate(async (refreshToken) => {
+                    const { accessToken } = await triggerRefreshToken({ refreshToken }).unwrap();
+                    return accessToken;
+                  });
+            
+                  if (isAuthenticated) {
+                    router.push('/(tabs)');
+                  }
+                } catch (error) {
+                  console.error('Error en autenticación biométrica:', error);
+                }
+              }}
+            >
+              <MaterialCommunityIcons name="face-recognition" size={90} color="white" />
+            </TouchableOpacity>
             )}
-          </TouchableOpacity>
+          </View>
         </View>
-        <Space vertical size={30} />
-        <View style={styles.footer}>
-          <Text style={styles.footerText}>¿No tienes cuenta?</Text>
-          <TouchableOpacity onPress={() => router.push("./register")}>
-            <Text style={styles.registerText}>Regístrate</Text>
-          </TouchableOpacity>
-        </View>
-        {isEmptyEmailAlert && (
-          <Snackbar
-            message="Debes ingresar tu correo electrónico."
-            style={styles.snackbar}
-          />
-        )}
-        {isEmptyPasswordAlert && (
-          <Snackbar
-            message="Debes ingresar tu contraseña."
-            style={styles.snackbar}
-          />
-        )}
-      </View>
+      </Screen>
     </SafeAreaView>
   );
 };

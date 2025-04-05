@@ -6,6 +6,8 @@ import Space from "@components/Space";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
 import { BlurView } from "expo-blur";
+import useLogout from "@hooks/useLogout";
+import { useUserName } from "@hooks/useUserName";
 
 const { width: viewportWidth } = Dimensions.get("window");
 
@@ -37,7 +39,12 @@ const pages = [
 ];
 
 const Home = () => {
+
+  // hooks
   const router = useRouter();
+  const name = useUserName();
+
+  const logout = useLogout();
 
   const today = new Date(); // Fecha de hoy
   const formattedDate = format(today, "EEEE, d 'de' MMMM", { locale: es });
@@ -73,15 +80,13 @@ const Home = () => {
         <Space vertical size={10} />
         <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
           <View>
-            <Text style={{ fontWeight: "700", fontSize: 20 }}>Hola Kevin</Text>
+            <Text style={{ fontWeight: "700", fontSize: 20 }}>Hola {name || 'Invitado'}</Text>
             <Space vertical size={10} />
             <Text style={{ color: "#525358" }}>{formattedDate}</Text>
           </View>
           <View style={{ marginRight: 10 }}>
             <Pressable
-              onPress={() => {
-                router.push("./login/sign-in");
-              }}
+              onPress={logout}
             >
               <Text style={{ color: "#5db075", fontSize: 20 }}>Salir</Text>
             </Pressable>
@@ -97,7 +102,6 @@ const Home = () => {
           autoPlay={true}
           autoPlayInterval={3000}
           loop={true}
-          onSnapToItem={(index) => console.log("Current slide:", index)}
           scrollAnimationDuration={1000}
         />
       </View>

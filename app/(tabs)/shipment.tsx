@@ -53,7 +53,7 @@ const Shipment: FC = () => {
   const router = useRouter();
 
   // Api calls
-  const [trigger, { data: shipments, isLoading, isError, error }] = useLazyGetAllShipmentsQuery();
+  const [trigger, { data: shipments, isLoading, isError, error, isUninitialized }] = useLazyGetAllShipmentsQuery();
 
   const handleSearch = () => {
     setRefreshing(true);
@@ -87,7 +87,7 @@ const Shipment: FC = () => {
       status={item.shipmentStatus?.description?.toLowerCase() as string}
       containerNumber={item.container?.containerNumber as string}
       destination={item.destination?.name as string}
-      date={new Date().toDateString()}
+      date={new Date(item?.dateCreated).toDateString()}
       onViewPress={() => router.push({
         pathname: `/shipments/[id]`,
         params: { id: item.shipmentId }
@@ -115,7 +115,10 @@ const Shipment: FC = () => {
           iconColor="#71a780"
           placeholderTextColor="#5db07587"
           value={searchTerm} 
-          onChangeText={setSearchTerm}
+          onChangeText={(value: string) => {
+            // setRefreshing(true);
+            setSearchTerm(value);
+          }}
         />
         <View style={{ flexDirection: 'row' }}>
           <View style={{ width: '50%', paddingRight: 10 }}>
@@ -194,18 +197,19 @@ const Shipment: FC = () => {
         </View>
         <Space vertical size={15} />
         {
-          isError &&
+          isError && (
             <View style={styles.center}>
               <Text>Algo ocurrió, favor intentar de nuevo</Text>
             </View>
+          )
         }
         {
-          isLoading 
+          (isLoading || refreshing)
             ? <ActivityIndicator />
             : <></>
         }
         {
-          shipments?.length &&
+          !!shipments?.length && !(isLoading || refreshing) && (
             <FlatList
               data={shipments}
               keyExtractor={(item) => `${item?.container?.containerNumber as string}-${item?.shipmentId}`}
@@ -215,6 +219,19 @@ const Shipment: FC = () => {
                 <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
               }
             />
+          )
+        }
+        { 
+          (!shipments?.length && !isUninitialized && !isLoading && !refreshing) && (
+            <View>
+              <Space vertical size={200} />
+              {
+                searchTerm 
+                  ? <Text style={{ color: '#71a780', fontWeight: '700', textAlign: 'center' }}>No se encontraron viajes con el filtro seleccionado</Text>
+                  : <Text style={{ color: '#71a780', fontWeight: '700', textAlign: 'center' }}>No se encontraron viajes</Text>
+              }
+            </View>
+          )
         }
       </View>
     </SafeAreaView>

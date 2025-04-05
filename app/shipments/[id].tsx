@@ -1,19 +1,28 @@
 // app/shipment/[id].tsx
-import React from 'react';
-import { View, Text, StyleSheet, ScrollView, SafeAreaView, TouchableOpacity } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, ScrollView, SafeAreaView, TouchableOpacity, Pressable } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import Space from '@components/Space';
-import AnimatedText from '@components/AnimatedText';
 import IconMapper from '@components/IconMapper';
 import { statusMapper } from 'utils/common/statusMapper';
 import CustomHeader from '@components/CustomHeader';
 import BackgroundView from '@components/BackgroundView';
-import { useGetShipmentByIdQuery } from '@api/shipmentApi';
+import { useGetShipmentByIdQuery, useUpdateShipmentMutation } from '@api/shipmentApi';
+import CustomAlert from '@components/CustomAlert';
+import { useLazyGetAllShipmentsStatusQuery } from '@api/shipmentStatusApi';
 
 const ShipmentView = () => {
   const { id } = useLocalSearchParams<{ id: string }>();
 
+  const [isAlertVisible, setAlertVisible] = useState<boolean>(false);
+  const [description, setDescription] = useState<string>('');
+
+  // mutations
+  const [modifyShipment] = useUpdateShipmentMutation();
+
+  // queries
   const { data: shipment, isLoading, isError } = useGetShipmentByIdQuery(id);
+  const [trigger, { data: shipmentStatusResp, isLoading: isLoadingSS, isError: isErrorSS, error: errorSS }] = useLazyGetAllShipmentsStatusQuery();
 
   // hooks
   const router = useRouter();
@@ -39,6 +48,32 @@ const ShipmentView = () => {
     })
   }
 
+  const updateShipment = async () => {
+    try {
+      const [shipmentStatusResponse] = await trigger({ search: description }).unwrap() ?? [];
+  
+      if (!shipmentStatusResponse) {
+        alert("No se encontró logro cancelar el viaje.");
+        return;
+      }
+
+
+      const updatedShipment = {
+        shipmentStatusId: shipmentStatusResponse?.shipmentStatusId
+      };
+  
+      console.log("Envío actualizado:", updatedShipment);
+
+      const response = await modifyShipment({ id, body: updatedShipment }).unwrap(); // unwrap para manejar errores
+      console.log('Shipment updated successfully:', response);
+      setAlertVisible(false);
+      router.back();
+    } catch (error) {
+      console.error('Error updating shipment:', error);
+      alert('Hubo un error al actualizar el shipmento.');
+    }
+  };
+
   return (
     <BackgroundView>
       <SafeAreaView style={{ flex: 1 }}>
@@ -53,6 +88,28 @@ const ShipmentView = () => {
             showEditButton={true}
             onEditPress={handleEdit}
           />
+        <CustomAlert
+          isVisible={isAlertVisible}
+          title="Estas seguro de modificar?"
+          titleColor="#ff0809bd"
+          text="Estas a punto de modificar la poliza, deseas continuar?"
+          onClose={() => { setAlertVisible(false) }}
+          buttons={[
+            <Pressable onPress={() => { setAlertVisible(false) }}>
+              <View style={styles.cancelButtonAlert}>
+                <Text style={styles.cancelButtonTextAlert}>Cancelar</Text>
+              </View>
+            </Pressable>,
+            <Pressable onPress={() => { 
+              updateShipment();
+              setAlertVisible(false);
+              }}>
+              <View style={styles.continueButtonAlert}>
+                <Text style={styles.continueButtonTextAlert}>Modificar</Text>
+              </View>
+            </Pressable>
+          ]}
+        />
         <Space vertical size={20} />
         <View style={{
           backgroundColor: '#88c69a',
@@ -89,10 +146,13 @@ const ShipmentView = () => {
         <View style={{ flexDirection: 'row', paddingHorizontal: 20 }}>
           <View style={{ width: '50%', paddingRight: 10 }}>
             {
-              !['CANCELADO', 'ELIMINADO', 'FINALIZADO', 'COBRADO', 'ENTREGADO'].includes(shipmentStatus?.description?.toUpperCase()) && 
+              !['CANCELADO', 'ELIMINADO', 'FINALIZADO', 'COBRADO', 'RUTA', 'ENTREGADO'].includes(shipmentStatus?.description?.toUpperCase()) && 
                 <TouchableOpacity
                   style={styles.searchButton}
-                  onPress={() => {}}
+                  onPress={() => {
+                    setDescription('CANCELADO');
+                    setAlertVisible(true);
+                  }}
                 >
                   <Text style={styles.buttonText}>Cancelar Viaje</Text>
                 </TouchableOpacity>
@@ -101,7 +161,10 @@ const ShipmentView = () => {
               ['CANCELADO'].includes(shipmentStatus?.description?.toUpperCase()) && 
               <TouchableOpacity
                 style={[styles.searchButton, { backgroundColor: '#ff8e00cf'}]}
-                onPress={() => {}}
+                onPress={() => {
+                  setDescription('CREADO');
+                    setAlertVisible(true);
+                }}
               >
                 <Text style={styles.buttonText}>Reanudar Viaje</Text>
               </TouchableOpacity>
@@ -241,4 +304,28 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#333',
   },
+  cancelButtonAlert: {
+    backgroundColor: "#ff0809bd",
+    paddingVertical: 10,
+    paddingHorizontal: 35,
+    borderRadius: 4,
+    marginTop: 20,
+  },
+  cancelButtonTextAlert: {
+    color: "#fff",
+    fontSize: 16,
+    textAlign: "center",
+  },
+  continueButtonAlert: {
+    backgroundColor: "#3f51b5",
+    paddingVertical: 10,
+    paddingHorizontal: 35,
+    borderRadius: 4,
+    marginTop: 20,
+  },
+  continueButtonTextAlert: {
+    color: "#fff",
+    fontSize: 16,
+    textAlign: "center",
+  }
 });

@@ -7,7 +7,7 @@ const initialState: ShipmentT = {
   origin: null,
   destination: null,
   container: null,
-  // policy: '',
+  policy: null,
   weight: 0.00,
   price: {
     currency: null,
@@ -26,25 +26,41 @@ const shipmentSlice = createSlice({
     addClient(state, action: PayloadAction<any>) {
       state.client = action.payload;
     },
-    addShipmentRoute(state, action: PayloadAction<any>) {
-      state.origin = action.payload.origin;
-      state.destination = action.payload.destination;
+    addOrigin(state, action: PayloadAction<any>) {
+      state.origin = action.payload;
     },
-    addContainerDetails(state, action: PayloadAction<any>) {
-      state.container = action.payload.container;
-      // state.policy = action.payload.policy;
-      state.weight = action.payload.weight;
-      state.price = action.payload.price;
+    addDestination(state, action: PayloadAction<any>) {
+      state.destination = action.payload;
     },
-    addTransportDetails(state, action: PayloadAction<any>) {
-      state.driver = action.payload.driver;
-      state.truck = action.payload.truck;
-      state.notes = action.payload.notes;
-    }
+    addContainer(state, action: PayloadAction<any>) {
+      state.container = action.payload;
+    },
+    addCurrency(state, action: PayloadAction<any>) {
+      state.price.currency = action.payload;
+    },
+    addPolicy(state, action: PayloadAction<any>) {
+      state.policy = action.payload;
+    },
+    addWeight(state, action: PayloadAction<any>) {
+      state.weight = action.payload;
+    },
+    addPrice(state, action: PayloadAction<any>) {
+      state.price.amount = action.payload;
+    },
+    addDriver(state, action: PayloadAction<any>) {
+      state.driver = action.payload;
+    },
+    addTruck(state, action: PayloadAction<any>) {
+      state.truck = action.payload;
+    },
+    addNotes(state, action: PayloadAction<any>) {
+      state.notes = action.payload;
+    },
+    reset: () => initialState
   }
 });
 
-export const { addClient, addShipmentRoute, addContainerDetails, addTransportDetails } = shipmentSlice.actions;
+export const { addClient, addContainer, addDestination, addDriver, addNotes, addOrigin, addPolicy, addPrice, addTruck, addWeight, addCurrency, reset } = shipmentSlice.actions;
 
 export const shipmentSelector = (state: RootState) => state.shipmentSlice;
 

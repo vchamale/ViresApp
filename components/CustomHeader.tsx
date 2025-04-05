@@ -1,6 +1,7 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView, StatusBar, StatusBarStyle } from 'react-native';
+import { Text, TouchableOpacity, StyleSheet, SafeAreaView, StatusBar, StatusBarStyle } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 
 type HeaderProps = {
   title: string;
@@ -13,12 +14,15 @@ type HeaderProps = {
   onBackPress?: () => void;
   onHelpPress?: () => void;
   onEditPress?: () => void;
+  onChangeViewPress?: () => void;
   showBackButton?: boolean;
   showEditButton?: boolean;
   showHelpButton?: boolean;
+  isSinglePage?: boolean;
+  showChangeViewButton?: boolean;
 };
 
-const CustomHeader: React.FC<HeaderProps> = ({ title, backgroundColor, color, statusBar, onBackPress, onHelpPress, onEditPress, showBackButton = true, showHelpButton = false, showEditButton = false }) => {
+const CustomHeader: React.FC<HeaderProps> = ({ title, backgroundColor, color, statusBar, onBackPress, onHelpPress, onEditPress, onChangeViewPress, showBackButton = true, showHelpButton = false, showEditButton = false, showChangeViewButton = false, isSinglePage = false }) => {
   return (
     <SafeAreaView style={[styles.headerContainer, backgroundColor ? { backgroundColor: backgroundColor }: null]}>
       {
@@ -43,6 +47,16 @@ const CustomHeader: React.FC<HeaderProps> = ({ title, backgroundColor, color, st
       {showEditButton && (
         <TouchableOpacity onPress={onEditPress} style={styles.helpButton}>
           <Ionicons name="create-sharp" size={28} color={color ?? "#71a780"} />
+        </TouchableOpacity>
+      )}
+      {showChangeViewButton && (
+        <TouchableOpacity onPress={onChangeViewPress} style={styles.helpButton}>
+          {
+            isSinglePage 
+              ? <MaterialIcons name="view-carousel" size={28} color={color ?? "#71a780"} />
+              : <MaterialIcons name="view-timeline" size={28} color={color ?? "#71a780"} />
+
+          }
         </TouchableOpacity>
       )}
     </SafeAreaView>
