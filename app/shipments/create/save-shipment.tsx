@@ -20,7 +20,8 @@ type SaveShipmentPropsT = {};
 const SaveShipment: FC<SaveShipmentPropsT> = ({}) => {
   // State
   const [refreshing, setRefreshing] = useState(false);
-  const [isCreatingShipmentLoading, setCreatingShipmentLoading] = useState(true);
+  const [isCreatingShipmentLoading, setCreatingShipmentLoading] =
+    useState(true);
 
   // hooks
   const router = useRouter();
@@ -29,14 +30,14 @@ const SaveShipment: FC<SaveShipmentPropsT> = ({}) => {
   const shipment = useAppSelector(shipmentSelector);
 
   // Api calls
-    // Mutations
-    const [saveShipment] = useCreateShipmentMutation();
+  // Mutations
+  const [saveShipment] = useCreateShipmentMutation();
 
   // Effects
   useEffect(() => {
     (async () => {
       await handleCreateShipment();
-    })()
+    })();
   }, []);
 
   // Functions
@@ -46,15 +47,15 @@ const SaveShipment: FC<SaveShipmentPropsT> = ({}) => {
   }, []);
 
   const handleGoTravel = () => {
-    router.replace('/shipments/shipment');
+    router.replace("/shipments/shipment");
   };
 
   const handleEditShipment = () => {
-    router.replace('/shipments/update/modify-shipment');
+    router.replace("/shipments/update/modify-shipment");
   };
 
   const handleCreateShipment = async () => {
-    console.log('shipment ', shipment.container);
+    console.log("shipment ", shipment.container);
 
     try {
       const newShipment = {
@@ -67,19 +68,20 @@ const SaveShipment: FC<SaveShipmentPropsT> = ({}) => {
         weight: shipment.weight,
         notes: shipment.notes,
         shipmentStatusId: 1,
-        statusUpdated: new Date(),
-        currencyId: shipment.price.currency?.currencyId
+        dateCreated: new Date(),
+        currencyId: shipment.price.currency?.currencyId,
+        
       };
 
-      console.log('newShipment ', newShipment);
+      console.log("newShipment ", newShipment);
 
-      // await saveShipment(newShipment)
-      // setTimeout(() => {
-      //   setCreatingShipmentLoading(false);
-      // }, 500);
+      await saveShipment(newShipment);
+      setTimeout(() => {
+        setCreatingShipmentLoading(false);
+      }, 500);
     } catch (error) {
       setCreatingShipmentLoading(false);
-      console.log('error ', error)
+      console.log("error ", error);
     }
   };
 
@@ -87,75 +89,120 @@ const SaveShipment: FC<SaveShipmentPropsT> = ({}) => {
     <SafeAreaView
       style={{
         flex: 1,
-        backgroundColor: '#71a780'
+        backgroundColor: "#71a780",
       }}
     >
       <View
         style={{
           padding: 15,
           flex: 1,
-          justifyContent: 'center'
+          justifyContent: "center",
         }}
       >
-        <View style={{ padding: 30, backgroundColor: '#fff', borderRadius: 10 }}>
-          <View style={{
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
-            padding: 12,
-            backgroundColor: '#fff',
-          }}>
-            <TouchableOpacity style={{
-              borderRadius: 50,
-              padding: 25,
-              backgroundColor: '#79c08e9e'
-            }}>
-              <FontAwesome6 name='truck-front' size={50} color='#71a780' />
+        <View
+          style={{ padding: 30, backgroundColor: "#fff", borderRadius: 10 }}
+        >
+          <View
+            style={{
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
+              padding: 12,
+              backgroundColor: "#fff",
+            }}
+          >
+            <TouchableOpacity
+              style={{
+                borderRadius: 50,
+                padding: 25,
+                backgroundColor: "#79c08e9e",
+              }}
+            >
+              <FontAwesome6 name="truck-front" size={50} color="#71a780" />
             </TouchableOpacity>
             <Space vertical size={15} />
           </View>
-          <Text style={{ color: '#71a780', fontSize: 30, fontWeight: 'bold', textAlign: 'center' }}>
-            {isCreatingShipmentLoading ? 'Viaje Creado' : 'Creando Viaje'}
+          <Text
+            style={{
+              color: "#71a780",
+              fontSize: 30,
+              fontWeight: "bold",
+              textAlign: "center",
+            }}
+          >
+            {isCreatingShipmentLoading ? "Viaje Creado" : "Creando Viaje"}
           </Text>
-          {
-            isCreatingShipmentLoading
-              ? <ActivityIndicator color='#71a780' size={100} />
-              :
-              <>
-                <Text style={{ fontSize: 15, textAlign: 'center' }}>Se ha creado un nuevo viaje:</Text>
-                <Space vertical size={25} />
-                <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
-                  <Text style={{ fontSize: 15, textAlign: 'center' }}>Cliente:</Text>
-                  <Text style={{ fontSize: 15, textAlign: 'center' }}>{shipment.client?.name}</Text>
-                </View>
-                <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
-                  <Text style={{ fontSize: 15, textAlign: 'center' }}>Destino:</Text>
-                  <Text style={{ fontSize: 15, textAlign: 'center' }}>{shipment.destination?.name}</Text>
-                </View>
-                <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
-                  <Text style={{ fontSize: 15, textAlign: 'center' }}>Contenedor:</Text>
-                  <Text style={{ fontSize: 15, textAlign: 'center' }}>{shipment.container?.containerNumber}</Text>
-                </View>
-                <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
-                  <Text style={{ fontSize: 15, textAlign: 'center' }}>Piloto:</Text>
-                  <Text style={{ fontSize: 15, textAlign: 'center' }}>{`${shipment.driver?.names} ${shipment.driver?.lastNames}`}</Text>
-                </View>
-                <Space vertical size={15} />
-                <View style={{
-                  backgroundColor: '#5db075',
+          {isCreatingShipmentLoading ? (
+            <ActivityIndicator color="#71a780" size={100} />
+          ) : (
+            <>
+              <Text style={{ fontSize: 15, textAlign: "center" }}>
+                Se ha creado un nuevo viaje:
+              </Text>
+              <Space vertical size={25} />
+              <View style={{ flexDirection: "row", justifyContent: "center" }}>
+                <Text style={{ fontSize: 15, textAlign: "center" }}>
+                  Cliente:
+                </Text>
+                <Text style={{ fontSize: 15, textAlign: "center" }}>
+                  {shipment.client?.name}
+                </Text>
+              </View>
+              <View style={{ flexDirection: "row", justifyContent: "center" }}>
+                <Text style={{ fontSize: 15, textAlign: "center" }}>
+                  Destino:
+                </Text>
+                <Text style={{ fontSize: 15, textAlign: "center" }}>
+                  {shipment.destination?.name}
+                </Text>
+              </View>
+              <View style={{ flexDirection: "row", justifyContent: "center" }}>
+                <Text style={{ fontSize: 15, textAlign: "center" }}>
+                  Contenedor:
+                </Text>
+                <Text style={{ fontSize: 15, textAlign: "center" }}>
+                  {shipment.container?.containerNumber}
+                </Text>
+              </View>
+              <View style={{ flexDirection: "row", justifyContent: "center" }}>
+                <Text style={{ fontSize: 15, textAlign: "center" }}>
+                  Piloto:
+                </Text>
+                <Text
+                  style={{ fontSize: 15, textAlign: "center" }}
+                >{`${shipment.driver?.names} ${shipment.driver?.lastNames}`}</Text>
+              </View>
+              <Space vertical size={15} />
+              <View
+                style={{
+                  backgroundColor: "#5db075",
                   borderRadius: 35,
-                  paddingVertical: 15
-                }}>
-                  <Pressable onPress={handleEditShipment}>
-                    <Text style={{ color: '#fff', fontSize: 15, textAlign: 'center' }}>Editar</Text>
-                  </Pressable>
-                </View>
-                <Space vertical size={15} />
-                <Pressable onPress={handleGoTravel}>
-                  <Text style={{ color: '#5db075', fontSize: 15, fontWeight: 'bold', textAlign: 'center' }}>Ir a Viajes</Text>
+                  paddingVertical: 15,
+                }}
+              >
+                <Pressable onPress={handleEditShipment}>
+                  <Text
+                    style={{ color: "#fff", fontSize: 15, textAlign: "center" }}
+                  >
+                    Editar
+                  </Text>
                 </Pressable>
-              </>
-          }
+              </View>
+              <Space vertical size={15} />
+              <Pressable onPress={handleGoTravel}>
+                <Text
+                  style={{
+                    color: "#5db075",
+                    fontSize: 15,
+                    fontWeight: "bold",
+                    textAlign: "center",
+                  }}
+                >
+                  Ir a Viajes
+                </Text>
+              </Pressable>
+            </>
+          )}
         </View>
       </View>
     </SafeAreaView>

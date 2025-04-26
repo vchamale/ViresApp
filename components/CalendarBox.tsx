@@ -1,6 +1,14 @@
-import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, StyleProp, ViewStyle } from 'react-native';
-import IconMapper from './IconMapper';
+import React from "react";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  StyleProp,
+  ViewStyle,
+  TextStyle,
+} from "react-native";
+import IconMapper from "./IconMapper";
 
 type CalendarBoxProps = {
   onPress: () => void;
@@ -10,8 +18,8 @@ type CalendarBoxProps = {
   iconName: string;
   iconSize?: number;
   iconColor: string;
-  placeholderStyle?: StyleProp<ViewStyle>;
-  dateStyle?: StyleProp<ViewStyle>;
+  placeholderStyle?: StyleProp<TextStyle>;
+  dateStyle?: StyleProp<TextStyle>;
 };
 
 const CalendarBox: React.FC<CalendarBoxProps> = ({
@@ -21,7 +29,7 @@ const CalendarBox: React.FC<CalendarBoxProps> = ({
   containerStyle,
   iconName,
   iconSize = 20,
-  iconColor = '#000',
+  iconColor = "#000",
   placeholderStyle,
   dateStyle,
 }) => {
@@ -30,15 +38,13 @@ const CalendarBox: React.FC<CalendarBoxProps> = ({
     : placeholder;
 
   return (
-    <TouchableOpacity
-      style={[styles.container]}
-      onPress={onPress}
-    >
+    <TouchableOpacity style={[styles.container]} onPress={onPress}>
       <Text
         style={[
           styles.text,
-          selectedDate ? styles.selectedText : styles.placeholderText,
-          selectedDate ? dateStyle : placeholderStyle
+          ...(selectedDate
+            ? [styles.selectedText, dateStyle].filter(Boolean)
+            : [styles.placeholderText, placeholderStyle].filter(Boolean)),
         ]}
       >
         {formattedDate}
@@ -50,24 +56,24 @@ const CalendarBox: React.FC<CalendarBoxProps> = ({
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     borderWidth: 1,
-    borderColor: '#5db075',
+    borderColor: "#5db075",
     borderRadius: 8,
     padding: 10,
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
   },
   text: {
-    width: '85%',
+    width: "85%",
     fontSize: 16,
   },
   placeholderText: {
-    color: '#5db07587',
-    fontSize: 12
+    color: "#5db07587",
+    fontSize: 12,
   },
   selectedText: {
-    color: '#5db075',
+    color: "#5db075",
   },
 });
 
