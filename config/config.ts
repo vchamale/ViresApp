@@ -1,6 +1,6 @@
 const baseApi = {
   // vires: 'http://137.184.216.113:3000'
-  vires: 'http://localhost:3000'
+  vires: "http://192.168.1.51:3000",
 };
 
 export const api = {
@@ -17,6 +17,6 @@ export const api = {
     client: `${baseApi.vires}/api/clients`,
     currency: `${baseApi.vires}/api/currencies`,
     driver: `${baseApi.vires}/api/drivers`,
-    container: `${baseApi.vires}/api/containers`
-  }
+    container: `${baseApi.vires}/api/containers`,
+  },
 };

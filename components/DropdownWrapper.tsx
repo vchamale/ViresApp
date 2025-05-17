@@ -1,7 +1,7 @@
-import React from 'react';
-import { Button, Text, View, StyleSheet } from 'react-native';
-import Dropdown from './Dropdown';
-import DropdownSkeleton from './skeleton/DropdownSkeleton';
+import React from "react";
+import { Button, Text, View, StyleSheet } from "react-native";
+import Dropdown from "./Dropdown";
+import DropdownSkeleton from "./skeleton/DropdownSkeleton";
 
 type DropdownWrapperProps<T> = {
   isLoading: boolean;
@@ -34,8 +34,15 @@ const DropdownWrapper = <T,>({
   isEditable = false,
   initialSelectedItem,
   linkText,
-  onLinkPress
+  onLinkPress,
 }: DropdownWrapperProps<T>) => {
+  console.log(">>>>> items:", JSON.stringify(items, null, 2));
+  console.log(">>>>> renderItemText:", renderItemText);
+  console.log(">>>>> onItemSelected:", onItemSelected);
+  console.log(">>>>> isEditable:", isEditable);
+  console.log(">>>>> linkText:", linkText);
+  console.log(">>>>> initialSelectedItem:", initialSelectedItem);
+
   return (
     <View style={styles.container}>
       {label && <Text style={styles.label}>{label}</Text>}
@@ -47,14 +54,14 @@ const DropdownWrapper = <T,>({
           placeholder={placeholder}
           renderItemText={renderItemText}
           onItemSelected={onItemSelected}
-          isEditable={isEditable}
+          isEditable={true}
           placeholderColor={placeholderColor}
           linkText={linkText}
           onLinkPress={onLinkPress}
           initialSelectedItem={initialSelectedItem}
         />
       ) : isError ? (
-        <Button 
+        <Button
           title="Algo ocurrió, has tap para intentar de nuevo o haz swipe down"
           color="red"
           onPress={refetch}
@@ -70,10 +77,10 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 16,
-    fontWeight: 'bold',
-    color: '#71a780',
+    fontWeight: "bold",
+    color: "#71a780",
     marginBottom: 8,
-  }
+  },
 });
 
 export default DropdownWrapper;
