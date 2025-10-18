@@ -1,6 +1,11 @@
 const baseApi = {
+<<<<<<< Updated upstream
   // vires: 'http://137.184.216.113:3000'
   vires: 'http://localhost:3000'
+=======
+  // vires: 'http://157.230.184.78:3000'
+  vires: "http://192.168.1.39:3000",
+>>>>>>> Stashed changes
 };
 
 export const api = {

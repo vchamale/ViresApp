@@ -15,81 +15,71 @@ import {
 import IconMapper from "@components/IconMapper";
 import { getDecodedToken, saveToken, saveUserName } from "utils/secureStore";
 import { Screen } from "react-native-screens";
-import { checkDeviceForBiometrics } from "utils/biometrics/checkDeviceForBiometrics";
-import { authenticate } from "utils/biometrics/authenticate";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
+
 
 const SignIn: React.FC = () => {
-  // State
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [isEmptyEmailAlert, setEmptyEmailAlert] = useState<boolean>(false);
-  const [isEmptyPasswordAlert, setEmptyPasswordAlert] = useState<boolean>(false);
   const [isLoading, setLoading] = useState<boolean>(false);
-  const [isBiometricSupported, setIsBiometricSupported] = useState<boolean>(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  // Refs
   const emailRef = useRef<TextInput>(null);
   const passwordRef = useRef<TextInput>(null);
 
-  // Api calls
   const [login] = useLoginMutation();
   const [triggerRefreshToken] = useLazyRefreshTokenQuery();
 
-  // Hooks
   const router = useRouter();
 
-  // effects
   useEffect(() => {
     const handleBackPress = () => {
-      // Bloquea el botón de retroceso en Android
-      return true; // Previene que el sistema cierre la app
+      // Block back button
+      return true; // Prevent from shutting down the app
     };
 
-    BackHandler.addEventListener('hardwareBackPress', handleBackPress);
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      handleBackPress
+    );
 
-    return () => {
-      BackHandler.removeEventListener('hardwareBackPress', handleBackPress);
-    };
+    return () => backHandler.remove();
   }, []);
 
-  useEffect(() => {
-    (async () => {
-      const compatible = await checkDeviceForBiometrics();
-      setIsBiometricSupported(compatible);
-    })();
-  }, []);
-
-  // Functions
   const onSubmit = async () => {
     setLoading(true);
     try {
       if (!email) {
-        setEmptyEmailAlert(true);
-        setTimeout(() => setEmptyEmailAlert(false), 2000);
-        setLoading(false);
-        return;
-      }
-      if (!password) {
-        setEmptyPasswordAlert(true);
-        setTimeout(() => setEmptyPasswordAlert(false), 2000);
+        setErrorMessage("Por favor ingresa tu correo electrónico.");
         setLoading(false);
         return;
       }
 
-      // Call login mutation
-      const response: { accessToken: string, refreshToken: string } = await login({ email, password }).unwrap();
+      if (!password) {
+        setErrorMessage("Por favor ingresa tu contraseña.");
+        setLoading(false);
+        return;
+      }
+
+      const { data: response } = await login({ email, password }).unwrap();
       if (response?.accessToken) {
-        await saveToken('accessToken', response.accessToken);
-        await saveToken('refreshToken', response.refreshToken);
+        await saveToken("accessToken", response.accessToken);
+        await saveToken("refreshToken", response.refreshToken);
         const { name } = getDecodedToken(response?.accessToken) ?? {};
         if (name) {
           await saveUserName(name);
         }
         router.push("/(tabs)");
       }
-    } catch (err) {
-      console.error(err);
+    } catch (err: unknown) {
+      if ((err as FetchBaseQueryError).status  === "FETCH_ERROR") {
+        setErrorMessage("Error de red. Por favor, verifica tu conexión a internet.");
+      } else if ((err as any).status === 400) {
+        setErrorMessage("Credenciales inválidas. Por favor, verifica tus datos.");
+      }
+      else if ((err as any).status === 500) {
+        setErrorMessage("Error del servidor.");
+      }
     } finally {
       setLoading(false);
     }
@@ -106,6 +96,11 @@ const SignIn: React.FC = () => {
             <Text style={styles.subtitle}>Inicia sesión para continuar</Text>
           </View>
           <Space vertical size={30} />
+          {errorMessage && (
+            <View style={styles.errorBanner}>
+              <Text style={styles.errorBannerText}>{errorMessage}</Text>
+            </View>
+          )}
           <View style={styles.form}>
             <View style={styles.inputContainer}>
               <IconMapper iconName="mail-outline" size={20} color="#5db075" />
@@ -115,20 +110,30 @@ const SignIn: React.FC = () => {
                 placeholder="Correo Electrónico"
                 placeholderTextColor="#5db075"
                 value={email}
-                onChangeText={(text) => setEmail(text.toLowerCase())}
+                onChangeText={(text) => {
+                  setEmail(text.toLowerCase());
+                  if (errorMessage) setErrorMessage(null);
+                }}
                 keyboardType="email-address"
               />
             </View>
             <Space vertical size={15} />
             <View style={styles.inputContainer}>
-              <IconMapper iconName="lock-closed-outline" size={20} color="#5db075" />
+              <IconMapper
+                iconName="lock-closed-outline"
+                size={20}
+                color="#5db075"
+              />
               <TextInput
                 ref={passwordRef}
                 style={styles.input}
                 placeholder="Contraseña"
                 placeholderTextColor="#5db075"
                 value={password}
-                onChangeText={setPassword}
+                onChangeText={(text) => {
+                  setPassword(text);
+                  if (errorMessage) setErrorMessage(null);
+                }}
                 secureTextEntry
               />
             </View>
@@ -140,28 +145,6 @@ const SignIn: React.FC = () => {
                 <Text style={styles.loginButtonText}>Iniciar Sesión</Text>
               )}
             </TouchableOpacity>
-
-            {isBiometricSupported && (
-              <TouchableOpacity
-              style={{ alignItems: 'center', padding: 30 }}
-              onPress={async () => {
-                try {
-                  const isAuthenticated = await authenticate(async (refreshToken) => {
-                    const { accessToken } = await triggerRefreshToken({ refreshToken }).unwrap();
-                    return accessToken;
-                  });
-            
-                  if (isAuthenticated) {
-                    router.push('/(tabs)');
-                  }
-                } catch (error) {
-                  console.error('Error en autenticación biométrica:', error);
-                }
-              }}
-            >
-              <MaterialCommunityIcons name="face-recognition" size={90} color="white" />
-            </TouchableOpacity>
-            )}
           </View>
         </View>
       </Screen>
@@ -174,7 +157,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#7193654f",
     justifyContent: "center",
-    alignContent: 'center',
+    alignContent: "center",
   },
   background: {
     flex: 1,
@@ -186,12 +169,12 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 30,
-    fontWeight: '900',
+    fontWeight: "900",
     color: "#fff",
   },
   subtitle: {
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: "600",
     color: "#fff",
   },
   form: {
@@ -258,6 +241,19 @@ const styles = StyleSheet.create({
     end: 16,
     bottom: 30,
     backgroundColor: "red",
+  },
+  errorBanner: {
+    backgroundColor: "#f8d7da",
+    borderColor: "#f5c6cb",
+    borderWidth: 1,
+    padding: 10,
+    borderRadius: 8,
+    marginBottom: 15,
+  },
+  errorBannerText: {
+    color: "#721c24",
+    fontSize: 14,
+    textAlign: "center",
   },
 });
 

@@ -24,7 +24,7 @@ export const authApi = createApi({
     baseUrl: api.vires.auth,
     credentials: 'include',
     timeout: 100000,
-    headers: { 'Content-type': 'application/json' }
+    headers: { 'Content-type' : 'application/json' }
   }),
   endpoints: build => ({
     login: build.mutation<{ data: any }, Partial<LoginT>>({
