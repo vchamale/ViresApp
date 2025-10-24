@@ -62,19 +62,15 @@ const SignIn: React.FC = () => {
         setLoading(false);
         return;
       }
-      console.log('>>>>> before getting response from login')
 
       const { accessToken, refreshToken } = await login({ email, password }).unwrap();
       if (accessToken) {
-        console.log('>>>>> before getting tokens')
         await saveToken("accessToken", accessToken);
         await saveToken("refreshToken", refreshToken);
         const { name } = getDecodedToken(accessToken) ?? {};
         if (name) {
-          console.log('>>>>> si hay nombre')
           await saveUserName(name);
         }
-        console.log('>>>> antes de llamar a router')
         router.push("/(tabs)");
       }
     } catch (err: unknown) {
