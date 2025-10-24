@@ -46,6 +46,8 @@ const SignIn: React.FC = () => {
     return () => backHandler.remove();
   }, []);
 
+  console.log('>>>>> on sign in')
+
   const onSubmit = async () => {
     setLoading(true);
     try {
@@ -60,15 +62,19 @@ const SignIn: React.FC = () => {
         setLoading(false);
         return;
       }
+      console.log('>>>>> before getting response from login')
 
-      const { data: response } = await login({ email, password }).unwrap();
-      if (response?.accessToken) {
-        await saveToken("accessToken", response.accessToken);
-        await saveToken("refreshToken", response.refreshToken);
-        const { name } = getDecodedToken(response?.accessToken) ?? {};
+      const { accessToken, refreshToken } = await login({ email, password }).unwrap();
+      if (accessToken) {
+        console.log('>>>>> before getting tokens')
+        await saveToken("accessToken", accessToken);
+        await saveToken("refreshToken", refreshToken);
+        const { name } = getDecodedToken(accessToken) ?? {};
         if (name) {
+          console.log('>>>>> si hay nombre')
           await saveUserName(name);
         }
+        console.log('>>>> antes de llamar a router')
         router.push("/(tabs)");
       }
     } catch (err: unknown) {

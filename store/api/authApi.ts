@@ -18,6 +18,11 @@ type SignUpT = {
   phone: string;
 };
 
+type LoginResponse = {
+  accessToken: string;
+  refreshToken: string;
+};
+
 export const authApi = createApi({
   reducerPath: 'auth',
   baseQuery: fetchBaseQuery({
@@ -27,7 +32,7 @@ export const authApi = createApi({
     headers: { 'Content-type' : 'application/json' }
   }),
   endpoints: build => ({
-    login: build.mutation<{ data: any }, Partial<LoginT>>({
+    login: build.mutation<LoginResponse, Partial<LoginT>>({
       query(body) {
         return {
           url: '/login',
