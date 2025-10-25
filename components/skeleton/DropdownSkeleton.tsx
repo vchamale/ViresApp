@@ -1,5 +1,5 @@
 import { View } from 'react-native';
-import SkeletonLoading from 'expo-skeleton-loading'
+// import SkeletonLoading from 'expo-skeleton-loading'
 
 const DropdownSkeleton = () => {
   return (
