@@ -98,6 +98,10 @@ const Shipment: FC = () => {
     );
   };
 
+  useEffect(() => {
+    handleSearch()
+  }, [])
+
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
       <View style={{ padding: 15, flex: 1 }}>
