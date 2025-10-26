@@ -1,6 +1,14 @@
 // app/shipment/[id].tsx
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, SafeAreaView, TouchableOpacity, Pressable } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  SafeAreaView,
+  TouchableOpacity,
+  Pressable,
+} from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import Space from '@components/Space';
 import IconMapper from '@components/IconMapper';
@@ -22,7 +30,10 @@ const ShipmentView = () => {
 
   // queries
   const { data: shipment, isLoading, isError } = useGetShipmentByIdQuery(id);
-  const [trigger, { data: shipmentStatusResp, isLoading: isLoadingSS, isError: isErrorSS, error: errorSS }] = useLazyGetAllShipmentsStatusQuery();
+  const [
+    trigger,
+    { data: shipmentStatusResp, isLoading: isLoadingSS, isError: isErrorSS, error: errorSS },
+  ] = useLazyGetAllShipmentsStatusQuery();
 
   // hooks
   const router = useRouter();
@@ -39,30 +50,29 @@ const ShipmentView = () => {
     truck,
     notes,
   } = shipment ?? {};
-  console.log('shipment ', shipment)
+  console.log('shipment ', shipment);
 
   const handleEdit = () => {
     router.push({
       pathname: `/shipments/edit/[id]`,
-      params: { id, shipment: JSON.stringify(shipment) }
-    })
-  }
+      params: { id, shipment: JSON.stringify(shipment) },
+    });
+  };
 
   const updateShipment = async () => {
     try {
-      const [shipmentStatusResponse] = await trigger({ search: description }).unwrap() ?? [];
-  
+      const [shipmentStatusResponse] = (await trigger({ search: description }).unwrap()) ?? [];
+
       if (!shipmentStatusResponse) {
-        alert("No se encontró logro cancelar el viaje.");
+        alert('No se encontró logro cancelar el viaje.');
         return;
       }
 
-
       const updatedShipment = {
-        shipmentStatusId: shipmentStatusResponse?.shipmentStatusId
+        shipmentStatusId: shipmentStatusResponse?.shipmentStatusId,
       };
-  
-      console.log("Envío actualizado:", updatedShipment);
+
+      console.log('Envío actualizado:', updatedShipment);
 
       const response = await modifyShipment({ id, body: updatedShipment }).unwrap(); // unwrap para manejar errores
       console.log('Shipment updated successfully:', response);
@@ -77,65 +87,82 @@ const ShipmentView = () => {
   return (
     <BackgroundView>
       <SafeAreaView style={{ flex: 1 }}>
-          <Space vertical size={15} />
-          <CustomHeader
-            title='Viaje'
-            color='#fff'
-            backgroundColor='#71a780'
-            onBackPress={() => {
-              router.back();
-            }}
-            showEditButton={true}
-            onEditPress={handleEdit}
-          />
+        <Space vertical size={15} />
+        <CustomHeader
+          title="Viaje"
+          color="#fff"
+          backgroundColor="#71a780"
+          onBackPress={() => {
+            router.back();
+          }}
+          showEditButton={true}
+          onEditPress={handleEdit}
+        />
         <CustomAlert
           isVisible={isAlertVisible}
           title="Estas seguro de modificar?"
           titleColor="#ff0809bd"
           text="Estas a punto de modificar la poliza, deseas continuar?"
-          onClose={() => { setAlertVisible(false) }}
+          onClose={() => {
+            setAlertVisible(false);
+          }}
           buttons={[
-            <Pressable onPress={() => { setAlertVisible(false) }}>
+            <Pressable
+              onPress={() => {
+                setAlertVisible(false);
+              }}
+            >
               <View style={styles.cancelButtonAlert}>
                 <Text style={styles.cancelButtonTextAlert}>Cancelar</Text>
               </View>
             </Pressable>,
-            <Pressable onPress={() => { 
-              updateShipment();
-              setAlertVisible(false);
-              }}>
+            <Pressable
+              onPress={() => {
+                updateShipment();
+                setAlertVisible(false);
+              }}
+            >
               <View style={styles.continueButtonAlert}>
                 <Text style={styles.continueButtonTextAlert}>Modificar</Text>
               </View>
-            </Pressable>
+            </Pressable>,
           ]}
         />
         <Space vertical size={20} />
-        <View style={{
-          backgroundColor: '#88c69a',
-          marginHorizontal: 20,
-          padding: 20,
-          borderRadius: 20,
-          flexDirection: 'row',
-          justifyContent: 'space-around'
-        }}>
+        <View
+          style={{
+            backgroundColor: '#88c69a',
+            marginHorizontal: 20,
+            padding: 20,
+            borderRadius: 20,
+            flexDirection: 'row',
+            justifyContent: 'space-around',
+          }}
+        >
           <View>
             <Text style={{ color: '#fff' }}>No. Contenedor</Text>
             <Space vertical size={20} />
-            <Text style={{ color: '#fff', fontWeight: '900', fontSize: 20 }}>{container?.containerNumber}</Text>
+            <Text style={{ color: '#fff', fontWeight: '900', fontSize: 20 }}>
+              {container?.containerNumber}
+            </Text>
           </View>
-          <View style={{
-            alignItems: 'center',
-            
-          }}>
+          <View
+            style={{
+              alignItems: 'center',
+            }}
+          >
             <Text style={{ color: '#fff' }}>Estado</Text>
             <Space vertical size={10} />
-            <IconMapper {...statusMapper[shipmentStatus?.description?.toLowerCase() || '']} size={24} color='#fff' />
+            <IconMapper
+              {...statusMapper[shipmentStatus?.description?.toLowerCase() || '']}
+              size={24}
+              color="#fff"
+            />
             <Space vertical size={10} />
             <Text
-              style={{ 
-                color: '#fff', //statusMapper[shipmentStatus?.description?.toLowerCase() || '']?.color || '#000', 
-                fontWeight: '900' 
+              style={{
+                color: '#fff', //statusMapper[shipmentStatus?.description?.toLowerCase() || '']?.color || '#000',
+                fontWeight: '900',
               }}
             >
               {shipmentStatus?.description?.toUpperCase()}
@@ -145,30 +172,30 @@ const ShipmentView = () => {
         <Space vertical size={20} />
         <View style={{ flexDirection: 'row', paddingHorizontal: 20 }}>
           <View style={{ width: '50%', paddingRight: 10 }}>
-            {
-              !['CANCELADO', 'ELIMINADO', 'FINALIZADO', 'COBRADO', 'RUTA', 'ENTREGADO'].includes(shipmentStatus?.description?.toUpperCase()) && 
-                <TouchableOpacity
-                  style={styles.searchButton}
-                  onPress={() => {
-                    setDescription('CANCELADO');
-                    setAlertVisible(true);
-                  }}
-                >
-                  <Text style={styles.buttonText}>Cancelar Viaje</Text>
-                </TouchableOpacity>
-            }
-            {
-              ['CANCELADO'].includes(shipmentStatus?.description?.toUpperCase()) && 
+            {!['CANCELADO', 'ELIMINADO', 'FINALIZADO', 'COBRADO', 'RUTA', 'ENTREGADO'].includes(
+              shipmentStatus?.description?.toUpperCase(),
+            ) && (
               <TouchableOpacity
-                style={[styles.searchButton, { backgroundColor: '#ff8e00cf'}]}
+                style={styles.searchButton}
+                onPress={() => {
+                  setDescription('CANCELADO');
+                  setAlertVisible(true);
+                }}
+              >
+                <Text style={styles.buttonText}>Cancelar Viaje</Text>
+              </TouchableOpacity>
+            )}
+            {['CANCELADO'].includes(shipmentStatus?.description?.toUpperCase()) && (
+              <TouchableOpacity
+                style={[styles.searchButton, { backgroundColor: '#ff8e00cf' }]}
                 onPress={() => {
                   setDescription('CREADO');
-                    setAlertVisible(true);
+                  setAlertVisible(true);
                 }}
               >
                 <Text style={styles.buttonText}>Reanudar Viaje</Text>
               </TouchableOpacity>
-            }
+            )}
           </View>
           <View style={{ width: '50%' }}>
             <TouchableOpacity style={styles.createButton} onPress={handleEdit}>
@@ -193,14 +220,14 @@ const ShipmentView = () => {
               </View>
             </View>
             <Space vertical size={10} />
-            <View style={{
-              marginLeft: 22
-            }}>
+            <View
+              style={{
+                marginLeft: 22,
+              }}
+            >
               <Text style={styles.label}>Precio</Text>
               <Space vertical size={5} />
-              <Text style={styles.text}>
-                {`${price ?? ''}`}
-              </Text>
+              <Text style={styles.text}>{`${price ?? ''}`}</Text>
               <Space vertical size={10} />
               <View>
                 <Text style={styles.label}>Origen</Text>
@@ -233,7 +260,6 @@ const ShipmentView = () => {
               <Text style={styles.text}>{notes || 'Sin notas adicionales'}</Text>
             </View>
           </View>
-
         </ScrollView>
       </SafeAreaView>
     </BackgroundView>
@@ -286,17 +312,17 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   createButton: {
-    backgroundColor: "#2073cdbd",
+    backgroundColor: '#2073cdbd',
     paddingVertical: 10,
     borderRadius: 4,
   },
   buttonText: {
-    color: "#fff",
+    color: '#fff',
     textAlign: 'center',
-    fontWeight: "bold",
+    fontWeight: 'bold',
   },
   searchButton: {
-    backgroundColor: "#ff0809bd",
+    backgroundColor: '#ff0809bd',
     paddingVertical: 10,
     borderRadius: 5,
   },
@@ -305,27 +331,27 @@ const styles = StyleSheet.create({
     color: '#333',
   },
   cancelButtonAlert: {
-    backgroundColor: "#ff0809bd",
+    backgroundColor: '#ff0809bd',
     paddingVertical: 10,
     paddingHorizontal: 35,
     borderRadius: 4,
     marginTop: 20,
   },
   cancelButtonTextAlert: {
-    color: "#fff",
+    color: '#fff',
     fontSize: 16,
-    textAlign: "center",
+    textAlign: 'center',
   },
   continueButtonAlert: {
-    backgroundColor: "#3f51b5",
+    backgroundColor: '#3f51b5',
     paddingVertical: 10,
     paddingHorizontal: 35,
     borderRadius: 4,
     marginTop: 20,
   },
   continueButtonTextAlert: {
-    color: "#fff",
+    color: '#fff',
     fontSize: 16,
-    textAlign: "center",
-  }
+    textAlign: 'center',
+  },
 });

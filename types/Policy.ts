@@ -5,4 +5,4 @@ export type PolicyT = {
   createdBy: number | null;
   updatedAt: string;
   updatedBy: number | null;
-}
+};

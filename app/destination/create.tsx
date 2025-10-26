@@ -1,57 +1,54 @@
-import React, { useState } from "react";
-import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  SafeAreaView,
-  StyleSheet,
-} from "react-native";
-import { useRouter } from "expo-router";
-import CustomHeader from "@components/CustomHeader";
-import Space from "@components/Space";
-import BackgroundView from "@components/BackgroundView";
-import { MaterialIcons } from "@expo/vector-icons";
-import { useCreateDestinationMutation } from "@api/destinationApi";
-import Dropdown from "@components/Dropdown";
-import { useGetAllClientsQuery } from "@api/clientApi";
+import React, { useState } from 'react';
+import { View, Text, TextInput, TouchableOpacity, SafeAreaView, StyleSheet } from 'react-native';
+import { useRouter } from 'expo-router';
+import CustomHeader from '@components/CustomHeader';
+import Space from '@components/Space';
+import BackgroundView from '@components/BackgroundView';
+import { MaterialIcons } from '@expo/vector-icons';
+import { useCreateDestinationMutation } from '@api/destinationApi';
+import Dropdown from '@components/Dropdown';
+import { useGetAllClientsQuery } from '@api/clientApi';
 
 const CreateDestination: React.FC = () => {
-  const [name, setName] = useState<string>("");
-  const [address, setAddress] = useState<string>("");
+  const [name, setName] = useState<string>('');
+  const [address, setAddress] = useState<string>('');
   const [clientSelected, setClientSelected] = useState(null);
 
   const router = useRouter();
 
   // mutations
 
-  const [create] = useCreateDestinationMutation()
+  const [create] = useCreateDestinationMutation();
 
-  const { data: clientList, isLoading: isMakeLoading, isError: isMakeError} = useGetAllClientsQuery({});
+  const {
+    data: clientList,
+    isLoading: isMakeLoading,
+    isError: isMakeError,
+  } = useGetAllClientsQuery({});
 
   const handleSubmit = async () => {
     if (!name || !address || !clientSelected) {
-      alert("Por favor completa los campos obligatorios");
+      alert('Por favor completa los campos obligatorios');
       return;
     }
 
     const destinationDetails = {
       name,
       address,
-      clientId: clientSelected?.clientId
+      clientId: clientSelected?.clientId,
     };
 
-    console.log("Detalles del punto de partida:", destinationDetails);
+    console.log('Detalles del punto de partida:', destinationDetails);
 
     // Simulación de envío de datos
     const resp = await create(destinationDetails);
-    console.log('resp ', resp)
+    console.log('resp ', resp);
     router.back();
   };
 
   const handleClientSelected = (item: any) => {
     setClientSelected(item);
-  }
+  };
 
   return (
     <BackgroundView>
@@ -73,7 +70,7 @@ const CreateDestination: React.FC = () => {
             <Dropdown
               items={clientList}
               placeholder="Selecciona un cliente"
-              placeholderColor='#71a780'
+              placeholderColor="#71a780"
               renderItemText={(item) => `${item?.name}`}
               onItemSelected={(item) => handleClientSelected(item)}
               initialSelectedItem={clientSelected ?? undefined}
@@ -111,28 +108,28 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 16,
-    fontWeight: "bold",
-    color: "#71a780",
+    fontWeight: 'bold',
+    color: '#71a780',
     marginBottom: 8,
   },
   input: {
     height: 40,
-    borderColor: "#ccc",
+    borderColor: '#ccc',
     borderWidth: 1,
     marginBottom: 16,
     paddingHorizontal: 8,
     borderRadius: 4,
   },
   submitButton: {
-    backgroundColor: "#3f51b5",
+    backgroundColor: '#3f51b5',
     paddingVertical: 10,
     borderRadius: 4,
     marginTop: 20,
   },
   submitButtonText: {
-    color: "#fff",
-    textAlign: "center",
-    fontWeight: "bold",
+    color: '#fff',
+    textAlign: 'center',
+    fontWeight: 'bold',
   },
 });
 

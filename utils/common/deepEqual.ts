@@ -16,7 +16,7 @@ export function deepEqual(obj1: any, obj2: any) {
 
   for (const key of keys1) {
     if (!keys2.includes(key) || !deepEqual(obj1[key], obj2[key])) {
-      return false; 
+      return false;
     }
   }
 

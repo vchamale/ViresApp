@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useState } from "react";
+import React, { FC, useCallback, useState } from 'react';
 import {
   FlatList,
   RefreshControl,
@@ -8,23 +8,23 @@ import {
   TextInput,
   TouchableOpacity,
   View,
-} from "react-native";
-import { useRouter } from "expo-router";
-import CustomHeader from "@components/CustomHeader";
-import Space from "@components/Space";
-import SearchBox from "@components/SearchBox";
-import { useLazyGetAllTrucksQuery } from "@api/truckApi";
-import VehicleCard from "@components/VehicleCard";
+} from 'react-native';
+import { useRouter } from 'expo-router';
+import CustomHeader from '@components/CustomHeader';
+import Space from '@components/Space';
+import SearchBox from '@components/SearchBox';
+import { useLazyGetAllTrucksQuery } from '@api/truckApi';
+import VehicleCard from '@components/VehicleCard';
 
 const VehicleList: FC = () => {
   const [refreshing, setRefreshing] = useState(false);
-  const [searchTerm, setSearchTerm] = useState<string>("");
+  const [searchTerm, setSearchTerm] = useState<string>('');
 
   const router = useRouter();
 
   const [trigger, { data: vehicles, isLoading, isError, error }] = useLazyGetAllTrucksQuery();
-  console.log('vehicles ', vehicles)
-  console.log('error ', error)
+  console.log('vehicles ', vehicles);
+  console.log('error ', error);
 
   const onRefresh = useCallback(() => {
     setRefreshing(true);
@@ -53,15 +53,11 @@ const VehicleList: FC = () => {
   );
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: "#fff" }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
       <View style={{ padding: 15, flex: 1 }}>
-        <CustomHeader
-          title="Vehículos"
-          onBackPress={() => router.back()}
-          showHelpButton={true}
-        />
+        <CustomHeader title="Vehículos" onBackPress={() => router.back()} showHelpButton={true} />
         <Space vertical size={15} />
-        <Text style={{ color: "#5db075", fontWeight: "700" }}>Buscar Vehículo</Text>
+        <Text style={{ color: '#5db075', fontWeight: '700' }}>Buscar Vehículo</Text>
         <Space vertical size={5} />
         <SearchBox
           iconName="search"
@@ -72,16 +68,16 @@ const VehicleList: FC = () => {
           onChangeText={setSearchTerm}
         />
         <Space vertical size={15} />
-        <View style={{ flexDirection: "row" }}>
-          <View style={{ width: "50%", paddingRight: 10 }}>
+        <View style={{ flexDirection: 'row' }}>
+          <View style={{ width: '50%', paddingRight: 10 }}>
             <TouchableOpacity
               style={styles.createButton}
-              onPress={() => router.push("/vehicles/create")}
+              onPress={() => router.push('/vehicles/create')}
             >
               <Text style={styles.buttonText}>Nuevo Vehículo</Text>
             </TouchableOpacity>
           </View>
-          <View style={{ width: "50%" }}>
+          <View style={{ width: '50%' }}>
             <TouchableOpacity style={styles.searchButton} onPress={handleSearch}>
               <Text style={styles.buttonText}>Buscar</Text>
             </TouchableOpacity>
@@ -93,9 +89,7 @@ const VehicleList: FC = () => {
           keyExtractor={(item) => item.truckId}
           contentContainerStyle={styles.listContainer}
           renderItem={renderItem}
-          refreshControl={
-            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-          }
+          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
         />
       </View>
     </SafeAreaView>
@@ -108,11 +102,11 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   vehicleCard: {
-    backgroundColor: "#f8f9fa",
+    backgroundColor: '#f8f9fa',
     borderRadius: 8,
     padding: 15,
     marginBottom: 10,
-    shadowColor: "#000",
+    shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
@@ -120,23 +114,23 @@ const styles = StyleSheet.create({
   },
   vehicleInfo: {
     fontSize: 14,
-    color: "#555",
+    color: '#555',
     marginTop: 5,
   },
   searchButton: {
-    backgroundColor: "#71a780",
+    backgroundColor: '#71a780',
     paddingVertical: 10,
     borderRadius: 5,
   },
   createButton: {
-    backgroundColor: "#2073cdbd",
+    backgroundColor: '#2073cdbd',
     paddingVertical: 10,
     borderRadius: 4,
   },
   buttonText: {
-    color: "#fff",
-    textAlign: "center",
-    fontWeight: "bold",
+    color: '#fff',
+    textAlign: 'center',
+    fontWeight: 'bold',
   },
 });
 

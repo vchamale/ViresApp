@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -7,23 +7,23 @@ import {
   SafeAreaView,
   StyleSheet,
   Pressable,
-} from "react-native";
-import { useLocalSearchParams, useRouter } from "expo-router";
-import CustomHeader from "@components/CustomHeader";
-import Space from "@components/Space";
-import BackgroundView from "@components/BackgroundView";
-import { useUpdateDestinationMutation } from "@api/destinationApi";
-import CustomAlert from "@components/CustomAlert";
-import { MaterialIcons } from "@expo/vector-icons";
-import { useGetAllClientsQuery } from "@api/clientApi";
-import Dropdown from "@components/Dropdown";
+} from 'react-native';
+import { useLocalSearchParams, useRouter } from 'expo-router';
+import CustomHeader from '@components/CustomHeader';
+import Space from '@components/Space';
+import BackgroundView from '@components/BackgroundView';
+import { useUpdateDestinationMutation } from '@api/destinationApi';
+import CustomAlert from '@components/CustomAlert';
+import { MaterialIcons } from '@expo/vector-icons';
+import { useGetAllClientsQuery } from '@api/clientApi';
+import Dropdown from '@components/Dropdown';
 
 const EditDestination: React.FC = () => {
   const { destination, id } = useLocalSearchParams();
   const parsedDestination = JSON.parse(destination as string);
 
-  const [name, setName] = useState<string>("");
-  const [address, setAddress] = useState<string>("");
+  const [name, setName] = useState<string>('');
+  const [address, setAddress] = useState<string>('');
   const [isModified, setIsModified] = useState<boolean>(false);
   const [isAlertVisible, setAlertVisible] = useState<boolean>(false);
   const [clientSelected, setClientSelected] = useState(null);
@@ -34,7 +34,11 @@ const EditDestination: React.FC = () => {
 
   const [updateDestination] = useUpdateDestinationMutation();
 
-  const { data: clientList, isLoading: isMakeLoading, isError: isMakeError} = useGetAllClientsQuery({});
+  const {
+    data: clientList,
+    isLoading: isMakeLoading,
+    isError: isMakeError,
+  } = useGetAllClientsQuery({});
 
   // Inicializar los valores con los datos existentes del origen
   useEffect(() => {
@@ -46,37 +50,53 @@ const EditDestination: React.FC = () => {
 
   useEffect(() => {
     if (parsedDestination && clientList?.length > 0) {
-      const client = clientList?.find((client: any) => parsedDestination.clientId === client.clientId)
+      const client = clientList?.find(
+        (client: any) => parsedDestination.clientId === client.clientId,
+      );
       setClientSelected(client);
     }
   }, [clientList]);
 
   useEffect(() => {
-    setIsModified(name !== parsedDestination.name || address !== parsedDestination.address || clientSelected?.clientId !== parsedDestination.clientId);
-  }, [name, address, clientSelected?.clientId, parsedDestination.clientId, parsedDestination.name, parsedDestination.address]);
+    setIsModified(
+      name !== parsedDestination.name ||
+        address !== parsedDestination.address ||
+        clientSelected?.clientId !== parsedDestination.clientId,
+    );
+  }, [
+    name,
+    address,
+    clientSelected?.clientId,
+    parsedDestination.clientId,
+    parsedDestination.name,
+    parsedDestination.address,
+  ]);
 
   const handleSubmit = () => {
     if (!name) {
-      alert("Por favor completa todos los campos obligatorios");
+      alert('Por favor completa todos los campos obligatorios');
       return;
     }
 
     if (!address) {
-      alert("Por favor completa todos los campos obligatorios");
+      alert('Por favor completa todos los campos obligatorios');
       return;
     }
 
     if (!clientSelected) {
-      alert("Por favor completa todos los campos obligatorios");
+      alert('Por favor completa todos los campos obligatorios');
       return;
     }
 
-    setAlertVisible(true)
+    setAlertVisible(true);
   };
 
   const handleUpdateDestination = async () => {
     try {
-      const response = await updateDestination({ id, body: { name, address, clientId: clientSelected?.clientId } }).unwrap();
+      const response = await updateDestination({
+        id,
+        body: { name, address, clientId: clientSelected?.clientId },
+      }).unwrap();
       console.log('Destination updated successfully:', response);
       setAlertVisible(false);
       router.back();
@@ -86,10 +106,9 @@ const EditDestination: React.FC = () => {
     }
   };
 
-  
   const handleClientSelected = (item: any) => {
     setClientSelected(item);
-  }
+  };
 
   return (
     <BackgroundView>
@@ -105,21 +124,29 @@ const EditDestination: React.FC = () => {
           title="Estas seguro de modificar?"
           titleColor="#ff0809bd"
           text="Estas a punto de modificar la poliza, deseas continuar?"
-          onClose={() => { setAlertVisible(false) }}
+          onClose={() => {
+            setAlertVisible(false);
+          }}
           buttons={[
-            <Pressable onPress={() => { setAlertVisible(false) }}>
+            <Pressable
+              onPress={() => {
+                setAlertVisible(false);
+              }}
+            >
               <View style={styles.cancelButtonAlert}>
                 <Text style={styles.cancelButtonTextAlert}>Cancelar</Text>
               </View>
             </Pressable>,
-            <Pressable onPress={() => { 
-              handleUpdateDestination()
-              setAlertVisible(false) 
-              }}>
+            <Pressable
+              onPress={() => {
+                handleUpdateDestination();
+                setAlertVisible(false);
+              }}
+            >
               <View style={styles.continueButtonAlert}>
                 <Text style={styles.continueButtonTextAlert}>Modificar</Text>
               </View>
-            </Pressable>
+            </Pressable>,
           ]}
         />
         <Space vertical size={50} />
@@ -133,7 +160,7 @@ const EditDestination: React.FC = () => {
             <Dropdown
               items={clientList}
               placeholder="Selecciona un cliente"
-              placeholderColor='#71a780'
+              placeholderColor="#71a780"
               renderItemText={(item) => `${item?.name}`}
               onItemSelected={(item) => handleClientSelected(item)}
               initialSelectedItem={clientSelected ?? undefined}
@@ -154,12 +181,11 @@ const EditDestination: React.FC = () => {
               placeholder="Ingrese la dirección del origen"
             />
           </View>
-          <TouchableOpacity style={[
-            styles.submitButton,
-            !isModified && styles.disabledButton,
-            ]} onPress={handleSubmit}
+          <TouchableOpacity
+            style={[styles.submitButton, !isModified && styles.disabledButton]}
+            onPress={handleSubmit}
             disabled={!isModified}
-            >
+          >
             <Text style={styles.submitButtonText}>Guardar Cambios</Text>
           </TouchableOpacity>
         </View>
@@ -176,56 +202,56 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 16,
-    fontWeight: "bold",
-    color: "#71a780",
+    fontWeight: 'bold',
+    color: '#71a780',
     marginBottom: 8,
   },
   input: {
     height: 40,
-    borderColor: "#ccc",
+    borderColor: '#ccc',
     borderWidth: 1,
     marginBottom: 16,
     paddingHorizontal: 8,
     borderRadius: 4,
   },
   submitButton: {
-    backgroundColor: "#3f51b5",
+    backgroundColor: '#3f51b5',
     paddingVertical: 10,
     borderRadius: 4,
     marginTop: 20,
   },
   disabledButton: {
-    backgroundColor: "#9fa8da",
+    backgroundColor: '#9fa8da',
     opacity: 0.7,
   },
   submitButtonText: {
-    color: "#fff",
-    textAlign: "center",
-    fontWeight: "bold",
+    color: '#fff',
+    textAlign: 'center',
+    fontWeight: 'bold',
   },
   cancelButtonAlert: {
-    backgroundColor: "#ff0809bd",
+    backgroundColor: '#ff0809bd',
     paddingVertical: 10,
     paddingHorizontal: 35,
     borderRadius: 4,
     marginTop: 20,
   },
   cancelButtonTextAlert: {
-    color: "#fff",
+    color: '#fff',
     fontSize: 16,
-    textAlign: "center",
+    textAlign: 'center',
   },
   continueButtonAlert: {
-    backgroundColor: "#3f51b5",
+    backgroundColor: '#3f51b5',
     paddingVertical: 10,
     paddingHorizontal: 35,
     borderRadius: 4,
     marginTop: 20,
   },
   continueButtonTextAlert: {
-    color: "#fff",
+    color: '#fff',
     fontSize: 16,
-    textAlign: "center",
+    textAlign: 'center',
   },
 });
 

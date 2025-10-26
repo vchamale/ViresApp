@@ -2,9 +2,8 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from '../configureStore';
 
 const initialState: any = {
-  name: ''
+  name: '',
 };
-
 
 const userSlice = createSlice({
   name: 'userSlice',
@@ -12,8 +11,8 @@ const userSlice = createSlice({
   reducers: {
     addName(state, action: PayloadAction<any>) {
       state.name = action.payload;
-    }
-  }
+    },
+  },
 });
 
 export const { addName } = userSlice.actions;

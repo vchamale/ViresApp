@@ -23,13 +23,13 @@ const AnimatedText: React.FC<AnimatedTextProps> = ({
 
   useEffect(() => {
     if (textWidth > 0) {
-      const animationDuration = (textWidth + size) / speed * 1000; // Duración en ms
+      const animationDuration = ((textWidth + size) / speed) * 1000; // Duración en ms
       Animated.loop(
         Animated.timing(translateX, {
           toValue: -textWidth + size,
           duration: animationDuration,
           useNativeDriver: true,
-        })
+        }),
       ).start();
     }
   }, [textWidth, size, speed]);

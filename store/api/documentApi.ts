@@ -6,7 +6,7 @@ export const documentApi = createApi({
   reducerPath: 'document',
   baseQuery: createBaseQuery(api.vires.document),
   tagTypes: ['Document'],
-  endpoints: build => ({
+  endpoints: (build) => ({
     getAllDocuments: build.query<any, any>({
       query: ({ documentNumber, startDate, endDate }) => {
         const params: Record<string, string> = {};
@@ -29,7 +29,7 @@ export const documentApi = createApi({
         return {
           url: '/',
           method: 'POST',
-          body
+          body,
         };
       },
       invalidatesTags: ['Document'],
@@ -39,7 +39,7 @@ export const documentApi = createApi({
         return {
           url: `/${id}`,
           method: 'PUT',
-          body
+          body,
         };
       },
       invalidatesTags: ['Document'],
@@ -48,12 +48,12 @@ export const documentApi = createApi({
       query({ id }) {
         return {
           url: `/${id}`,
-          method: 'DELETE'
+          method: 'DELETE',
         };
       },
       invalidatesTags: ['Document'],
-    })
-  })
+    }),
+  }),
 });
 
 export const {
@@ -61,5 +61,5 @@ export const {
   useUpdateDocumentMutation,
   useGetAllDocumentsQuery,
   useGetDocumentByIdQuery,
-  useLazyGetAllDocumentsQuery
+  useLazyGetAllDocumentsQuery,
 } = documentApi;

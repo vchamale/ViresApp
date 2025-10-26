@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -7,14 +7,14 @@ import {
   SafeAreaView,
   StyleSheet,
   Pressable,
-} from "react-native";
-import { useRouter, useLocalSearchParams } from "expo-router";
+} from 'react-native';
+import { useRouter, useLocalSearchParams } from 'expo-router';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
-import CustomHeader from "@components/CustomHeader";
-import Space from "@components/Space";
-import BackgroundView from "@components/BackgroundView";
-import CustomAlert from "@components/CustomAlert";
-import { useUpdateDocumentMutation } from "@api/documentApi";
+import CustomHeader from '@components/CustomHeader';
+import Space from '@components/Space';
+import BackgroundView from '@components/BackgroundView';
+import CustomAlert from '@components/CustomAlert';
+import { useUpdateDocumentMutation } from '@api/documentApi';
 
 const EditPolicy: React.FC = () => {
   // expo
@@ -22,7 +22,7 @@ const EditPolicy: React.FC = () => {
   const parsedPolicy = JSON.parse(policy as string);
 
   // state
-  const [noDocument, setNoDocument] = useState<string>("");
+  const [noDocument, setNoDocument] = useState<string>('');
   const [isModified, setIsModified] = useState<boolean>(false);
   const [isAlertVisible, setAlertVisible] = useState<boolean>(false);
 
@@ -47,11 +47,11 @@ const EditPolicy: React.FC = () => {
   // handlers
   const handleSubmit = () => {
     if (!noDocument) {
-      alert("Por favor completa todos los campos obligatorios");
+      alert('Por favor completa todos los campos obligatorios');
       return;
     }
 
-    setAlertVisible(true)
+    setAlertVisible(true);
   };
 
   const updatePolicy = async () => {
@@ -80,21 +80,29 @@ const EditPolicy: React.FC = () => {
           title="Estas seguro de modificar?"
           titleColor="#ff0809bd"
           text="Estas a punto de modificar la poliza, deseas continuar?"
-          onClose={() => { setAlertVisible(false) }}
+          onClose={() => {
+            setAlertVisible(false);
+          }}
           buttons={[
-            <Pressable onPress={() => { setAlertVisible(false) }}>
+            <Pressable
+              onPress={() => {
+                setAlertVisible(false);
+              }}
+            >
               <View style={styles.cancelButtonAlert}>
                 <Text style={styles.cancelButtonTextAlert}>Cancelar</Text>
               </View>
             </Pressable>,
-            <Pressable onPress={() => { 
-              updatePolicy()
-              setAlertVisible(false) 
-              }}>
+            <Pressable
+              onPress={() => {
+                updatePolicy();
+                setAlertVisible(false);
+              }}
+            >
               <View style={styles.continueButtonAlert}>
                 <Text style={styles.continueButtonTextAlert}>Modificar</Text>
               </View>
-            </Pressable>
+            </Pressable>,
           ]}
         />
         <Space vertical size={50} />
@@ -136,56 +144,56 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 16,
-    fontWeight: "bold",
-    color: "#71a780",
+    fontWeight: 'bold',
+    color: '#71a780',
     marginBottom: 8,
   },
   input: {
     height: 40,
-    borderColor: "#ccc",
+    borderColor: '#ccc',
     borderWidth: 1,
     marginBottom: 16,
     paddingHorizontal: 8,
     borderRadius: 4,
   },
   submitButton: {
-    backgroundColor: "#3f51b5",
+    backgroundColor: '#3f51b5',
     paddingVertical: 10,
     borderRadius: 4,
     marginTop: 20,
   },
   disabledButton: {
-    backgroundColor: "#9fa8da", // Color más claro para el estado deshabilitado
+    backgroundColor: '#9fa8da', // Color más claro para el estado deshabilitado
     opacity: 0.7, // Hacer más opaco el botón deshabilitado
   },
   submitButtonText: {
-    color: "#fff",
-    textAlign: "center",
-    fontWeight: "bold",
+    color: '#fff',
+    textAlign: 'center',
+    fontWeight: 'bold',
   },
   cancelButtonAlert: {
-    backgroundColor: "#ff0809bd",
+    backgroundColor: '#ff0809bd',
     paddingVertical: 10,
     paddingHorizontal: 35,
     borderRadius: 4,
     marginTop: 20,
   },
   cancelButtonTextAlert: {
-    color: "#fff",
+    color: '#fff',
     fontSize: 16,
-    textAlign: "center",
+    textAlign: 'center',
   },
   continueButtonAlert: {
-    backgroundColor: "#3f51b5",
+    backgroundColor: '#3f51b5',
     paddingVertical: 10,
     paddingHorizontal: 35,
     borderRadius: 4,
     marginTop: 20,
   },
   continueButtonTextAlert: {
-    color: "#fff",
+    color: '#fff',
     fontSize: 16,
-    textAlign: "center",
+    textAlign: 'center',
   },
 });
 

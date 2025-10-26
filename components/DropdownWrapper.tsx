@@ -34,7 +34,7 @@ const DropdownWrapper = <T,>({
   isEditable = false,
   initialSelectedItem,
   linkText,
-  onLinkPress
+  onLinkPress,
 }: DropdownWrapperProps<T>) => {
   return (
     <View style={styles.container}>
@@ -54,7 +54,7 @@ const DropdownWrapper = <T,>({
           initialSelectedItem={initialSelectedItem}
         />
       ) : isError ? (
-        <Button 
+        <Button
           title="Algo ocurrió, has tap para intentar de nuevo o haz swipe down"
           color="red"
           onPress={refetch}
@@ -73,7 +73,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#71a780',
     marginBottom: 8,
-  }
+  },
 });
 
 export default DropdownWrapper;

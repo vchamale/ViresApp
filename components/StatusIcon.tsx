@@ -9,8 +9,7 @@ type StatusIconProps = {
 };
 
 const StatusIcon: React.FC<StatusIconProps> = ({ status }) => {
-
-  const icon = statusMapper[status.toLowerCase()] ?? statusMapper['default']
+  const icon = statusMapper[status.toLowerCase()] ?? statusMapper['default'];
 
   return (
     <View style={styles.headerContainer}>
@@ -34,7 +33,7 @@ const styles = StyleSheet.create({
   statusIcon: {
     borderRadius: 50,
     padding: 15,
-    backgroundColor: '#79c08e9e'
+    backgroundColor: '#79c08e9e',
   },
   title: {
     fontSize: 18,

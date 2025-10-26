@@ -6,7 +6,7 @@ export const originApi = createApi({
   reducerPath: 'origin',
   baseQuery: createBaseQuery(api.vires.origin),
   tagTypes: ['Origin'],
-  endpoints: build => ({
+  endpoints: (build) => ({
     getAllOrigins: build.query<any, any>({
       query: ({ search }) => {
         const params: Record<string, string> = {};
@@ -27,7 +27,7 @@ export const originApi = createApi({
         return {
           url: '/',
           method: 'POST',
-          body
+          body,
         };
       },
       invalidatesTags: ['Origin'],
@@ -37,7 +37,7 @@ export const originApi = createApi({
         return {
           url: `/${id}`,
           method: 'PUT',
-          body
+          body,
         };
       },
       invalidatesTags: ['Origin'],
@@ -46,12 +46,18 @@ export const originApi = createApi({
       query({ id }) {
         return {
           url: `/${id}`,
-          method: 'DELETE'
+          method: 'DELETE',
         };
       },
       invalidatesTags: ['Origin'],
-    })
-  })
+    }),
+  }),
 });
 
-export const { useCreateOriginMutation, useUpdateOriginMutation, useGetAllOriginsQuery, useGetOriginByIdQuery, useLazyGetAllOriginsQuery } = originApi;
+export const {
+  useCreateOriginMutation,
+  useUpdateOriginMutation,
+  useGetAllOriginsQuery,
+  useGetOriginByIdQuery,
+  useLazyGetAllOriginsQuery,
+} = originApi;

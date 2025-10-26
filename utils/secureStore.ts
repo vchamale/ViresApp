@@ -51,7 +51,7 @@ export const getDecodedToken = (token: string): Record<string, any> | null => {
 export const getValidToken = async (
   accessTokenKey: string,
   refreshTokenKey: string,
-  refreshTokenFunction: (refreshToken: string) => Promise<{ accessToken: string}>
+  refreshTokenFunction: (refreshToken: string) => Promise<{ accessToken: string }>,
 ): Promise<string | null> => {
   try {
     const accessToken = await getToken(accessTokenKey);
@@ -61,10 +61,10 @@ export const getValidToken = async (
     }
 
     const refreshToken = await getToken(refreshTokenKey);
-    console.log('valid token refreshToken ', refreshToken)
+    console.log('valid token refreshToken ', refreshToken);
     if (refreshToken) {
       const { accessToken } = await refreshTokenFunction(refreshToken);
-      console.log('accessTokenKey ', accessTokenKey, ' newAccessToken ', accessToken)
+      console.log('accessTokenKey ', accessTokenKey, ' newAccessToken ', accessToken);
       if (accessToken) {
         await saveToken(accessTokenKey, accessToken);
         return accessToken;

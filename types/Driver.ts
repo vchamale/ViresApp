@@ -8,5 +8,5 @@ export type DriverT = {
   lastNames: string;
   telephone: string;
   license: string;
-  status: boolean
+  status: boolean;
 };

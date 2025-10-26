@@ -1,9 +1,9 @@
-import React from "react";
-import { Dimensions, StyleSheet, View } from "react-native";
-import Svg, { Path } from "react-native-svg";
+import React from 'react';
+import { Dimensions, StyleSheet, View } from 'react-native';
+import Svg, { Path } from 'react-native-svg';
 
 const BackgroundView = ({ children }: { children: React.ReactNode }) => {
-  const { width } = Dimensions.get("window");
+  const { width } = Dimensions.get('window');
 
   return (
     <View style={styles.container}>
@@ -27,6 +27,6 @@ export default BackgroundView;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff'
+    backgroundColor: '#fff',
   },
 });

@@ -6,7 +6,7 @@ export const shipmentStatusApi = createApi({
   reducerPath: 'shipmentStatus',
   baseQuery: createBaseQuery(api.vires.shiptmentStatus),
   tagTypes: ['ShipmentStatus'],
-  endpoints: build => ({
+  endpoints: (build) => ({
     getAllShipmentsStatus: build.query<any, any>({
       query: ({ search }) => {
         const params: Record<string, string> = {};
@@ -21,8 +21,9 @@ export const shipmentStatusApi = createApi({
     getShipmentStatusById: build.query<any, string | number>({
       query: (id) => `/${id}`,
       providesTags: (result, error, id) => [{ type: 'ShipmentStatus', id }],
-    })
-  })
+    }),
+  }),
 });
 
-export const { useGetAllShipmentsStatusQuery, useLazyGetAllShipmentsStatusQuery } = shipmentStatusApi;
+export const { useGetAllShipmentsStatusQuery, useLazyGetAllShipmentsStatusQuery } =
+  shipmentStatusApi;

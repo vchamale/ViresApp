@@ -30,7 +30,7 @@ export const handleTokenValidation = async (dispatch?: Dispatch) => {
           },
         },
       ],
-      { cancelable: false }
+      { cancelable: false },
     );
 
     return null;

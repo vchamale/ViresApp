@@ -1,86 +1,68 @@
-import { FC } from "react";
-import {
-  SafeAreaView,
-  StyleSheet,
-  Text,
-  View,
-  Switch,
-  Pressable,
-} from "react-native";
-import { useRouter } from "expo-router";
-import CustomHeader from "@components/CustomHeader";
-import Space from "@components/Space";
-import IconMapper from "@components/IconMapper";
+import { FC } from 'react';
+import { SafeAreaView, StyleSheet, Text, View, Switch, Pressable } from 'react-native';
+import { useRouter } from 'expo-router';
+import CustomHeader from '@components/CustomHeader';
+import Space from '@components/Space';
+import IconMapper from '@components/IconMapper';
 
 const Configuration: FC = () => {
   const router = useRouter();
 
   const options = [
     {
-      label: "Cambiar Contraseña",
-      path: "./settings/change-password",
-      iconName: "lock-outline",
+      label: 'Cambiar Contraseña',
+      path: './settings/change-password',
+      iconName: 'lock-outline',
     },
     {
-      label: "Configuraciones Generales",
-      path: "./settings/general",
-      iconName: "settings-outline",
+      label: 'Configuraciones Generales',
+      path: './settings/general',
+      iconName: 'settings-outline',
     },
     {
-      label: "Notificaciones",
-      path: "./settings/notifications",
-      iconName: "notifications-outline",
+      label: 'Notificaciones',
+      path: './settings/notifications',
+      iconName: 'notifications-outline',
     },
     {
-      label: "Idioma",
-      path: "./settings/language",
-      iconName: "language-outline",
+      label: 'Idioma',
+      path: './settings/language',
+      iconName: 'language-outline',
     },
   ];
 
   const toggleOptions = [
     {
-      label: "Habilitar Biométricas",
-      iconName: "finger-print-outline",
+      label: 'Habilitar Biométricas',
+      iconName: 'finger-print-outline',
       value: false,
       onToggle: (value: boolean) => {
-        console.log("Biométricas:", value);
+        console.log('Biométricas:', value);
       },
     },
     {
-      label: "Modo Oscuro",
-      iconName: "moon-outline",
+      label: 'Modo Oscuro',
+      iconName: 'moon-outline',
       value: false,
       onToggle: (value: boolean) => {
-        console.log("Modo Oscuro:", value);
+        console.log('Modo Oscuro:', value);
       },
     },
   ];
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: "#fff" }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
       <View style={{ padding: 15, flex: 1 }}>
-        <CustomHeader
-          title="Configuración"
-          showBackButton={false}
-        />
+        <CustomHeader title="Configuración" showBackButton={false} />
         <Space vertical size={40} />
         <Text style={styles.sectionTitle}>General</Text>
         <Space vertical size={10} />
         <View>
           {options.map((option, index) => (
-            <Pressable
-              key={index}
-              onPress={() => router.push(option.path)}
-              style={styles.card}
-            >
+            <Pressable key={index} onPress={() => router.push(option.path)} style={styles.card}>
               <View style={styles.row}>
                 <View style={styles.iconContainer}>
-                  <IconMapper
-                    iconName={option.iconName}
-                    size={20}
-                    color="#fff"
-                  />
+                  <IconMapper iconName={option.iconName} size={20} color="#fff" />
                 </View>
                 <View style={styles.column}>
                   <Text style={styles.label}>{option.label}</Text>
@@ -100,11 +82,7 @@ const Configuration: FC = () => {
             <View key={index} style={styles.card}>
               <View style={styles.row}>
                 <View style={styles.iconContainer}>
-                  <IconMapper
-                    iconName={option.iconName}
-                    size={20}
-                    color="#fff"
-                  />
+                  <IconMapper iconName={option.iconName} size={20} color="#fff" />
                 </View>
                 <View style={styles.column}>
                   <Text style={styles.label}>{option.label}</Text>
@@ -113,7 +91,7 @@ const Configuration: FC = () => {
                   // value={option.value}
                   // onValueChange={option.onToggle}
                   thumbColor="#fff"
-                  trackColor={{ false: "#ddd", true: "#88c69a" }}
+                  trackColor={{ false: '#ddd', true: '#88c69a' }}
                 />
               </View>
             </View>
@@ -126,9 +104,9 @@ const Configuration: FC = () => {
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: "#88c69ad4",
+    backgroundColor: '#88c69ad4',
     borderRadius: 10,
-    shadowColor: "#000",
+    shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
@@ -137,33 +115,33 @@ const styles = StyleSheet.create({
     marginVertical: 5,
   },
   column: {
-    flexDirection: "column",
+    flexDirection: 'column',
     flex: 1,
   },
   row: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
   rowButton: {
-    flexDirection: "row",
-    justifyContent: "flex-end",
-    alignItems: "center",
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    alignItems: 'center',
   },
   iconContainer: {
-    alignContent: "center",
-    alignItems: "center",
+    alignContent: 'center',
+    alignItems: 'center',
     marginRight: 10,
   },
   label: {
-    fontWeight: "700",
-    color: "#fff",
+    fontWeight: '700',
+    color: '#fff',
     fontSize: 16,
   },
   sectionTitle: {
     fontSize: 18,
-    fontWeight: "bold",
-    color: "#525358",
+    fontWeight: 'bold',
+    color: '#525358',
     marginBottom: 10,
   },
 });

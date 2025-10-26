@@ -1,6 +1,15 @@
 // R/RN
 import React, { useState } from 'react';
-import { View, Button, StyleSheet, SafeAreaView, FlatList, TouchableOpacity, Text, Pressable } from 'react-native';
+import {
+  View,
+  Button,
+  StyleSheet,
+  SafeAreaView,
+  FlatList,
+  TouchableOpacity,
+  Text,
+  Pressable,
+} from 'react-native';
 // Expo stuff
 import { useRouter } from 'expo-router';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
@@ -35,46 +44,55 @@ const AddShipmentClient = () => {
   const { showSnackbar } = useSnackbar();
 
   // API Calls
-    // Querys
-    const { currentData: clients, isError: isErrorClients, error: errorClients, isLoading: isLoadingClients, refetch: refetchClients, isFetching: isFetchingClients } = useGetAllClientsQuery({});
+  // Querys
+  const {
+    currentData: clients,
+    isError: isErrorClients,
+    error: errorClients,
+    isLoading: isLoadingClients,
+    refetch: refetchClients,
+    isFetching: isFetchingClients,
+  } = useGetAllClientsQuery({});
   ///////
 
   // Functions
   const handleClientSelected = (item: any) => {
     dispatch(addClient(item));
     // setClient(item);
-  }
+  };
 
   const handleResetShipment = () => {
     dispatch(reset());
-    router.back()
-  }
+    router.back();
+  };
 
   const handleContinueButton = () => {
     if (!client) {
       return showSnackbar({
-        message: "Debes seleccionar un cliente para continuear.",
-        color: "red",
-        duration: 3000
+        message: 'Debes seleccionar un cliente para continuear.',
+        color: 'red',
+        duration: 3000,
       });
     }
-    
+
     // dispatch(addClient(client));
-    router.push('/shipments/create/shipping-route')
-  }
+    router.push('/shipments/create/shipping-route');
+  };
 
   // Computations
 
   return (
     <BackgroundView>
-      <SafeAreaView style={{
-        flex: 1
-      }}>
+      <SafeAreaView
+        style={{
+          flex: 1,
+        }}
+      >
         <View style={styles.container}>
-          <CustomHeader 
+          <CustomHeader
             title={'Agrega Cliente'}
-            backgroundColor='#71a780'
-            color='#fff'
+            backgroundColor="#71a780"
+            color="#fff"
             onBackPress={() => setResetShipmentAlertVisible(true)}
             isSinglePage={isSingleShipmentCreatePage}
             showChangeViewButton={true}
@@ -88,37 +106,47 @@ const AddShipmentClient = () => {
             title="Alerta"
             titleColor="#ff0809bd"
             text="Si regresas el progreso de tu viaje sera eliminado y deberas de ingresarlo de nuevo, deseas continuar?"
-            onClose={() => { setResetShipmentAlertVisible(false) }}
+            onClose={() => {
+              setResetShipmentAlertVisible(false);
+            }}
             buttons={[
-              <Pressable onPress={() => { setResetShipmentAlertVisible(false) }}>
+              <Pressable
+                onPress={() => {
+                  setResetShipmentAlertVisible(false);
+                }}
+              >
                 <View style={styles.cancelButtonAlert}>
                   <Text style={styles.cancelButtonTextAlert}>Cancelar</Text>
                 </View>
               </Pressable>,
-              <Pressable onPress={() => { 
-                handleResetShipment()
-                setResetShipmentAlertVisible(false) 
-                }}>
+              <Pressable
+                onPress={() => {
+                  handleResetShipment();
+                  setResetShipmentAlertVisible(false);
+                }}
+              >
                 <View style={styles.continueButtonAlert}>
                   <Text style={styles.continueButtonTextAlert}>Continuar</Text>
                 </View>
-              </Pressable>
+              </Pressable>,
             ]}
           />
           <Space vertical size={50} />
           <View style={{ flex: 1, justifyContent: 'space-between' }}>
             <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
-              <FontAwesome6 name='user-group' size={100} color='#fff' />
+              <FontAwesome6 name="user-group" size={100} color="#fff" />
             </View>
             <Space vertical size={80} />
-            <View style={{
-              backgroundColor: '#71a780',
-              marginHorizontal: 20,
-              padding: 20,
-              borderRadius: 20,
-              flexDirection: 'row',
-              justifyContent: 'space-around'
-            }}>
+            <View
+              style={{
+                backgroundColor: '#71a780',
+                marginHorizontal: 20,
+                padding: 20,
+                borderRadius: 20,
+                flexDirection: 'row',
+                justifyContent: 'space-around',
+              }}
+            >
               <FlatList
                 contentContainerStyle={styles.flatListContainer}
                 data={[{ key: 'form' }]}
@@ -131,7 +159,7 @@ const AddShipmentClient = () => {
                       isError={isErrorClients}
                       items={clients}
                       placeholder="Selecciona un cliente"
-                      placeholderColor='#71a780'
+                      placeholderColor="#71a780"
                       renderItemText={(item) => `${item.name}`}
                       onItemSelected={(item: ClientT) => handleClientSelected(item)}
                       refetch={refetchClients}
@@ -150,7 +178,7 @@ const AddShipmentClient = () => {
                     /> */}
                   </>
                 )}
-                />
+              />
             </View>
             <TouchableOpacity style={styles.createButton} onPress={handleContinueButton}>
               <Text style={styles.buttonText}>Continuar</Text>
@@ -165,10 +193,10 @@ const AddShipmentClient = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20
+    padding: 20,
   },
   flatListContainer: {
-    flexGrow: 1
+    flexGrow: 1,
   },
   label: {
     fontSize: 16,
@@ -194,38 +222,38 @@ const styles = StyleSheet.create({
   },
   createButton: {
     marginHorizontal: 50,
-    backgroundColor: "#2073cdbd",
+    backgroundColor: '#2073cdbd',
     paddingVertical: 10,
     borderRadius: 4,
   },
   buttonText: {
-    color: "#fff",
+    color: '#fff',
     textAlign: 'center',
-    fontWeight: "bold",
+    fontWeight: 'bold',
   },
   cancelButtonAlert: {
-    backgroundColor: "#ff0809bd",
+    backgroundColor: '#ff0809bd',
     paddingVertical: 10,
     paddingHorizontal: 35,
     borderRadius: 4,
     marginTop: 20,
   },
   cancelButtonTextAlert: {
-    color: "#fff",
+    color: '#fff',
     fontSize: 16,
-    textAlign: "center",
+    textAlign: 'center',
   },
   continueButtonAlert: {
-    backgroundColor: "#3f51b5",
+    backgroundColor: '#3f51b5',
     paddingVertical: 10,
     paddingHorizontal: 35,
     borderRadius: 4,
     marginTop: 20,
   },
   continueButtonTextAlert: {
-    color: "#fff",
+    color: '#fff',
     fontSize: 16,
-    textAlign: "center",
+    textAlign: 'center',
   },
 });
 

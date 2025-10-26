@@ -1,6 +1,14 @@
 // R/RN
 import React, { useState } from 'react';
-import { View, Text, Button, StyleSheet, SafeAreaView, FlatList, TouchableOpacity } from 'react-native';
+import {
+  View,
+  Text,
+  Button,
+  StyleSheet,
+  SafeAreaView,
+  FlatList,
+  TouchableOpacity,
+} from 'react-native';
 // Expo stuff
 import { useRouter } from 'expo-router';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
@@ -38,37 +46,51 @@ const ShippingRoute = () => {
   const { showSnackbar } = useSnackbar();
 
   // API Calls
-    // Querys
-    const { currentData: destinations, isError: isErrorDestinations, error: errorDestinations, isLoading: isLoadingDestinations, refetch: refetchDestinations, isFetching: isFetchingDestinations } = useGetAllDestinationsQuery({});
-    const { currentData: origins, isError: isErrorOrigins, error: errorOrigins, isLoading: isLoadingOrigins, refetch: refetchOrigins, isFetching: isFetchingOrigins } = useGetAllOriginsQuery({});
+  // Querys
+  const {
+    currentData: destinations,
+    isError: isErrorDestinations,
+    error: errorDestinations,
+    isLoading: isLoadingDestinations,
+    refetch: refetchDestinations,
+    isFetching: isFetchingDestinations,
+  } = useGetAllDestinationsQuery({});
+  const {
+    currentData: origins,
+    isError: isErrorOrigins,
+    error: errorOrigins,
+    isLoading: isLoadingOrigins,
+    refetch: refetchOrigins,
+    isFetching: isFetchingOrigins,
+  } = useGetAllOriginsQuery({});
 
-    // Mutations
+  // Mutations
 
   // Functions
   const handleOriginSelected = (originValue: OriginT) => {
     dispatch(addOrigin(originValue));
     // setOrigin(origin);
-  }
+  };
 
   const handleDestinationSelected = (destinationValue: DestinationT) => {
     dispatch(addDestination(destinationValue));
     // setDestination(destination)
-  }
+  };
 
   const handleContinueButton = () => {
     if (!origin) {
       return showSnackbar({
-        message: "Debes seleccionar un origen para continuar.",
-        color: "red",
-        duration: 3000
+        message: 'Debes seleccionar un origen para continuar.',
+        color: 'red',
+        duration: 3000,
       });
     }
 
     if (!destination) {
       return showSnackbar({
-        message: "Debes seleccionar un destino para continuar.",
-        color: "red",
-        duration: 3000
+        message: 'Debes seleccionar un destino para continuar.',
+        color: 'red',
+        duration: 3000,
       });
     }
 
@@ -77,19 +99,21 @@ const ShippingRoute = () => {
     //   destination
     // }))
 
-    router.push('/shipments/create/add-container-details')
-  }
+    router.push('/shipments/create/add-container-details');
+  };
 
   return (
     <BackgroundView>
-      <SafeAreaView style={{
-        flex: 1
-      }}>
+      <SafeAreaView
+        style={{
+          flex: 1,
+        }}
+      >
         <View style={styles.container}>
-          <CustomHeader 
+          <CustomHeader
             title={'Ruta de viaje'}
-            backgroundColor='#71a780'
-            color='#fff'
+            backgroundColor="#71a780"
+            color="#fff"
             isSinglePage={isSingleShipmentCreatePage}
             showChangeViewButton={true}
             onChangeViewPress={() => {
@@ -102,7 +126,7 @@ const ShippingRoute = () => {
           />
           <Space vertical size={50} />
           <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
-            <FontAwesome6 name='route' size={100} color='#fff' />
+            <FontAwesome6 name="route" size={100} color="#fff" />
           </View>
           <Space vertical size={180} />
           <FlatList
@@ -111,22 +135,22 @@ const ShippingRoute = () => {
             keyExtractor={(item) => item.key}
             renderItem={() => (
               <>
-              <Text style={styles.label}>Origen</Text>
-              <DropdownWrapper
-                isLoading={isLoadingOrigins}
-                isFetching={isFetchingOrigins}
-                isError={isErrorOrigins}
-                items={origins}
-                placeholder="Selecciona una origen"
-                placeholderColor='#71a780'
-                renderItemText={(item) => `${item.name}`}
-                onItemSelected={(item: OriginT) => handleOriginSelected(item)}
-                refetch={refetchOrigins}
-                linkText="Agregar nuevo origen"
-                onLinkPress={() => console.log('Botón tipo link presionado')}
-                {...(origin && { initialSelectedItem: origin })}
-              />
-              {/* <Dropdown 
+                <Text style={styles.label}>Origen</Text>
+                <DropdownWrapper
+                  isLoading={isLoadingOrigins}
+                  isFetching={isFetchingOrigins}
+                  isError={isErrorOrigins}
+                  items={origins}
+                  placeholder="Selecciona una origen"
+                  placeholderColor="#71a780"
+                  renderItemText={(item) => `${item.name}`}
+                  onItemSelected={(item: OriginT) => handleOriginSelected(item)}
+                  refetch={refetchOrigins}
+                  linkText="Agregar nuevo origen"
+                  onLinkPress={() => console.log('Botón tipo link presionado')}
+                  {...(origin && { initialSelectedItem: origin })}
+                />
+                {/* <Dropdown 
                 items={origins}
                 placeholder="Selecciona una origen"
                 renderItemText={(item) => `${item.name}`}
@@ -134,8 +158,8 @@ const ShippingRoute = () => {
                 linkText="Agregar nuevo origen"
                 onLinkPress={() => console.log('Botón tipo link presionado')}
               /> */}
-              <Text style={styles.label}>Destino</Text>
-              {/* <Dropdown 
+                <Text style={styles.label}>Destino</Text>
+                {/* <Dropdown 
                 items={destinations}
                 placeholder="Selecciona una destino"
                 renderItemText={(item) => `${item.address}`}
@@ -143,23 +167,23 @@ const ShippingRoute = () => {
                 linkText="Agregar nuevo destino"
                 onLinkPress={() => console.log('Botón tipo link presionado')}
               /> */}
-              <DropdownWrapper
-                isLoading={isLoadingDestinations}
-                isFetching={isFetchingDestinations}
-                isError={isErrorDestinations}
-                items={destinations}
-                placeholder="Selecciona un destino"
-                placeholderColor='#71a780'
-                renderItemText={(item) => `${item.address}`}
-                onItemSelected={(item: DestinationT) => handleDestinationSelected(item)}
-                refetch={refetchDestinations}
-                linkText="Agregar nuevo destino"
-                onLinkPress={() => console.log('Botón tipo link presionado')}
-                {...(destination && { initialSelectedItem: destination })}
-              />
+                <DropdownWrapper
+                  isLoading={isLoadingDestinations}
+                  isFetching={isFetchingDestinations}
+                  isError={isErrorDestinations}
+                  items={destinations}
+                  placeholder="Selecciona un destino"
+                  placeholderColor="#71a780"
+                  renderItemText={(item) => `${item.address}`}
+                  onItemSelected={(item: DestinationT) => handleDestinationSelected(item)}
+                  refetch={refetchDestinations}
+                  linkText="Agregar nuevo destino"
+                  onLinkPress={() => console.log('Botón tipo link presionado')}
+                  {...(destination && { initialSelectedItem: destination })}
+                />
               </>
             )}
-            />
+          />
           <TouchableOpacity style={styles.createButton} onPress={handleContinueButton}>
             <Text style={styles.buttonText}>Continuar</Text>
           </TouchableOpacity>
@@ -172,7 +196,7 @@ const ShippingRoute = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20
+    padding: 20,
   },
   flatListContainer: {
     flexGrow: 1,
@@ -202,14 +226,14 @@ const styles = StyleSheet.create({
   },
   createButton: {
     marginHorizontal: 50,
-    backgroundColor: "#2073cdbd",
+    backgroundColor: '#2073cdbd',
     paddingVertical: 10,
     borderRadius: 4,
   },
   buttonText: {
-    color: "#fff",
+    color: '#fff',
     textAlign: 'center',
-    fontWeight: "bold",
+    fontWeight: 'bold',
   },
 });
 

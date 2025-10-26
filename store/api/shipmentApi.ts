@@ -6,7 +6,7 @@ export const shipmentApi = createApi({
   reducerPath: 'shipment',
   baseQuery: createBaseQuery(api.vires.shipment),
   tagTypes: ['Shipment'],
-  endpoints: build => ({
+  endpoints: (build) => ({
     getAllShipments: build.query<any, any>({
       query: ({ search, startDate, endDate }) => {
         const params: Record<string, string> = {};
@@ -29,7 +29,7 @@ export const shipmentApi = createApi({
         return {
           url: '/',
           method: 'POST',
-          body
+          body,
         };
       },
       invalidatesTags: ['Shipment'],
@@ -39,7 +39,7 @@ export const shipmentApi = createApi({
         return {
           url: `/${id}`,
           method: 'PUT',
-          body
+          body,
         };
       },
       invalidatesTags: ['Shipment'],
@@ -48,12 +48,18 @@ export const shipmentApi = createApi({
       query({ id }) {
         return {
           url: `/${id}`,
-          method: 'DELETE'
+          method: 'DELETE',
         };
       },
       invalidatesTags: ['Shipment'],
-    })
-  })
+    }),
+  }),
 });
 
-export const { useCreateShipmentMutation, useUpdateShipmentMutation, useGetAllShipmentsQuery, useLazyGetAllShipmentsQuery, useGetShipmentByIdQuery } = shipmentApi;
+export const {
+  useCreateShipmentMutation,
+  useUpdateShipmentMutation,
+  useGetAllShipmentsQuery,
+  useLazyGetAllShipmentsQuery,
+  useGetShipmentByIdQuery,
+} = shipmentApi;

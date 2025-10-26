@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useState } from "react";
+import React, { FC, useCallback, useState } from 'react';
 import {
   FlatList,
   RefreshControl,
@@ -7,17 +7,17 @@ import {
   Text,
   TouchableOpacity,
   View,
-} from "react-native";
-import { useRouter } from "expo-router";
-import CustomHeader from "@components/CustomHeader";
-import Space from "@components/Space";
-import SearchBox from "@components/SearchBox";
-import StartingPointCard from "@components/StartingPointCard";
-import { useLazyGetAllOriginsQuery } from "@api/originApi";
+} from 'react-native';
+import { useRouter } from 'expo-router';
+import CustomHeader from '@components/CustomHeader';
+import Space from '@components/Space';
+import SearchBox from '@components/SearchBox';
+import StartingPointCard from '@components/StartingPointCard';
+import { useLazyGetAllOriginsQuery } from '@api/originApi';
 
 const OriginList: FC = () => {
   const [refreshing, setRefreshing] = useState(false);
-  const [searchTerm, setSearchTerm] = useState<string>("");
+  const [searchTerm, setSearchTerm] = useState<string>('');
 
   const router = useRouter();
 
@@ -29,7 +29,6 @@ const OriginList: FC = () => {
       .unwrap()
       .finally(() => setRefreshing(false));
   }, [trigger]);
-
 
   const handleSearch = () => {
     const params: Record<string, string> = {};
@@ -49,10 +48,11 @@ const OriginList: FC = () => {
           })
         }
       />
-  )};
+    );
+  };
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: "#fff" }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
       <View style={{ padding: 15, flex: 1 }}>
         <CustomHeader
           title="Punto de Partida"
@@ -60,7 +60,7 @@ const OriginList: FC = () => {
           showHelpButton={true}
         />
         <Space vertical size={15} />
-        <Text style={{ color: "#71a780", fontWeight: "700" }}>Buscar Punto de Partida</Text>
+        <Text style={{ color: '#71a780', fontWeight: '700' }}>Buscar Punto de Partida</Text>
         <Space vertical size={5} />
         <SearchBox
           iconName="search"
@@ -71,16 +71,16 @@ const OriginList: FC = () => {
           onChangeText={setSearchTerm}
         />
         <Space vertical size={15} />
-        <View style={{ flexDirection: "row" }}>
-          <View style={{ width: "50%", paddingRight: 10 }}>
+        <View style={{ flexDirection: 'row' }}>
+          <View style={{ width: '50%', paddingRight: 10 }}>
             <TouchableOpacity
               style={styles.createButton}
-              onPress={() => router.push("/origin/create")}
+              onPress={() => router.push('/origin/create')}
             >
               <Text style={styles.buttonText}>Nuevo Destino</Text>
             </TouchableOpacity>
           </View>
-          <View style={{ width: "50%" }}>
+          <View style={{ width: '50%' }}>
             <TouchableOpacity style={styles.searchButton} onPress={handleSearch}>
               <Text style={styles.buttonText}>Buscar</Text>
             </TouchableOpacity>
@@ -92,9 +92,7 @@ const OriginList: FC = () => {
           keyExtractor={(item) => item.originId.toString()}
           contentContainerStyle={styles.listContainer}
           renderItem={renderItem}
-          refreshControl={
-            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-          }
+          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
         />
       </View>
     </SafeAreaView>
@@ -107,11 +105,11 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   originCard: {
-    backgroundColor: "#f8f9fa",
+    backgroundColor: '#f8f9fa',
     borderRadius: 8,
     padding: 15,
     marginBottom: 10,
-    shadowColor: "#000",
+    shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
@@ -119,28 +117,28 @@ const styles = StyleSheet.create({
   },
   originName: {
     fontSize: 18,
-    fontWeight: "bold",
-    color: "#333",
+    fontWeight: 'bold',
+    color: '#333',
   },
   originInfo: {
     fontSize: 14,
-    color: "#555",
+    color: '#555',
     marginTop: 5,
   },
   searchButton: {
-    backgroundColor: "#71a780",
+    backgroundColor: '#71a780',
     paddingVertical: 10,
     borderRadius: 5,
   },
   createButton: {
-    backgroundColor: "#2073cdbd",
+    backgroundColor: '#2073cdbd',
     paddingVertical: 10,
     borderRadius: 4,
   },
   buttonText: {
-    color: "#fff",
-    textAlign: "center",
-    fontWeight: "bold",
+    color: '#fff',
+    textAlign: 'center',
+    fontWeight: 'bold',
   },
 });
 

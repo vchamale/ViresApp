@@ -1,17 +1,10 @@
-import React from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  ScrollView,
-  SafeAreaView,
-  TouchableOpacity,
-} from "react-native";
-import { useLocalSearchParams, useRouter } from "expo-router";
-import Space from "@components/Space";
-import CustomHeader from "@components/CustomHeader";
-import BackgroundView from "@components/BackgroundView";
-import { useGetDestinationsByIdQuery } from "@api/destinationApi";
+import React from 'react';
+import { View, Text, StyleSheet, ScrollView, SafeAreaView, TouchableOpacity } from 'react-native';
+import { useLocalSearchParams, useRouter } from 'expo-router';
+import Space from '@components/Space';
+import CustomHeader from '@components/CustomHeader';
+import BackgroundView from '@components/BackgroundView';
+import { useGetDestinationsByIdQuery } from '@api/destinationApi';
 
 const DestinationView = () => {
   const { id } = useLocalSearchParams<{
@@ -24,9 +17,9 @@ const DestinationView = () => {
   const handleEdit = () => {
     router.push({
       pathname: `/destination/edit/[id]`,
-      params: { id, destination: JSON.stringify(destination) }
-    })
-  }
+      params: { id, destination: JSON.stringify(destination) },
+    });
+  };
 
   return (
     <BackgroundView>
@@ -47,12 +40,12 @@ const DestinationView = () => {
           <View style={styles.card}>
             <View style={[styles.row]}>
               <Text style={styles.label}>Nombre</Text>
-              <Text style={styles.text}>{destination?.name || "N/A"}</Text>
+              <Text style={styles.text}>{destination?.name || 'N/A'}</Text>
             </View>
             <Space vertical size={10} />
             <View style={styles.row}>
               <Text style={styles.label}>Dirección</Text>
-              <Text style={styles.text}>{destination?.address || "N/A"}</Text>
+              <Text style={styles.text}>{destination?.address || 'N/A'}</Text>
             </View>
           </View>
           <View style={{ flexDirection: 'row', paddingHorizontal: 0 }}>
@@ -77,9 +70,9 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   card: {
-    backgroundColor: "#f8f9fa",
+    backgroundColor: '#f8f9fa',
     borderRadius: 10,
-    shadowColor: "#000",
+    shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
@@ -88,30 +81,30 @@ const styles = StyleSheet.create({
     marginBottom: 15,
   },
   row: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
     paddingVertical: 10,
     borderBottomWidth: 1,
-    borderBottomColor: "#ddd",
+    borderBottomColor: '#ddd',
   },
   label: {
-    fontWeight: "700",
-    color: "#5db075",
+    fontWeight: '700',
+    color: '#5db075',
     fontSize: 14,
   },
   createButton: {
-    backgroundColor: "#2073cdbd",
+    backgroundColor: '#2073cdbd',
     paddingVertical: 10,
     borderRadius: 4,
   },
   buttonText: {
-    color: "#fff",
+    color: '#fff',
     textAlign: 'center',
-    fontWeight: "bold",
+    fontWeight: 'bold',
   },
   text: {
     fontSize: 14,
-    color: "#333",
+    color: '#333',
   },
 });

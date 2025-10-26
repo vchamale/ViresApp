@@ -5,38 +5,38 @@ import createBaseQuery from 'store/util/baseQuery';
 export const currencyApi = createApi({
   reducerPath: 'currency',
   baseQuery: createBaseQuery(api.vires.currency),
-  endpoints: build => ({
+  endpoints: (build) => ({
     getAllCurrencys: build.query<any, any>({
       query: () => `/`,
-      
     }),
     createCurrency: build.mutation<{ data: any }, Partial<any>>({
       query(body) {
         return {
           url: '/',
           method: 'POST',
-          body
+          body,
         };
-      }
+      },
     }),
     updateCurrency: build.mutation<any, Partial<any>>({
       query(body) {
         return {
           url: '/',
           method: 'PUT',
-          body
+          body,
         };
-      }
+      },
     }),
     deleteCurrency: build.mutation<any, Partial<any>>({
       query({ id }) {
         return {
           url: `/${id}`,
-          method: 'DELETE'
+          method: 'DELETE',
         };
-      }
-    })
-  })
+      },
+    }),
+  }),
 });
 
-export const { useCreateCurrencyMutation, useUpdateCurrencyMutation, useGetAllCurrencysQuery } = currencyApi;
+export const { useCreateCurrencyMutation, useUpdateCurrencyMutation, useGetAllCurrencysQuery } =
+  currencyApi;

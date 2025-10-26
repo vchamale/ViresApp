@@ -13,7 +13,13 @@ type CardProps = {
   onViewPress: () => void;
 };
 
-const ShipmentCard: React.FC<CardProps> = ({ containerNumber, date, destination, status, onViewPress }) => {
+const ShipmentCard: React.FC<CardProps> = ({
+  containerNumber,
+  date,
+  destination,
+  status,
+  onViewPress,
+}) => {
   return (
     <View style={styles.card}>
       <View style={styles.row}>
@@ -26,7 +32,9 @@ const ShipmentCard: React.FC<CardProps> = ({ containerNumber, date, destination,
             textSize={85}
             fontSize={12}
             speed={20}
-          >{status?.toUpperCase()}</AnimatedText>
+          >
+            {status?.toUpperCase()}
+          </AnimatedText>
         </View>
         <View style={styles.column}>
           <View style={styles.column}>
@@ -76,7 +84,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 5,
   },
   column: {
-    flexDirection: 'column'
+    flexDirection: 'column',
   },
   row: {
     flexDirection: 'row',
@@ -86,7 +94,7 @@ const styles = StyleSheet.create({
   rowButton: {
     flexDirection: 'row',
     justifyContent: 'flex-end',
-    alignItems: 'flex-end'
+    alignItems: 'flex-end',
   },
   destinationRow: {
     alignItems: 'flex-start',
@@ -101,7 +109,7 @@ const styles = StyleSheet.create({
     color: '#333',
   },
   destinationContainer: {
-    flex: 1
+    flex: 1,
   },
   viewButton: {
     backgroundColor: '#71a780',

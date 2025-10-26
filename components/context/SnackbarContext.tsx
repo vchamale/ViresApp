@@ -39,11 +39,11 @@ export const SnackbarProvider = ({ children }: { children: ReactNode }) => {
         <Snackbar
           message={snackbarOptions.message}
           style={{
-            position: "absolute", 
-            start: 16, 
-            end: 16, 
-            bottom: 30, 
-            backgroundColor: snackbarOptions.color || 'red'
+            position: 'absolute',
+            start: 16,
+            end: 16,
+            bottom: 30,
+            backgroundColor: snackbarOptions.color || 'red',
           }}
         />
       )}

@@ -1,5 +1,13 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, StyleSheet, SafeAreaView, TouchableOpacity, Switch } from 'react-native';
+import {
+  View,
+  Text,
+  TextInput,
+  StyleSheet,
+  SafeAreaView,
+  TouchableOpacity,
+  Switch,
+} from 'react-native';
 import { useRouter } from 'expo-router';
 import CustomHeader from '@components/CustomHeader';
 import BackgroundView from '@components/BackgroundView';

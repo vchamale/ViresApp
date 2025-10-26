@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -7,21 +7,21 @@ import {
   SafeAreaView,
   StyleSheet,
   Pressable,
-} from "react-native";
-import { useLocalSearchParams, useRouter } from "expo-router";
-import CustomHeader from "@components/CustomHeader";
-import Space from "@components/Space";
-import BackgroundView from "@components/BackgroundView";
-import { useUpdateOriginMutation } from "@api/originApi";
-import CustomAlert from "@components/CustomAlert";
-import { MaterialIcons } from "@expo/vector-icons";
+} from 'react-native';
+import { useLocalSearchParams, useRouter } from 'expo-router';
+import CustomHeader from '@components/CustomHeader';
+import Space from '@components/Space';
+import BackgroundView from '@components/BackgroundView';
+import { useUpdateOriginMutation } from '@api/originApi';
+import CustomAlert from '@components/CustomAlert';
+import { MaterialIcons } from '@expo/vector-icons';
 
 const EditOrigin: React.FC = () => {
   const { origin, id } = useLocalSearchParams();
   const parsedOrigin = JSON.parse(origin as string);
 
-  const [name, setName] = useState<string>("");
-  const [address, setAddress] = useState<string>("");
+  const [name, setName] = useState<string>('');
+  const [address, setAddress] = useState<string>('');
   const [isModified, setIsModified] = useState<boolean>(false);
   const [isAlertVisible, setAlertVisible] = useState<boolean>(false);
 
@@ -45,16 +45,16 @@ const EditOrigin: React.FC = () => {
 
   const handleSubmit = () => {
     if (!name) {
-      alert("Por favor completa todos los campos obligatorios");
+      alert('Por favor completa todos los campos obligatorios');
       return;
     }
 
     if (!address) {
-      alert("Por favor completa todos los campos obligatorios");
+      alert('Por favor completa todos los campos obligatorios');
       return;
     }
 
-    setAlertVisible(true)
+    setAlertVisible(true);
   };
 
   const handleUpdateOrigin = async () => {
@@ -83,21 +83,29 @@ const EditOrigin: React.FC = () => {
           title="Estas seguro de modificar?"
           titleColor="#ff0809bd"
           text="Estas a punto de modificar la poliza, deseas continuar?"
-          onClose={() => { setAlertVisible(false) }}
+          onClose={() => {
+            setAlertVisible(false);
+          }}
           buttons={[
-            <Pressable onPress={() => { setAlertVisible(false) }}>
+            <Pressable
+              onPress={() => {
+                setAlertVisible(false);
+              }}
+            >
               <View style={styles.cancelButtonAlert}>
                 <Text style={styles.cancelButtonTextAlert}>Cancelar</Text>
               </View>
             </Pressable>,
-            <Pressable onPress={() => { 
-              handleUpdateOrigin()
-              setAlertVisible(false) 
-              }}>
+            <Pressable
+              onPress={() => {
+                handleUpdateOrigin();
+                setAlertVisible(false);
+              }}
+            >
               <View style={styles.continueButtonAlert}>
                 <Text style={styles.continueButtonTextAlert}>Modificar</Text>
               </View>
-            </Pressable>
+            </Pressable>,
           ]}
         />
         <Space vertical size={50} />
@@ -123,12 +131,11 @@ const EditOrigin: React.FC = () => {
               placeholder="Ingrese la dirección del origen"
             />
           </View>
-          <TouchableOpacity style={[
-            styles.submitButton,
-            !isModified && styles.disabledButton,
-            ]} onPress={handleSubmit}
+          <TouchableOpacity
+            style={[styles.submitButton, !isModified && styles.disabledButton]}
+            onPress={handleSubmit}
             disabled={!isModified}
-            >
+          >
             <Text style={styles.submitButtonText}>Guardar Cambios</Text>
           </TouchableOpacity>
         </View>
@@ -145,56 +152,56 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 16,
-    fontWeight: "bold",
-    color: "#71a780",
+    fontWeight: 'bold',
+    color: '#71a780',
     marginBottom: 8,
   },
   input: {
     height: 40,
-    borderColor: "#ccc",
+    borderColor: '#ccc',
     borderWidth: 1,
     marginBottom: 16,
     paddingHorizontal: 8,
     borderRadius: 4,
   },
   submitButton: {
-    backgroundColor: "#3f51b5",
+    backgroundColor: '#3f51b5',
     paddingVertical: 10,
     borderRadius: 4,
     marginTop: 20,
   },
   disabledButton: {
-    backgroundColor: "#9fa8da",
+    backgroundColor: '#9fa8da',
     opacity: 0.7,
   },
   submitButtonText: {
-    color: "#fff",
-    textAlign: "center",
-    fontWeight: "bold",
+    color: '#fff',
+    textAlign: 'center',
+    fontWeight: 'bold',
   },
   cancelButtonAlert: {
-    backgroundColor: "#ff0809bd",
+    backgroundColor: '#ff0809bd',
     paddingVertical: 10,
     paddingHorizontal: 35,
     borderRadius: 4,
     marginTop: 20,
   },
   cancelButtonTextAlert: {
-    color: "#fff",
+    color: '#fff',
     fontSize: 16,
-    textAlign: "center",
+    textAlign: 'center',
   },
   continueButtonAlert: {
-    backgroundColor: "#3f51b5",
+    backgroundColor: '#3f51b5',
     paddingVertical: 10,
     paddingHorizontal: 35,
     borderRadius: 4,
     marginTop: 20,
   },
   continueButtonTextAlert: {
-    color: "#fff",
+    color: '#fff',
     fontSize: 16,
-    textAlign: "center",
+    textAlign: 'center',
   },
 });
 

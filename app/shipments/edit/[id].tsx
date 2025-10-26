@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -8,32 +8,32 @@ import {
   StyleSheet,
   Pressable,
   ScrollView,
-} from "react-native";
-import { useRouter, useLocalSearchParams } from "expo-router";
-import CustomHeader from "@components/CustomHeader";
-import Space from "@components/Space";
-import BackgroundView from "@components/BackgroundView";
-import Dropdown from "@components/Dropdown";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
-import CustomAlert from "@components/CustomAlert";
-import { useUpdateShipmentMutation } from "@api/shipmentApi";
-import { useGetAllShipmentsStatusQuery } from "@api/shipmentStatusApi";
-import { useGetAllOriginsQuery } from "@api/originApi";
-import { useGetAllDestinationsQuery } from "@api/destinationApi";
-import { useGetAllClientsQuery } from "@api/clientApi";
-import { useGetAllTrucksQuery } from "@api/truckApi";
-import { useGetAllDriversQuery } from "@api/driverApi";
+} from 'react-native';
+import { useRouter, useLocalSearchParams } from 'expo-router';
+import CustomHeader from '@components/CustomHeader';
+import Space from '@components/Space';
+import BackgroundView from '@components/BackgroundView';
+import Dropdown from '@components/Dropdown';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+import CustomAlert from '@components/CustomAlert';
+import { useUpdateShipmentMutation } from '@api/shipmentApi';
+import { useGetAllShipmentsStatusQuery } from '@api/shipmentStatusApi';
+import { useGetAllOriginsQuery } from '@api/originApi';
+import { useGetAllDestinationsQuery } from '@api/destinationApi';
+import { useGetAllClientsQuery } from '@api/clientApi';
+import { useGetAllTrucksQuery } from '@api/truckApi';
+import { useGetAllDriversQuery } from '@api/driverApi';
 
 const EditShipment: React.FC = () => {
   const { shipment, id } = useLocalSearchParams(); // Recibe los datos del envío como string
   const parsedShipment = JSON.parse(shipment as string);
 
-  const [containerNumber, setContainerNumber] = useState<string>("");
-  const [weight, setWeight] = useState<string>("");
-  const [price, setPrice] = useState<string>("");
-  const [client, setClient] = useState<string>("");
-  const [driver, setDriver] = useState<string>("");
-  const [vehicle, setVehicle] = useState<string>("");
+  const [containerNumber, setContainerNumber] = useState<string>('');
+  const [weight, setWeight] = useState<string>('');
+  const [price, setPrice] = useState<string>('');
+  const [client, setClient] = useState<string>('');
+  const [driver, setDriver] = useState<string>('');
+  const [vehicle, setVehicle] = useState<string>('');
   const [isAlertVisible, setAlertVisible] = useState<boolean>(false);
   const [isModified, setIsModified] = useState<boolean>(false);
   const [shipmentStatusSelected, setShipmentStatusSelected] = useState(null);
@@ -49,39 +49,64 @@ const EditShipment: React.FC = () => {
   const [modifyShipment] = useUpdateShipmentMutation();
 
   // Queries
-  const { data: shipmentStatusList, isLoading: isShipmentStatusLoading, isError: isShipmentStatusError} = useGetAllShipmentsStatusQuery({});
-  const { data: originList, isLoading: isOriginLoading, isError: isOriginError} = useGetAllOriginsQuery({});
-  const { data: destinationList, isLoading: isDestinationLoading, isError: isDestinationError} = useGetAllDestinationsQuery({});
+  const {
+    data: shipmentStatusList,
+    isLoading: isShipmentStatusLoading,
+    isError: isShipmentStatusError,
+  } = useGetAllShipmentsStatusQuery({});
+  const {
+    data: originList,
+    isLoading: isOriginLoading,
+    isError: isOriginError,
+  } = useGetAllOriginsQuery({});
+  const {
+    data: destinationList,
+    isLoading: isDestinationLoading,
+    isError: isDestinationError,
+  } = useGetAllDestinationsQuery({});
   // const { data: clientList, isLoading: isClientLoading, isError: isClientError} = useGetAllClientsQuery({});
-  const { data: vehicleList, isLoading: isVehicleLoading, isError: isVehicleError} = useGetAllTrucksQuery({});
-  const { data: driverList, isLoading: isdriverLoading, isError: isdriverError} = useGetAllDriversQuery({});
+  const {
+    data: vehicleList,
+    isLoading: isVehicleLoading,
+    isError: isVehicleError,
+  } = useGetAllTrucksQuery({});
+  const {
+    data: driverList,
+    isLoading: isdriverLoading,
+    isError: isdriverError,
+  } = useGetAllDriversQuery({});
 
   // Inicializar los valores con los datos existentes del envío
   useEffect(() => {
     if (parsedShipment) {
-      setContainerNumber(parsedShipment.container?.containerNumber || "");
-      setWeight(parsedShipment.weight?.toString() || "");
-      setPrice(parsedShipment.price?.toString() || "");
+      setContainerNumber(parsedShipment.container?.containerNumber || '');
+      setWeight(parsedShipment.weight?.toString() || '');
+      setPrice(parsedShipment.price?.toString() || '');
     }
   }, [parsedShipment]);
 
   useEffect(() => {
     if (parsedShipment && shipmentStatusList?.length > 0) {
-      const shipmentStatus = shipmentStatusList?.find((shipmentStatus: any) => parsedShipment.shipmentStatusId === shipmentStatus.shipmentStatusId)
+      const shipmentStatus = shipmentStatusList?.find(
+        (shipmentStatus: any) =>
+          parsedShipment.shipmentStatusId === shipmentStatus.shipmentStatusId,
+      );
       setShipmentStatusSelected(shipmentStatus);
     }
   }, [shipmentStatusList]);
 
   useEffect(() => {
     if (parsedShipment && originList?.length > 0) {
-      const origin = originList?.find((origin: any) => parsedShipment.originId === origin.originId)
+      const origin = originList?.find((origin: any) => parsedShipment.originId === origin.originId);
       setOriginSelected(origin);
     }
   }, [originList]);
 
   useEffect(() => {
     if (parsedShipment && destinationList?.length > 0) {
-      const destination = destinationList?.find((destination: any) => parsedShipment.destinationId === destination.destinationId)
+      const destination = destinationList?.find(
+        (destination: any) => parsedShipment.destinationId === destination.destinationId,
+      );
       setDestinationSelected(destination);
     }
   }, [destinationList]);
@@ -95,14 +120,16 @@ const EditShipment: React.FC = () => {
 
   useEffect(() => {
     if (parsedShipment && vehicleList?.length > 0) {
-      const vehicle = vehicleList?.find((truck: any) => parsedShipment.truckId === truck.truckId)
+      const vehicle = vehicleList?.find((truck: any) => parsedShipment.truckId === truck.truckId);
       setVehicleSelected(vehicle);
     }
   }, [vehicleList]);
 
   useEffect(() => {
     if (parsedShipment && driverList?.length > 0) {
-      const driver = driverList?.find((driver: any) => parsedShipment.user?.userId === driver.userId)
+      const driver = driverList?.find(
+        (driver: any) => parsedShipment.user?.userId === driver.userId,
+      );
       setDriverSelected(driver);
     }
   }, [vehicleList]);
@@ -110,48 +137,49 @@ const EditShipment: React.FC = () => {
   useEffect(() => {
     setIsModified(
       containerNumber !== parsedShipment.container?.containerNumber ||
-      shipmentStatusSelected?.shipmentStatusId !== parsedShipment.shipmentStatus?.shipmentStatusId ||
-      originSelected?.originId !== parsedShipment.origin?.originId ||
-      destinationSelected?.destinationId !== parsedShipment.destination?.destinationId ||
-      vehicleSelected?.truckId !== parsedShipment.truck?.truckId ||
-      driverSelected?.userId !== parsedShipment.user?.userId ||
-      price !== parsedShipment.price ||
-      weight !== parsedShipment.weight
+        shipmentStatusSelected?.shipmentStatusId !==
+          parsedShipment.shipmentStatus?.shipmentStatusId ||
+        originSelected?.originId !== parsedShipment.origin?.originId ||
+        destinationSelected?.destinationId !== parsedShipment.destination?.destinationId ||
+        vehicleSelected?.truckId !== parsedShipment.truck?.truckId ||
+        driverSelected?.userId !== parsedShipment.user?.userId ||
+        price !== parsedShipment.price ||
+        weight !== parsedShipment.weight,
     );
   }, [
-      containerNumber,
-      parsedShipment.container?.containerNumber,
-      shipmentStatusSelected?.shipmentStatusId,
-      parsedShipment.shipmentStatus?.shipmentStatusId,
-      originSelected?.originId,
-      parsedShipment.origin?.originId,
-      destinationSelected?.destinationId,
-      parsedShipment.destination?.destinationId,
-      vehicleSelected?.truckId,
-      parsedShipment.truck?.truckId,
-      driverSelected?.userId,
-      parsedShipment.user?.userId,
-      price,
-      parsedShipment.price,
-      weight,
-      parsedShipment.weight
-    ]);
+    containerNumber,
+    parsedShipment.container?.containerNumber,
+    shipmentStatusSelected?.shipmentStatusId,
+    parsedShipment.shipmentStatus?.shipmentStatusId,
+    originSelected?.originId,
+    parsedShipment.origin?.originId,
+    destinationSelected?.destinationId,
+    parsedShipment.destination?.destinationId,
+    vehicleSelected?.truckId,
+    parsedShipment.truck?.truckId,
+    driverSelected?.userId,
+    parsedShipment.user?.userId,
+    price,
+    parsedShipment.price,
+    weight,
+    parsedShipment.weight,
+  ]);
 
   const handleSubmit = () => {
     if (
-        !containerNumber ||
-        !weight ||
-        !price ||
-        !shipmentStatusSelected?.shipmentStatusId ||
-        !originSelected?.originId || 
-        !destinationSelected?.destinationId ||
-        !vehicleSelected?.truckId
-      ) {
-      alert("Por favor completa todos los campos obligatorios");
+      !containerNumber ||
+      !weight ||
+      !price ||
+      !shipmentStatusSelected?.shipmentStatusId ||
+      !originSelected?.originId ||
+      !destinationSelected?.destinationId ||
+      !vehicleSelected?.truckId
+    ) {
+      alert('Por favor completa todos los campos obligatorios');
       return;
     }
 
-    setAlertVisible(true)
+    setAlertVisible(true);
   };
 
   const updateShipment = async () => {
@@ -163,10 +191,10 @@ const EditShipment: React.FC = () => {
         shipmentStatus: shipmentStatusSelected?.shipmentStatusId,
         origin: originSelected?.originId,
         destination: destinationSelected?.destinationId,
-        truck: vehicleSelected?.truckId
+        truck: vehicleSelected?.truckId,
       };
-  
-      console.log("Envío actualizado:", updatedShipment);
+
+      console.log('Envío actualizado:', updatedShipment);
 
       const response = await modifyShipment({ id, body: updatedShipment }).unwrap(); // unwrap para manejar errores
       console.log('Shipment updated successfully:', response);
@@ -180,15 +208,15 @@ const EditShipment: React.FC = () => {
 
   const handleShipmentStatusSelected = (item: any) => {
     setShipmentStatusSelected(item);
-  }
+  };
 
   const handleOriginSelected = (item: any) => {
     setOriginSelected(item);
-  }
+  };
 
   const handleDestinationSelected = (item: any) => {
     setDestinationSelected(item);
-  }
+  };
 
   // const handleClientSelected = (item: any) => {
   //   setClientSelected(item);
@@ -196,11 +224,11 @@ const EditShipment: React.FC = () => {
 
   const handleVehicleSelected = (item: any) => {
     setVehicleSelected(item);
-  }
+  };
 
   const handleDriverSelected = (item: any) => {
     setDriverSelected(item);
-  }
+  };
 
   return (
     <BackgroundView>
@@ -217,21 +245,29 @@ const EditShipment: React.FC = () => {
           title="Estas seguro de modificar?"
           titleColor="#ff0809bd"
           text="Estas a punto de modificar la poliza, deseas continuar?"
-          onClose={() => { setAlertVisible(false) }}
+          onClose={() => {
+            setAlertVisible(false);
+          }}
           buttons={[
-            <Pressable onPress={() => { setAlertVisible(false) }}>
+            <Pressable
+              onPress={() => {
+                setAlertVisible(false);
+              }}
+            >
               <View style={styles.cancelButtonAlert}>
                 <Text style={styles.cancelButtonTextAlert}>Cancelar</Text>
               </View>
             </Pressable>,
-            <Pressable onPress={() => { 
-              updateShipment()
-              setAlertVisible(false) 
-              }}>
+            <Pressable
+              onPress={() => {
+                updateShipment();
+                setAlertVisible(false);
+              }}
+            >
               <View style={styles.continueButtonAlert}>
                 <Text style={styles.continueButtonTextAlert}>Modificar</Text>
               </View>
-            </Pressable>
+            </Pressable>,
           ]}
         />
         <Space vertical size={50} />
@@ -289,7 +325,7 @@ const EditShipment: React.FC = () => {
           <Dropdown
             items={driverList}
             placeholder="Selecciona un piloto"
-            placeholderColor='#71a780'
+            placeholderColor="#71a780"
             renderItemText={(item) => `${item?.names}`}
             onItemSelected={(item) => handleDriverSelected(item)}
             initialSelectedItem={driverSelected ?? undefined}
@@ -299,7 +335,7 @@ const EditShipment: React.FC = () => {
           <Dropdown
             items={vehicleList}
             placeholder="Selecciona un vehiculo"
-            placeholderColor='#71a780'
+            placeholderColor="#71a780"
             renderItemText={(item) => `${item?.plate}`}
             onItemSelected={(item) => handleVehicleSelected(item)}
             initialSelectedItem={vehicleSelected ?? undefined}
@@ -323,12 +359,11 @@ const EditShipment: React.FC = () => {
             placeholder="Ingrese el precio"
           />
 
-          <TouchableOpacity style={[
-            styles.submitButton,
-            !isModified && styles.disabledButton,
-            ]} onPress={handleSubmit}
+          <TouchableOpacity
+            style={[styles.submitButton, !isModified && styles.disabledButton]}
+            onPress={handleSubmit}
             disabled={!isModified}
-            >
+          >
             <Text style={styles.submitButtonText}>Guardar Cambios</Text>
           </TouchableOpacity>
         </ScrollView>
@@ -344,57 +379,57 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 16,
-    fontWeight: "bold",
-    color: "#5db075",
+    fontWeight: 'bold',
+    color: '#5db075',
     marginBottom: 8,
   },
   input: {
     height: 40,
-    borderColor: "#ccc",
+    borderColor: '#ccc',
     borderWidth: 1,
     marginBottom: 16,
     paddingHorizontal: 8,
     borderRadius: 4,
   },
   submitButton: {
-    backgroundColor: "#3f51b5",
+    backgroundColor: '#3f51b5',
     paddingVertical: 10,
     borderRadius: 4,
     marginTop: 20,
   },
   submitButtonText: {
-    color: "#fff",
-    textAlign: "center",
-    fontWeight: "bold",
+    color: '#fff',
+    textAlign: 'center',
+    fontWeight: 'bold',
   },
   cancelButtonAlert: {
-    backgroundColor: "#ff0809bd",
+    backgroundColor: '#ff0809bd',
     paddingVertical: 10,
     paddingHorizontal: 35,
     borderRadius: 4,
     marginTop: 20,
   },
   cancelButtonTextAlert: {
-    color: "#fff",
+    color: '#fff',
     fontSize: 16,
-    textAlign: "center",
+    textAlign: 'center',
   },
   continueButtonAlert: {
-    backgroundColor: "#3f51b5",
+    backgroundColor: '#3f51b5',
     paddingVertical: 10,
     paddingHorizontal: 35,
     borderRadius: 4,
     marginTop: 20,
   },
   continueButtonTextAlert: {
-    color: "#fff",
+    color: '#fff',
     fontSize: 16,
-    textAlign: "center",
+    textAlign: 'center',
   },
   disabledButton: {
-    backgroundColor: "#9fa8da",
+    backgroundColor: '#9fa8da',
     opacity: 0.7,
-  }
+  },
 });
 
 export default EditShipment;

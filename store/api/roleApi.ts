@@ -6,7 +6,7 @@ export const roleApi = createApi({
   reducerPath: 'role',
   baseQuery: createBaseQuery(api.vires.role),
   tagTypes: ['Role'],
-  endpoints: build => ({
+  endpoints: (build) => ({
     getAllRoles: build.query<any, any>({
       query: () => `/`,
       providesTags: ['Role'],
@@ -14,8 +14,8 @@ export const roleApi = createApi({
     getRoleById: build.query<any, string | number>({
       query: (id) => `/${id}`,
       providesTags: (result, error, id) => [{ type: 'Role', id }],
-    })
-  })
+    }),
+  }),
 });
 
 export const { useGetAllRolesQuery, useLazyGetAllRolesQuery, useGetRoleByIdQuery } = roleApi;

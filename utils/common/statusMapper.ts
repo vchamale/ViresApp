@@ -1,7 +1,7 @@
 type IconMapperT = {
   iconName: string;
   color: string;
-}
+};
 
 type StatusMapperT = Record<string, IconMapperT>;
 
@@ -41,5 +41,5 @@ export const statusMapper: StatusMapperT = {
   default: {
     iconName: 'warning',
     color: '#ff00008c',
-  }
+  },
 };

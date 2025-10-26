@@ -1,32 +1,25 @@
-import React, { useState } from "react";
-import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  SafeAreaView,
-  StyleSheet,
-} from "react-native";
-import { useRouter } from "expo-router";
-import CustomHeader from "@components/CustomHeader";
-import Space from "@components/Space";
-import BackgroundView from "@components/BackgroundView";
-import { MaterialIcons } from "@expo/vector-icons";
-import { useCreateOriginMutation } from "@api/originApi";
+import React, { useState } from 'react';
+import { View, Text, TextInput, TouchableOpacity, SafeAreaView, StyleSheet } from 'react-native';
+import { useRouter } from 'expo-router';
+import CustomHeader from '@components/CustomHeader';
+import Space from '@components/Space';
+import BackgroundView from '@components/BackgroundView';
+import { MaterialIcons } from '@expo/vector-icons';
+import { useCreateOriginMutation } from '@api/originApi';
 
 const CreateOrigin: React.FC = () => {
-  const [name, setName] = useState<string>("");
-  const [address, setAddress] = useState<string>("");
+  const [name, setName] = useState<string>('');
+  const [address, setAddress] = useState<string>('');
 
   const router = useRouter();
 
   // mutations
 
-  const [create] = useCreateOriginMutation()
+  const [create] = useCreateOriginMutation();
 
   const handleSubmit = async () => {
     if (!name || !address) {
-      alert("Por favor completa los campos obligatorios");
+      alert('Por favor completa los campos obligatorios');
       return;
     }
 
@@ -35,11 +28,11 @@ const CreateOrigin: React.FC = () => {
       address,
     };
 
-    console.log("Detalles del punto de partida:", originDetails);
+    console.log('Detalles del punto de partida:', originDetails);
 
     // Simulación de envío de datos
     const resp = await create(originDetails);
-    console.log('resp ', resp)
+    console.log('resp ', resp);
     router.back();
   };
 
@@ -92,28 +85,28 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 16,
-    fontWeight: "bold",
-    color: "#71a780",
+    fontWeight: 'bold',
+    color: '#71a780',
     marginBottom: 8,
   },
   input: {
     height: 40,
-    borderColor: "#ccc",
+    borderColor: '#ccc',
     borderWidth: 1,
     marginBottom: 16,
     paddingHorizontal: 8,
     borderRadius: 4,
   },
   submitButton: {
-    backgroundColor: "#3f51b5",
+    backgroundColor: '#3f51b5',
     paddingVertical: 10,
     borderRadius: 4,
     marginTop: 20,
   },
   submitButtonText: {
-    color: "#fff",
-    textAlign: "center",
-    fontWeight: "bold",
+    color: '#fff',
+    textAlign: 'center',
+    fontWeight: 'bold',
   },
 });
 

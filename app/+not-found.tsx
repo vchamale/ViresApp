@@ -16,7 +16,7 @@ const NotFoundScreen = () => {
       </ThemedView>
     </>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {

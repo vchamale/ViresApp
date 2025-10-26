@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -8,25 +8,25 @@ import {
   StyleSheet,
   Pressable,
   ScrollView,
-} from "react-native";
-import { useRouter, useLocalSearchParams } from "expo-router";
-import CustomHeader from "@components/CustomHeader";
-import Space from "@components/Space";
-import BackgroundView from "@components/BackgroundView";
-import CustomAlert from "@components/CustomAlert";
-import { useUpdateClientMutation } from "@api/clientApi";
-import { FontAwesome5 } from "@expo/vector-icons";
+} from 'react-native';
+import { useRouter, useLocalSearchParams } from 'expo-router';
+import CustomHeader from '@components/CustomHeader';
+import Space from '@components/Space';
+import BackgroundView from '@components/BackgroundView';
+import CustomAlert from '@components/CustomAlert';
+import { useUpdateClientMutation } from '@api/clientApi';
+import { FontAwesome5 } from '@expo/vector-icons';
 
 const EditClient: React.FC = () => {
   const { client, id } = useLocalSearchParams(); // Recibe los datos del cliente
   const parsedClient = JSON.parse(client as string);
 
-  const [nit, setNit] = useState<string>("");
-  const [name, setName] = useState<string>("");
-  const [address, setAddress] = useState<string>("");
-  const [contactName, setContactName] = useState<string>("");
-  const [telephone, setTelephone] = useState<string>("");
-  const [email, setEmail] = useState<string>("");
+  const [nit, setNit] = useState<string>('');
+  const [name, setName] = useState<string>('');
+  const [address, setAddress] = useState<string>('');
+  const [contactName, setContactName] = useState<string>('');
+  const [telephone, setTelephone] = useState<string>('');
+  const [email, setEmail] = useState<string>('');
   const [isAlertVisible, setAlertVisible] = useState<boolean>(false);
   const [isModified, setIsModified] = useState<boolean>(false);
 
@@ -46,46 +46,69 @@ const EditClient: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    setIsModified(name !== parsedClient.name || address !== parsedClient.address || nit !== parsedClient.nit || contactName !== parsedClient.contactName || telephone !== parsedClient.telephone || email !== parsedClient.email);
-  }, [name, address, nit, contactName, telephone, email, parsedClient.nit, parsedClient.name, parsedClient.address, parsedClient.contactName, parsedClient.telephone, parsedClient.email]);
+    setIsModified(
+      name !== parsedClient.name ||
+        address !== parsedClient.address ||
+        nit !== parsedClient.nit ||
+        contactName !== parsedClient.contactName ||
+        telephone !== parsedClient.telephone ||
+        email !== parsedClient.email,
+    );
+  }, [
+    name,
+    address,
+    nit,
+    contactName,
+    telephone,
+    email,
+    parsedClient.nit,
+    parsedClient.name,
+    parsedClient.address,
+    parsedClient.contactName,
+    parsedClient.telephone,
+    parsedClient.email,
+  ]);
 
   const handleSubmit = () => {
     if (!name) {
-      alert("Por favor completa todos los campos obligatorios");
+      alert('Por favor completa todos los campos obligatorios');
       return;
     }
 
     if (!address) {
-      alert("Por favor completa todos los campos obligatorios");
+      alert('Por favor completa todos los campos obligatorios');
       return;
     }
 
     if (!nit) {
-      alert("Por favor completa todos los campos obligatorios");
+      alert('Por favor completa todos los campos obligatorios');
       return;
     }
 
     if (!contactName) {
-      alert("Por favor completa todos los campos obligatorios");
+      alert('Por favor completa todos los campos obligatorios');
       return;
     }
 
     if (!telephone) {
-      alert("Por favor completa todos los campos obligatorios");
+      alert('Por favor completa todos los campos obligatorios');
       return;
     }
 
     if (!email) {
-      alert("Por favor completa todos los campos obligatorios");
+      alert('Por favor completa todos los campos obligatorios');
       return;
     }
 
-    setAlertVisible(true)
+    setAlertVisible(true);
   };
 
   const handleUpdateClient = async () => {
     try {
-      const response = await updateClient({ id, body: { name, address, nit, contactName, telephone, email } }).unwrap();
+      const response = await updateClient({
+        id,
+        body: { name, address, nit, contactName, telephone, email },
+      }).unwrap();
       console.log('Client updated successfully:', response);
       setAlertVisible(false);
       router.back();
@@ -108,21 +131,29 @@ const EditClient: React.FC = () => {
           title="Estas seguro de modificar?"
           titleColor="#ff0809bd"
           text="Estas a punto de modificar la poliza, deseas continuar?"
-          onClose={() => { setAlertVisible(false) }}
+          onClose={() => {
+            setAlertVisible(false);
+          }}
           buttons={[
-            <Pressable onPress={() => { setAlertVisible(false) }}>
+            <Pressable
+              onPress={() => {
+                setAlertVisible(false);
+              }}
+            >
               <View style={styles.cancelButtonAlert}>
                 <Text style={styles.cancelButtonTextAlert}>Cancelar</Text>
               </View>
             </Pressable>,
-            <Pressable onPress={() => { 
-              handleUpdateClient()
-              setAlertVisible(false) 
-              }}>
+            <Pressable
+              onPress={() => {
+                handleUpdateClient();
+                setAlertVisible(false);
+              }}
+            >
               <View style={styles.continueButtonAlert}>
                 <Text style={styles.continueButtonTextAlert}>Modificar</Text>
               </View>
-            </Pressable>
+            </Pressable>,
           ]}
         />
         <Space vertical size={50} />
@@ -181,12 +212,11 @@ const EditClient: React.FC = () => {
             placeholder="Ingrese el correo electrónico"
           />
 
-          <TouchableOpacity style={[
-            styles.submitButton,
-            !isModified && styles.disabledButton,
-            ]} onPress={handleSubmit}
+          <TouchableOpacity
+            style={[styles.submitButton, !isModified && styles.disabledButton]}
+            onPress={handleSubmit}
             disabled={!isModified}
-            >
+          >
             <Text style={styles.submitButtonText}>Guardar Cambios</Text>
           </TouchableOpacity>
           <Space vertical size={30} />
@@ -203,56 +233,56 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 16,
-    fontWeight: "bold",
-    color: "#5db075",
+    fontWeight: 'bold',
+    color: '#5db075',
     marginBottom: 8,
   },
   input: {
     height: 40,
-    borderColor: "#ccc",
+    borderColor: '#ccc',
     borderWidth: 1,
     marginBottom: 16,
     paddingHorizontal: 8,
     borderRadius: 4,
   },
   disabledButton: {
-    backgroundColor: "#9fa8da",
+    backgroundColor: '#9fa8da',
     opacity: 0.7,
   },
   submitButton: {
-    backgroundColor: "#3f51b5",
+    backgroundColor: '#3f51b5',
     paddingVertical: 10,
     borderRadius: 4,
     marginTop: 20,
   },
   submitButtonText: {
-    color: "#fff",
-    textAlign: "center",
-    fontWeight: "bold",
+    color: '#fff',
+    textAlign: 'center',
+    fontWeight: 'bold',
   },
   cancelButtonAlert: {
-    backgroundColor: "#ff0809bd",
+    backgroundColor: '#ff0809bd',
     paddingVertical: 10,
     paddingHorizontal: 35,
     borderRadius: 4,
     marginTop: 20,
   },
   cancelButtonTextAlert: {
-    color: "#fff",
+    color: '#fff',
     fontSize: 16,
-    textAlign: "center",
+    textAlign: 'center',
   },
   continueButtonAlert: {
-    backgroundColor: "#3f51b5",
+    backgroundColor: '#3f51b5',
     paddingVertical: 10,
     paddingHorizontal: 35,
     borderRadius: 4,
     marginTop: 20,
   },
   continueButtonTextAlert: {
-    color: "#fff",
+    color: '#fff',
     fontSize: 16,
-    textAlign: "center",
+    textAlign: 'center',
   },
 });
 

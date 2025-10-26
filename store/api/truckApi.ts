@@ -6,7 +6,7 @@ export const truckApi = createApi({
   reducerPath: 'truck',
   baseQuery: createBaseQuery(api.vires.truck),
   tagTypes: ['Vehicle'],
-  endpoints: build => ({
+  endpoints: (build) => ({
     getAllTrucks: build.query<any, any>({
       query: ({ search }) => {
         const params: Record<string, string> = {};
@@ -27,7 +27,7 @@ export const truckApi = createApi({
         return {
           url: '/',
           method: 'POST',
-          body
+          body,
         };
       },
       invalidatesTags: ['Vehicle'],
@@ -37,7 +37,7 @@ export const truckApi = createApi({
         return {
           url: `/${id}`,
           method: 'PUT',
-          body
+          body,
         };
       },
       invalidatesTags: ['Vehicle'],
@@ -46,12 +46,18 @@ export const truckApi = createApi({
       query({ id }) {
         return {
           url: `/${id}`,
-          method: 'DELETE'
+          method: 'DELETE',
         };
       },
       invalidatesTags: ['Vehicle'],
-    })
-  })
+    }),
+  }),
 });
 
-export const { useCreateTruckMutation, useUpdateTruckMutation, useGetAllTrucksQuery, useGetTruckByIdQuery, useLazyGetAllTrucksQuery } = truckApi;
+export const {
+  useCreateTruckMutation,
+  useUpdateTruckMutation,
+  useGetAllTrucksQuery,
+  useGetTruckByIdQuery,
+  useLazyGetAllTrucksQuery,
+} = truckApi;

@@ -29,26 +29,26 @@ export const authApi = createApi({
     baseUrl: api.vires.auth,
     credentials: 'include',
     timeout: 100000,
-    headers: { 'Content-type' : 'application/json' }
+    headers: { 'Content-type': 'application/json' },
   }),
-  endpoints: build => ({
+  endpoints: (build) => ({
     login: build.mutation<LoginResponse, Partial<LoginT>>({
       query(body) {
         return {
           url: '/login',
           method: 'POST',
-          body
+          body,
         };
-      }
+      },
     }),
     signUp: build.mutation<SignUpT, Partial<SignUpT>>({
       query(body) {
         return {
           url: '/register',
           method: 'POST',
-          body
+          body,
         };
-      }
+      },
     }),
     refreshToken: build.query<{ accessToken: string }, { accessToken: string }>({
       query: () => ({
@@ -56,7 +56,7 @@ export const authApi = createApi({
         method: 'POST',
       }),
     }),
-  })
+  }),
 });
 
 export const { useLoginMutation, useSignUpMutation, useLazyRefreshTokenQuery } = authApi;

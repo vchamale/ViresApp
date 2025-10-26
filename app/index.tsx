@@ -1,7 +1,7 @@
-import { useRouter } from "expo-router";
-import { FC, useEffect } from "react";
-import { BackHandler, SafeAreaView } from "react-native";
-import checkToken from "utils/checkToken";
+import { useRouter } from 'expo-router';
+import { FC, useEffect } from 'react';
+import { BackHandler, SafeAreaView } from 'react-native';
+import checkToken from 'utils/checkToken';
 
 type HomePropsT = {
   navigation: any;
@@ -15,10 +15,7 @@ const Index: FC<HomePropsT> = ({ navigation }) => {
       return true;
     };
 
-    const backHandler = BackHandler.addEventListener(
-      'hardwareBackPress',
-      handleBackPress
-    );
+    const backHandler = BackHandler.addEventListener('hardwareBackPress', handleBackPress);
 
     return () => backHandler.remove();
   }, []);

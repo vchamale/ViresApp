@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -7,28 +7,32 @@ import {
   SafeAreaView,
   StyleSheet,
   ScrollView,
-} from "react-native";
-import { useRouter } from "expo-router";
-import CustomHeader from "@components/CustomHeader";
-import Space from "@components/Space";
-import BackgroundView from "@components/BackgroundView";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { useGetAllMakeQuery, useGetAllModelsByMakeIdQuery } from "@api/makeApi";
-import Dropdown from "@components/Dropdown";
-import { skipToken } from "@reduxjs/toolkit/query";
-import { useCreateTruckMutation } from "@api/truckApi";
+} from 'react-native';
+import { useRouter } from 'expo-router';
+import CustomHeader from '@components/CustomHeader';
+import Space from '@components/Space';
+import BackgroundView from '@components/BackgroundView';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { useGetAllMakeQuery, useGetAllModelsByMakeIdQuery } from '@api/makeApi';
+import Dropdown from '@components/Dropdown';
+import { skipToken } from '@reduxjs/toolkit/query';
+import { useCreateTruckMutation } from '@api/truckApi';
 
 const AddVehicle: React.FC = () => {
-  const [plate, setPlate] = useState<string>("");
-  const [vin, setVin] = useState<string>("");
-  const [year, setYear] = useState<string>("");
+  const [plate, setPlate] = useState<string>('');
+  const [vin, setVin] = useState<string>('');
+  const [year, setYear] = useState<string>('');
   const [makeSelected, setMakeSelected] = useState(null);
   const [modelSelected, setModelSelected] = useState(null);
 
   const router = useRouter();
 
-  const { data: makeList, isLoading: isMakeLoading, isError: isMakeError} = useGetAllMakeQuery({});
-  const { data: modelList, isLoading: isModelLoading, isError: isModelError} = useGetAllModelsByMakeIdQuery(makeSelected?.makeId ? { id: makeSelected.makeId } : skipToken);
+  const { data: makeList, isLoading: isMakeLoading, isError: isMakeError } = useGetAllMakeQuery({});
+  const {
+    data: modelList,
+    isLoading: isModelLoading,
+    isError: isModelError,
+  } = useGetAllModelsByMakeIdQuery(makeSelected?.makeId ? { id: makeSelected.makeId } : skipToken);
 
   // mutations
 
@@ -36,7 +40,7 @@ const AddVehicle: React.FC = () => {
 
   const handleSubmit = async () => {
     if (!plate || !vin || !year || !modelSelected?.modelId) {
-      alert("Por favor completa todos los campos obligatorios");
+      alert('Por favor completa todos los campos obligatorios');
       return;
     }
 
@@ -47,9 +51,9 @@ const AddVehicle: React.FC = () => {
       modelId: modelSelected?.modelId,
     };
 
-    console.log("Detalles del vehículo:", vehicleDetails);
+    console.log('Detalles del vehículo:', vehicleDetails);
     const response = await create(vehicleDetails);
-    console.log('response ', response)
+    console.log('response ', response);
 
     router.back();
   };
@@ -57,10 +61,10 @@ const AddVehicle: React.FC = () => {
   const handleMakeSelected = (item: any) => {
     setMakeSelected(item);
     setModelSelected(null);
-  }
+  };
   const handleModelSelected = (item: any) => {
     setModelSelected(item);
-  }
+  };
 
   return (
     <BackgroundView>
@@ -77,30 +81,29 @@ const AddVehicle: React.FC = () => {
         </View>
         <Space vertical size={120} />
         <ScrollView style={styles.container}>
-        <Text style={styles.label}>Marca</Text>
+          <Text style={styles.label}>Marca</Text>
           <Dropdown
             items={makeList}
             placeholder="Selecciona una marca"
-            placeholderColor='#71a780'
+            placeholderColor="#71a780"
             renderItemText={(item) => `${item?.name}`}
             onItemSelected={(item) => handleMakeSelected(item)}
             initialSelectedItem={makeSelected ?? undefined}
           />
 
-          {
-            makeSelected &&
+          {makeSelected && (
             <>
               <Text style={styles.label}>Modelo</Text>
               <Dropdown
                 items={modelList}
                 placeholder="Selecciona un modelo"
-                placeholderColor='#71a780'
+                placeholderColor="#71a780"
                 renderItemText={(item) => `${item?.name}`}
                 onItemSelected={(item) => handleModelSelected(item)}
                 initialSelectedItem={modelSelected ?? undefined}
               />
             </>
-          }
+          )}
 
           <Text style={styles.label}>Placa</Text>
           <TextInput
@@ -130,7 +133,7 @@ const AddVehicle: React.FC = () => {
           <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
             <Text style={styles.submitButtonText}>Guardar Vehículo</Text>
           </TouchableOpacity>
-          <Space vertical size={35} /> 
+          <Space vertical size={35} />
         </ScrollView>
       </SafeAreaView>
     </BackgroundView>
@@ -144,28 +147,28 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 16,
-    fontWeight: "bold",
-    color: "#71a780",
+    fontWeight: 'bold',
+    color: '#71a780',
     marginBottom: 8,
   },
   input: {
     height: 40,
-    borderColor: "#ccc",
+    borderColor: '#ccc',
     borderWidth: 1,
     marginBottom: 16,
     paddingHorizontal: 8,
     borderRadius: 4,
   },
   submitButton: {
-    backgroundColor: "#3f51b5",
+    backgroundColor: '#3f51b5',
     paddingVertical: 10,
     borderRadius: 4,
     marginTop: 20,
   },
   submitButtonText: {
-    color: "#fff",
-    textAlign: "center",
-    fontWeight: "bold",
+    color: '#fff',
+    textAlign: 'center',
+    fontWeight: 'bold',
   },
 });
 

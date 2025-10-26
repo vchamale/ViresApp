@@ -1,6 +1,15 @@
 // R/RN
 import React, { useEffect } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, SafeAreaView, FlatList, TouchableOpacity } from 'react-native';
+import {
+  View,
+  Text,
+  TextInput,
+  Button,
+  StyleSheet,
+  SafeAreaView,
+  FlatList,
+  TouchableOpacity,
+} from 'react-native';
 // Expo stuff
 import { useRouter } from 'expo-router';
 import { Octicons } from '@expo/vector-icons';
@@ -8,7 +17,14 @@ import { Octicons } from '@expo/vector-icons';
 import { useGetAllContainersQuery } from '@api/containerApi';
 import { useGetAllCurrencysQuery } from '@api/currencyApi';
 // Slices
-import { addContainer, addCurrency, addPolicy, addPrice, addWeight, shipmentSelector } from '@slice/shipmentSlice';
+import {
+  addContainer,
+  addCurrency,
+  addPolicy,
+  addPrice,
+  addWeight,
+  shipmentSelector,
+} from '@slice/shipmentSlice';
 // Hooks
 import { useAppDispatch, useAppSelector } from '@hooks/useRedux';
 import { useSnackbar } from '@components/context/SnackbarContext';
@@ -45,17 +61,38 @@ const AddContainerDetails = () => {
   const { showSnackbar } = useSnackbar();
 
   // API Calls
-    // Querys
-    const { currentData: containers, isError: isErrorContainer, error: errorContainer, isLoading: isLoadingContainer, refetch: refetchContainers, isFetching: isFetchingContainers } = useGetAllContainersQuery({});
-    const { currentData: policies, isError: isErrorPolicies, error: errorPolicies, isLoading: isLoadingPolicies, refetch: refetchPolicies, isFetching: isFetchingPolicies } = useGetAllDocumentsQuery({});
-    const { currentData: currencies, isError: isErrorCurrencies, error: errorCurrencies, isLoading: isLoadingCurrencies, refetch: refetchCurrencies, isFetching: isFetchingCurrencies } = useGetAllCurrencysQuery({});
+  // Querys
+  const {
+    currentData: containers,
+    isError: isErrorContainer,
+    error: errorContainer,
+    isLoading: isLoadingContainer,
+    refetch: refetchContainers,
+    isFetching: isFetchingContainers,
+  } = useGetAllContainersQuery({});
+  const {
+    currentData: policies,
+    isError: isErrorPolicies,
+    error: errorPolicies,
+    isLoading: isLoadingPolicies,
+    refetch: refetchPolicies,
+    isFetching: isFetchingPolicies,
+  } = useGetAllDocumentsQuery({});
+  const {
+    currentData: currencies,
+    isError: isErrorCurrencies,
+    error: errorCurrencies,
+    isLoading: isLoadingCurrencies,
+    refetch: refetchCurrencies,
+    isFetching: isFetchingCurrencies,
+  } = useGetAllCurrencysQuery({});
 
-    // Mutations
+  // Mutations
 
   // effects
   useEffect(() => {
     if (currencies?.length) {
-      console.log('hiii ', currencies?.[0])
+      console.log('hiii ', currencies?.[0]);
       dispatch(addCurrency(currencies?.[0]));
     }
   }, [currencies]);
@@ -92,41 +129,41 @@ const AddContainerDetails = () => {
   const handleContinueButton = () => {
     if (!container) {
       return showSnackbar({
-        message: "Debes seleccionar un contenedor para continuar.",
-        color: "red",
-        duration: 3000
+        message: 'Debes seleccionar un contenedor para continuar.',
+        color: 'red',
+        duration: 3000,
       });
     }
 
     if (!policy) {
       return showSnackbar({
-        message: "Debes seleccionar una póliza para continuar.",
-        color: "red",
-        duration: 3000
+        message: 'Debes seleccionar una póliza para continuar.',
+        color: 'red',
+        duration: 3000,
       });
     }
 
     if (!price) {
       return showSnackbar({
-        message: "Debes ingresar un precio para continuar.",
-        color: "red",
-        duration: 3000
+        message: 'Debes ingresar un precio para continuar.',
+        color: 'red',
+        duration: 3000,
       });
     }
 
     if (!weight) {
       return showSnackbar({
-        message: "Debes ingresar un peso para continuar.",
-        color: "red",
-        duration: 3000
+        message: 'Debes ingresar un peso para continuar.',
+        color: 'red',
+        duration: 3000,
       });
     }
 
     if (!price.currency) {
       return showSnackbar({
-        message: "Debes ingresar un tipo de moneda para continuar.",
-        color: "red",
-        duration: 3000
+        message: 'Debes ingresar un tipo de moneda para continuar.',
+        color: 'red',
+        duration: 3000,
       });
     }
 
@@ -143,18 +180,20 @@ const AddContainerDetails = () => {
     // if ()
 
     router.push('/shipments/create/add-transport-details');
-  }
-  
+  };
+
   return (
     <BackgroundView>
-      <SafeAreaView style={{
-        flex: 1
-      }}>
+      <SafeAreaView
+        style={{
+          flex: 1,
+        }}
+      >
         <View style={styles.container}>
-          <CustomHeader 
-            title={'Detalle del Contenedor'} 
-            backgroundColor='#71a780'
-            color='#fff'
+          <CustomHeader
+            title={'Detalle del Contenedor'}
+            backgroundColor="#71a780"
+            color="#fff"
             onBackPress={() => {
               router.back();
             }}
@@ -167,7 +206,7 @@ const AddContainerDetails = () => {
           />
           <Space vertical size={50} />
           <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
-            <Octicons name='container' size={100} color='#fff' />
+            <Octicons name="container" size={100} color="#fff" />
           </View>
           <Space vertical size={120} />
           <FlatList
@@ -203,52 +242,64 @@ const AddContainerDetails = () => {
                   isEditable={true}
                 />
                 <Text style={styles.label}>Peso</Text>
-                <View style={{
+                <View
+                  style={{
                     flexDirection: 'column',
-                    justifyContent: 'center'
-                  }}>
-                <View style={{
-                  flexDirection: 'row',
-                  height: 40,
-                  width: 100,
-                  borderColor: '#ccc',
-                  borderWidth: 1,
-                  marginBottom: 16,
-                  paddingHorizontal: 8,
-                  borderRadius: 4,
-                }}>
-                  <TextInput
+                    justifyContent: 'center',
+                  }}
+                >
+                  <View
                     style={{
+                      flexDirection: 'row',
                       height: 40,
-                      width: '70%',
-                      justifyContent: 'center',
-                      textAlign: 'center'
+                      width: 100,
+                      borderColor: '#ccc',
+                      borderWidth: 1,
+                      marginBottom: 16,
+                      paddingHorizontal: 8,
+                      borderRadius: 4,
                     }}
-                    value={weight}
-                    onChangeText={handleWeightInput}
-                    keyboardType="decimal-pad"
-                    placeholder="0.00"
-                  />
-                  <View style={{
-                    flex: 1
-                  }}>
-                    <Text style={{
-                      flex: 1,
-                      height: 40,
-                      paddingTop: 10
-                    }}>
-                      Kg
-                    </Text>
-                  </View>
+                  >
+                    <TextInput
+                      style={{
+                        height: 40,
+                        width: '70%',
+                        justifyContent: 'center',
+                        textAlign: 'center',
+                      }}
+                      value={weight}
+                      onChangeText={handleWeightInput}
+                      keyboardType="decimal-pad"
+                      placeholder="0.00"
+                    />
+                    <View
+                      style={{
+                        flex: 1,
+                      }}
+                    >
+                      <Text
+                        style={{
+                          flex: 1,
+                          height: 40,
+                          paddingTop: 10,
+                        }}
+                      >
+                        Kg
+                      </Text>
+                    </View>
                   </View>
                 </View>
                 <Text style={styles.label}>Precio</Text>
-                <View style={{
-                  flexDirection: 'row'
-                }}>
-                  <View style={{
-                    flexDirection: 'row'
-                  }}>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                  }}
+                >
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                    }}
+                  >
                     <DropdownWrapper
                       isLoading={isLoadingCurrencies}
                       isFetching={isFetchingCurrencies}
@@ -271,7 +322,7 @@ const AddContainerDetails = () => {
                 </View>
               </>
             )}
-            />
+          />
           <TouchableOpacity style={styles.createButton} onPress={handleContinueButton}>
             <Text style={styles.buttonText}>Continuar</Text>
           </TouchableOpacity>
@@ -284,10 +335,10 @@ const AddContainerDetails = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20
+    padding: 20,
   },
   flatListContainer: {
-    flexGrow: 1
+    flexGrow: 1,
   },
   label: {
     fontSize: 16,
@@ -322,14 +373,14 @@ const styles = StyleSheet.create({
   },
   createButton: {
     marginHorizontal: 50,
-    backgroundColor: "#2073cdbd",
+    backgroundColor: '#2073cdbd',
     paddingVertical: 10,
     borderRadius: 4,
   },
   buttonText: {
-    color: "#fff",
+    color: '#fff',
     textAlign: 'center',
-    fontWeight: "bold",
+    fontWeight: 'bold',
   },
 });
 

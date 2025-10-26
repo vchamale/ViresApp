@@ -1,10 +1,10 @@
-import { TenantT } from "./Shipment";
+import { TenantT } from './Shipment';
 
 export type ModelT = {
   modelId: number;
   makeId: number;
   name: string;
-}
+};
 
 export type TruckT = {
   truckId: number;
@@ -16,4 +16,4 @@ export type TruckT = {
   status: boolean;
   tenant: TenantT;
   model: ModelT;
-}
+};

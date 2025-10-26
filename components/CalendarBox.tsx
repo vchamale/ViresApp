@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import {
   View,
   Text,
@@ -7,8 +7,8 @@ import {
   StyleProp,
   ViewStyle,
   TextStyle,
-} from "react-native";
-import IconMapper from "./IconMapper";
+} from 'react-native';
+import IconMapper from './IconMapper';
 
 type CalendarBoxProps = {
   onPress: () => void;
@@ -25,17 +25,15 @@ type CalendarBoxProps = {
 const CalendarBox: React.FC<CalendarBoxProps> = ({
   onPress,
   selectedDate,
-  placeholder = "yyyy-mm-dd",
+  placeholder = 'yyyy-mm-dd',
   containerStyle,
   iconName,
   iconSize = 20,
-  iconColor = "#000",
+  iconColor = '#000',
   placeholderStyle,
   dateStyle,
 }) => {
-  const formattedDate = selectedDate
-    ? selectedDate.toISOString().split("T")[0]
-    : placeholder;
+  const formattedDate = selectedDate ? selectedDate.toISOString().split('T')[0] : placeholder;
 
   return (
     <TouchableOpacity style={[styles.container]} onPress={onPress}>
@@ -56,24 +54,24 @@ const CalendarBox: React.FC<CalendarBoxProps> = ({
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
     borderWidth: 1,
-    borderColor: "#5db075",
+    borderColor: '#5db075',
     borderRadius: 8,
     padding: 10,
-    backgroundColor: "#fff",
+    backgroundColor: '#fff',
   },
   text: {
-    width: "85%",
+    width: '85%',
     fontSize: 16,
   },
   placeholderText: {
-    color: "#5db07587",
+    color: '#5db07587',
     fontSize: 12,
   },
   selectedText: {
-    color: "#5db075",
+    color: '#5db075',
   },
 });
 

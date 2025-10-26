@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 
 type ClientCardProps = {
-  client: any
+  client: any;
   onViewPress: () => void;
 };
 

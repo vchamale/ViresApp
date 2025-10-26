@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -8,27 +8,27 @@ import {
   StyleSheet,
   Pressable,
   ScrollView,
-} from "react-native";
-import { useLocalSearchParams, useRouter } from "expo-router";
-import CustomHeader from "@components/CustomHeader";
-import Space from "@components/Space";
-import BackgroundView from "@components/BackgroundView";
-import CustomAlert from "@components/CustomAlert";
-import { MaterialIcons } from "@expo/vector-icons";
-import { useUpdateDriverMutation } from "@api/driverApi";
-import Dropdown from "@components/Dropdown";
-import { useGetAllTrucksQuery } from "@api/truckApi";
-import { type TruckT } from "@types/Truck";
+} from 'react-native';
+import { useLocalSearchParams, useRouter } from 'expo-router';
+import CustomHeader from '@components/CustomHeader';
+import Space from '@components/Space';
+import BackgroundView from '@components/BackgroundView';
+import CustomAlert from '@components/CustomAlert';
+import { MaterialIcons } from '@expo/vector-icons';
+import { useUpdateDriverMutation } from '@api/driverApi';
+import Dropdown from '@components/Dropdown';
+import { useGetAllTrucksQuery } from '@api/truckApi';
+import { type TruckT } from '@types/Truck';
 
 const EditDriver: React.FC = () => {
   const { driver, id } = useLocalSearchParams();
   const parsedDriver = JSON.parse(driver as string);
 
-  const [names, setNames] = useState<string>("");
-  const [lastNames, setLastNames] = useState<string>("");
-  const [email, setEmail] = useState<string>("");
-  const [telephone, setTelephone] = useState<string>("");
-  const [license, setLicense] = useState<string>("");
+  const [names, setNames] = useState<string>('');
+  const [lastNames, setLastNames] = useState<string>('');
+  const [email, setEmail] = useState<string>('');
+  const [telephone, setTelephone] = useState<string>('');
+  const [license, setLicense] = useState<string>('');
   const [isModified, setIsModified] = useState<boolean>(false);
   const [isAlertVisible, setAlertVisible] = useState<boolean>(false);
   const [truckSelected, setTruckSelected] = useState<TruckT | null>(null);
@@ -54,7 +54,7 @@ const EditDriver: React.FC = () => {
 
   useEffect(() => {
     if (parsedDriver && trucks?.length > 0) {
-      const truck = trucks?.find((truck: any) => parsedDriver?.truck?.truckId === truck.truckId)
+      const truck = trucks?.find((truck: any) => parsedDriver?.truck?.truckId === truck.truckId);
       setTruckSelected(truck);
     }
   }, [trucks]);
@@ -66,13 +66,13 @@ const EditDriver: React.FC = () => {
         email !== parsedDriver.email ||
         telephone !== parsedDriver.telephone ||
         license !== parsedDriver.license ||
-        truckSelected?.truckId !== parsedDriver?.truck?.truckId
+        truckSelected?.truckId !== parsedDriver?.truck?.truckId,
     );
   }, [names, lastNames, email, telephone, license, parsedDriver, truckSelected]);
 
   const handleSubmit = () => {
     if (!names || !lastNames || !email || !telephone || !license) {
-      alert("Por favor completa todos los campos obligatorios");
+      alert('Por favor completa todos los campos obligatorios');
       return;
     }
 
@@ -87,22 +87,22 @@ const EditDriver: React.FC = () => {
         email,
         telephone,
         license,
-        truckId: truckSelected?.truckId
+        truckId: truckSelected?.truckId,
       };
 
       const response = await updateDriver({ id, body: updatedDriver }).unwrap();
-      console.log("Driver updated successfully:", response);
+      console.log('Driver updated successfully:', response);
       setAlertVisible(false);
       router.back();
     } catch (error) {
-      console.error("Error updating driver:", error);
-      alert("Hubo un error al actualizar el conductor.");
+      console.error('Error updating driver:', error);
+      alert('Hubo un error al actualizar el conductor.');
     }
   };
 
   const handleSelectTruck = (truck: TruckT) => {
     setTruckSelected(truck);
-  }
+  };
 
   return (
     <BackgroundView>
@@ -133,13 +133,13 @@ const EditDriver: React.FC = () => {
           ]}
         />
         <Space vertical size={50} />
-        <View style={{ flexDirection: "row", justifyContent: "center" }}>
+        <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
           <MaterialIcons name="edit" size={150} color="#fff" />
         </View>
         <Space vertical size={70} />
         <ScrollView style={styles.container}>
           <View>
-          <Text style={styles.label}>Trailer</Text>
+            <Text style={styles.label}>Trailer</Text>
             <Dropdown
               items={trucks}
               placeholder="Selecciona una trailer"
@@ -193,10 +193,7 @@ const EditDriver: React.FC = () => {
             />
           </View>
           <TouchableOpacity
-            style={[
-              styles.submitButton,
-              !isModified && styles.disabledButton,
-            ]}
+            style={[styles.submitButton, !isModified && styles.disabledButton]}
             onPress={handleSubmit}
             disabled={!isModified}
           >
@@ -215,56 +212,56 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 16,
-    fontWeight: "bold",
-    color: "#71a780",
+    fontWeight: 'bold',
+    color: '#71a780',
     marginBottom: 8,
   },
   input: {
     height: 40,
-    borderColor: "#ccc",
+    borderColor: '#ccc',
     borderWidth: 1,
     marginBottom: 16,
     paddingHorizontal: 8,
     borderRadius: 4,
   },
   submitButton: {
-    backgroundColor: "#3f51b5",
+    backgroundColor: '#3f51b5',
     paddingVertical: 10,
     borderRadius: 4,
     marginTop: 20,
   },
   disabledButton: {
-    backgroundColor: "#9fa8da",
+    backgroundColor: '#9fa8da',
     opacity: 0.7,
   },
   submitButtonText: {
-    color: "#fff",
-    textAlign: "center",
-    fontWeight: "bold",
+    color: '#fff',
+    textAlign: 'center',
+    fontWeight: 'bold',
   },
   cancelButtonAlert: {
-    backgroundColor: "#ff0809bd",
+    backgroundColor: '#ff0809bd',
     paddingVertical: 10,
     paddingHorizontal: 35,
     borderRadius: 4,
     marginTop: 20,
   },
   cancelButtonTextAlert: {
-    color: "#fff",
+    color: '#fff',
     fontSize: 16,
-    textAlign: "center",
+    textAlign: 'center',
   },
   continueButtonAlert: {
-    backgroundColor: "#3f51b5",
+    backgroundColor: '#3f51b5',
     paddingVertical: 10,
     paddingHorizontal: 35,
     borderRadius: 4,
     marginTop: 20,
   },
   continueButtonTextAlert: {
-    color: "#fff",
+    color: '#fff',
     fontSize: 16,
-    textAlign: "center",
+    textAlign: 'center',
   },
 });
 

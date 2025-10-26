@@ -20,15 +20,12 @@ const StepIndicator: React.FC<StepIndicatorProps> = ({ steps, currentStep, onSte
       >
         <View>
           <View style={[styles.circle, isActive ? styles.activeCircle : styles.inactiveCircle]}>
-            <Text style={[styles.stepText, isCurrent && styles.currentStepText]}>
-              {index + 1}
-            </Text>
+            <Text style={[styles.stepText, isCurrent && styles.currentStepText]}>{index + 1}</Text>
           </View>
           <Text style={styles.label}>{item}</Text>
           {index < steps.length - 1 && (
             <View style={isActive ? styles.activeLine : styles.inactiveLine} />
           )}
-
         </View>
       </TouchableOpacity>
     );

@@ -8,16 +8,15 @@ const initialState: ShipmentT = {
   destination: null,
   container: null,
   policy: null,
-  weight: 0.00,
+  weight: 0.0,
   price: {
     currency: null,
-    amount: 0.00
+    amount: 0.0,
   },
   driver: null,
   truck: null,
-  notes: ''
+  notes: '',
 };
-
 
 const shipmentSlice = createSlice({
   name: 'shipmentSlice',
@@ -56,11 +55,24 @@ const shipmentSlice = createSlice({
     addNotes(state, action: PayloadAction<any>) {
       state.notes = action.payload;
     },
-    reset: () => initialState
-  }
+    reset: () => initialState,
+  },
 });
 
-export const { addClient, addContainer, addDestination, addDriver, addNotes, addOrigin, addPolicy, addPrice, addTruck, addWeight, addCurrency, reset } = shipmentSlice.actions;
+export const {
+  addClient,
+  addContainer,
+  addDestination,
+  addDriver,
+  addNotes,
+  addOrigin,
+  addPolicy,
+  addPrice,
+  addTruck,
+  addWeight,
+  addCurrency,
+  reset,
+} = shipmentSlice.actions;
 
 export const shipmentSelector = (state: RootState) => state.shipmentSlice;
 

@@ -6,7 +6,7 @@ export const makeApi = createApi({
   reducerPath: 'make',
   baseQuery: createBaseQuery(api.vires.make),
   tagTypes: ['Make'],
-  endpoints: build => ({
+  endpoints: (build) => ({
     getAllMake: build.query<any, any>({
       query: ({ search }) => {
         const params: Record<string, string> = {};
@@ -33,7 +33,7 @@ export const makeApi = createApi({
         return {
           url: '/',
           method: 'POST',
-          body
+          body,
         };
       },
       invalidatesTags: ['Make'],
@@ -43,7 +43,7 @@ export const makeApi = createApi({
         return {
           url: `/${id}`,
           method: 'PUT',
-          body
+          body,
         };
       },
       invalidatesTags: ['Make'],
@@ -52,12 +52,19 @@ export const makeApi = createApi({
       query({ id }) {
         return {
           url: `/${id}`,
-          method: 'DELETE'
+          method: 'DELETE',
         };
       },
       invalidatesTags: ['Make'],
-    })
-  })
+    }),
+  }),
 });
 
-export const { useCreateMakeMutation, useUpdateMakeMutation, useGetAllMakeQuery, useGetMakeByIdQuery, useLazyGetAllMakeQuery, useGetAllModelsByMakeIdQuery } = makeApi;
+export const {
+  useCreateMakeMutation,
+  useUpdateMakeMutation,
+  useGetAllMakeQuery,
+  useGetMakeByIdQuery,
+  useLazyGetAllMakeQuery,
+  useGetAllModelsByMakeIdQuery,
+} = makeApi;

@@ -1,4 +1,4 @@
-import { TenantT } from "./Shipment";
+import { TenantT } from './Shipment';
 
 export type SizeT = {
   sizeId: number;

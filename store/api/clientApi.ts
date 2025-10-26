@@ -6,7 +6,7 @@ export const clientApi = createApi({
   reducerPath: 'client',
   baseQuery: createBaseQuery(api.vires.client),
   tagTypes: ['Client'],
-  endpoints: build => ({
+  endpoints: (build) => ({
     getAllClients: build.query<any, any>({
       query: ({ search }) => {
         const params: Record<string, string> = {};
@@ -27,17 +27,17 @@ export const clientApi = createApi({
         return {
           url: '/',
           method: 'POST',
-          body
+          body,
         };
       },
       invalidatesTags: ['Client'],
     }),
     updateClient: build.mutation<any, Partial<any>>({
-      query({ id, body}) {
+      query({ id, body }) {
         return {
           url: `/${id}`,
           method: 'PUT',
-          body
+          body,
         };
       },
       invalidatesTags: ['Client'],
@@ -46,12 +46,18 @@ export const clientApi = createApi({
       query({ id }) {
         return {
           url: `/${id}`,
-          method: 'DELETE'
+          method: 'DELETE',
         };
       },
       invalidatesTags: ['Client'],
-    })
-  })
+    }),
+  }),
 });
 
-export const { useCreateClientMutation, useUpdateClientMutation, useGetAllClientsQuery, useLazyGetAllClientsQuery, useGetClientByIdQuery } = clientApi;
+export const {
+  useCreateClientMutation,
+  useUpdateClientMutation,
+  useGetAllClientsQuery,
+  useLazyGetAllClientsQuery,
+  useGetClientByIdQuery,
+} = clientApi;

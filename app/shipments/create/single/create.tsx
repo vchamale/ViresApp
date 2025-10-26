@@ -1,8 +1,34 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, SafeAreaView, ScrollView, StyleSheet, Pressable } from 'react-native';
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  Pressable,
+} from 'react-native';
 import { useRouter } from 'expo-router';
 import { useAppDispatch, useAppSelector } from '@hooks/useRedux';
-import { shipmentSelector, addClient, addShipmentRoute, addContainerDetails, addTransportDetails, addOrigin, addDestination, addContainer, addPolicy, addWeight, addPrice, addCurrency, addDriver, addTruck, addNotes, reset } from '@slice/shipmentSlice';
+import {
+  shipmentSelector,
+  addClient,
+  addShipmentRoute,
+  addContainerDetails,
+  addTransportDetails,
+  addOrigin,
+  addDestination,
+  addContainer,
+  addPolicy,
+  addWeight,
+  addPrice,
+  addCurrency,
+  addDriver,
+  addTruck,
+  addNotes,
+  reset,
+} from '@slice/shipmentSlice';
 import Dropdown from '@components/Dropdown';
 import CustomHeader from '@components/CustomHeader';
 import { pageControlSelector, setSingleShipmentCreatePage } from '@slice/pageControlSlice';
@@ -28,12 +54,12 @@ const SinglePageShipmentForm = () => {
   const router = useRouter();
 
   // State
-  const [containerNumber, setContainerNumber] = useState<string>("");
-  const [weight, setWeight] = useState<string>("");
-  const [price, setPrice] = useState<string>("");
+  const [containerNumber, setContainerNumber] = useState<string>('');
+  const [weight, setWeight] = useState<string>('');
+  const [price, setPrice] = useState<string>('');
   // const [client, setClient] = useState<string>("");
   // const [driver, setDriver] = useState<string>("");
-  const [vehicle, setVehicle] = useState<string>("");
+  const [vehicle, setVehicle] = useState<string>('');
   const [isAlertVisible, setAlertVisible] = useState<boolean>(false);
   const [isModified, setIsModified] = useState<boolean>(false);
   const [shipmentStatusSelected, setShipmentStatusSelected] = useState(null);
@@ -49,28 +75,77 @@ const SinglePageShipmentForm = () => {
   const { isSingleShipmentCreatePage } = useAppSelector(pageControlSelector);
 
   // Queries
-  const { currentData: clients, isError: isErrorClients, error: errorClients, isLoading: isLoadingClients, refetch: refetchClients, isFetching: isFetchingClients } = useGetAllClientsQuery({});
-  const { currentData: origins, isError: isErrorOrigins, error: errorOrigins, isLoading: isLoadingOrigins, refetch: refetchOrigins, isFetching: isFetchingOrigins } = useGetAllOriginsQuery({});
-  const { currentData: destinations, isError: isErrorDestinations, error: errorDestinations, isLoading: isLoadingDestinations, refetch: refetchDestinations, isFetching: isFetchingDestinations } = useGetAllDestinationsQuery({});
-  const { currentData: containers, isError: isErrorContainer, error: errorContainer, isLoading: isLoadingContainer, refetch: refetchContainers, isFetching: isFetchingContainers } = useGetAllContainersQuery({});
-  const { currentData: policies, isError: isErrorPolicies, error: errorPolicies, isLoading: isLoadingPolicies, refetch: refetchPolicies, isFetching: isFetchingPolicies } = useGetAllDocumentsQuery({});
-  const { data: shipmentStatusList, isLoading: isShipmentStatusLoading, isError: isShipmentStatusError} = useGetAllShipmentsStatusQuery({});
+  const {
+    currentData: clients,
+    isError: isErrorClients,
+    error: errorClients,
+    isLoading: isLoadingClients,
+    refetch: refetchClients,
+    isFetching: isFetchingClients,
+  } = useGetAllClientsQuery({});
+  const {
+    currentData: origins,
+    isError: isErrorOrigins,
+    error: errorOrigins,
+    isLoading: isLoadingOrigins,
+    refetch: refetchOrigins,
+    isFetching: isFetchingOrigins,
+  } = useGetAllOriginsQuery({});
+  const {
+    currentData: destinations,
+    isError: isErrorDestinations,
+    error: errorDestinations,
+    isLoading: isLoadingDestinations,
+    refetch: refetchDestinations,
+    isFetching: isFetchingDestinations,
+  } = useGetAllDestinationsQuery({});
+  const {
+    currentData: containers,
+    isError: isErrorContainer,
+    error: errorContainer,
+    isLoading: isLoadingContainer,
+    refetch: refetchContainers,
+    isFetching: isFetchingContainers,
+  } = useGetAllContainersQuery({});
+  const {
+    currentData: policies,
+    isError: isErrorPolicies,
+    error: errorPolicies,
+    isLoading: isLoadingPolicies,
+    refetch: refetchPolicies,
+    isFetching: isFetchingPolicies,
+  } = useGetAllDocumentsQuery({});
+  const {
+    data: shipmentStatusList,
+    isLoading: isShipmentStatusLoading,
+    isError: isShipmentStatusError,
+  } = useGetAllShipmentsStatusQuery({});
   // const { data: clientList, isLoading: isClientLoading, isError: isClientError} = useGetAllClientsQuery({});
-  const { data: vehicleList, isLoading: isVehicleLoading, isError: isVehicleError} = useGetAllTrucksQuery({});
-  const { data: driverList, isLoading: isdriverLoading, isError: isdriverError} = useGetAllDriversQuery({});
+  const {
+    data: vehicleList,
+    isLoading: isVehicleLoading,
+    isError: isVehicleError,
+  } = useGetAllTrucksQuery({});
+  const {
+    data: driverList,
+    isLoading: isdriverLoading,
+    isError: isdriverError,
+  } = useGetAllDriversQuery({});
 
   // Effects
   useEffect(() => {
     if (shipment) {
-      setContainerNumber(shipment.container?.containerNumber || "");
-      setWeight(shipment.weight?.toString() || "");
-      setPrice(shipment.price?.toString() || "");
+      setContainerNumber(shipment.container?.containerNumber || '');
+      setWeight(shipment.weight?.toString() || '');
+      setPrice(shipment.price?.toString() || '');
     }
   }, [shipment]);
 
   useEffect(() => {
     if (shipment && shipmentStatusList?.length > 0) {
-      const shipmentStatus = shipmentStatusList?.find((shipmentStatus: any) => shipment.shipmentStatusId === shipmentStatus.shipmentStatusId)
+      const shipmentStatus = shipmentStatusList?.find(
+        (shipmentStatus: any) => shipment.shipmentStatusId === shipmentStatus.shipmentStatusId,
+      );
       setShipmentStatusSelected(shipmentStatus);
     }
   }, [shipmentStatusList]);
@@ -98,14 +173,14 @@ const SinglePageShipmentForm = () => {
 
   useEffect(() => {
     if (shipment && vehicleList?.length > 0) {
-      const vehicle = vehicleList?.find((truck: any) => shipment.truckId === truck.truckId)
+      const vehicle = vehicleList?.find((truck: any) => shipment.truckId === truck.truckId);
       setVehicleSelected(vehicle);
     }
   }, [vehicleList]);
 
   useEffect(() => {
     if (shipment && driverList?.length > 0) {
-      const driver = driverList?.find((driver: any) => shipment.user?.userId === driver.userId)
+      const driver = driverList?.find((driver: any) => shipment.user?.userId === driver.userId);
       setDriverSelected(driver);
     }
   }, [vehicleList]);
@@ -113,32 +188,32 @@ const SinglePageShipmentForm = () => {
   useEffect(() => {
     setIsModified(
       containerNumber !== shipment.container?.containerNumber ||
-      shipmentStatusSelected?.shipment !== shipment.shipmentStatus?.shipmentStatusId ||
-      originSelected?.originId !== shipment.origin?.originId ||
-      destinationSelected?.destinationId !== shipment.destination?.destinationId ||
-      vehicleSelected?.truckId !== shipment.truck?.truckId ||
-      driverSelected?.userId !== shipment.user?.userId ||
-      price !== shipment.price ||
-      weight !== shipment.weight
+        shipmentStatusSelected?.shipment !== shipment.shipmentStatus?.shipmentStatusId ||
+        originSelected?.originId !== shipment.origin?.originId ||
+        destinationSelected?.destinationId !== shipment.destination?.destinationId ||
+        vehicleSelected?.truckId !== shipment.truck?.truckId ||
+        driverSelected?.userId !== shipment.user?.userId ||
+        price !== shipment.price ||
+        weight !== shipment.weight,
     );
   }, [
-      containerNumber,
-      shipment.container?.containerNumber,
-      shipmentStatusSelected?.shipmentStatusId,
-      shipment.shipmentStatus?.shipmentStatusId,
-      originSelected?.originId,
-      shipment.origin?.originId,
-      destinationSelected?.destinationId,
-      shipment.destination?.destinationId,
-      vehicleSelected?.truckId,
-      shipment.truck?.truckId,
-      driverSelected?.userId,
-      shipment.user?.userId,
-      price,
-      shipment.price,
-      weight,
-      shipment.weight
-    ]);
+    containerNumber,
+    shipment.container?.containerNumber,
+    shipmentStatusSelected?.shipmentStatusId,
+    shipment.shipmentStatus?.shipmentStatusId,
+    originSelected?.originId,
+    shipment.origin?.originId,
+    destinationSelected?.destinationId,
+    shipment.destination?.destinationId,
+    vehicleSelected?.truckId,
+    shipment.truck?.truckId,
+    driverSelected?.userId,
+    shipment.user?.userId,
+    price,
+    shipment.price,
+    weight,
+    shipment.weight,
+  ]);
 
   const handleSave = () => {
     if (
@@ -146,65 +221,65 @@ const SinglePageShipmentForm = () => {
       !weight ||
       !price ||
       !shipmentStatusSelected?.shipmentStatusId ||
-      !originSelected?.originId || 
+      !originSelected?.originId ||
       !destinationSelected?.destinationId ||
       !vehicleSelected?.truckId
     ) {
-    alert("Por favor completa todos los campos obligatorios");
-    return;
-  }
+      alert('Por favor completa todos los campos obligatorios');
+      return;
+    }
 
     router.push('/shipments/summary');
   };
 
   const handleClientSelected = (value: any) => {
     dispatch(addClient(value));
-  }
+  };
 
   const handleOriginSelected = (item: any) => {
     dispatch(addOrigin(item));
-  }
+  };
 
   const handleDestinationSelected = (value: any) => {
     dispatch(addDestination(value));
-  }
+  };
 
   const handleContainerSelected = (value: any) => {
     dispatch(addContainer(value));
-  }
+  };
 
   const handlePolicySelected = (value: any) => {
     dispatch(addPolicy(value));
-  }
+  };
 
   const handleWeightSelected = (value: any) => {
     dispatch(addWeight(value));
-  }
+  };
 
   const handlePriceSelected = (value: any) => {
     dispatch(addPrice(value));
-  }
+  };
 
   const handleCurrencySelected = (value: any) => {
     dispatch(addCurrency(value));
-  }
+  };
 
   const handleDriverSelected = (value: any) => {
     dispatch(addDriver(value));
-  }
+  };
 
   const handleVehicleSelected = (value: any) => {
     dispatch(addTruck(value));
-  }
+  };
 
   const handleNotesSelected = (value: any) => {
     dispatch(addNotes(value));
-  }
+  };
 
   const handleResetShipment = () => {
     dispatch(reset());
-    router.back()
-  }
+    router.back();
+  };
 
   return (
     <BackgroundView>
@@ -223,34 +298,41 @@ const SinglePageShipmentForm = () => {
           }}
         />
         <CustomAlert
-            isVisible={isResetShipmentAlertVisible}
-            title="Alerta"
-            titleColor="#ff0809bd"
-            text="Si regresas el progreso de tu viaje sera eliminado y deberas de ingresarlo de nuevo, deseas continuar?"
-            onClose={() => { setResetShipmentAlertVisible(false) }}
-            buttons={[
-              <Pressable onPress={() => { setResetShipmentAlertVisible(false) }}>
-                <View style={styles.cancelButtonAlert}>
-                  <Text style={styles.cancelButtonTextAlert}>Cancelar</Text>
-                </View>
-              </Pressable>,
-              <Pressable onPress={() => { 
-                handleResetShipment()
-                setResetShipmentAlertVisible(false) 
-                }}>
-                <View style={styles.continueButtonAlert}>
-                  <Text style={styles.continueButtonTextAlert}>Continuar</Text>
-                </View>
-              </Pressable>
-            ]}
-          />
+          isVisible={isResetShipmentAlertVisible}
+          title="Alerta"
+          titleColor="#ff0809bd"
+          text="Si regresas el progreso de tu viaje sera eliminado y deberas de ingresarlo de nuevo, deseas continuar?"
+          onClose={() => {
+            setResetShipmentAlertVisible(false);
+          }}
+          buttons={[
+            <Pressable
+              onPress={() => {
+                setResetShipmentAlertVisible(false);
+              }}
+            >
+              <View style={styles.cancelButtonAlert}>
+                <Text style={styles.cancelButtonTextAlert}>Cancelar</Text>
+              </View>
+            </Pressable>,
+            <Pressable
+              onPress={() => {
+                handleResetShipment();
+                setResetShipmentAlertVisible(false);
+              }}
+            >
+              <View style={styles.continueButtonAlert}>
+                <Text style={styles.continueButtonTextAlert}>Continuar</Text>
+              </View>
+            </Pressable>,
+          ]}
+        />
         <Space vertical size={50} />
         <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
           <MaterialCommunityIcons name="truck-fast" size={150} color="#fff" />
         </View>
         <Space vertical size={120} />
         <ScrollView contentContainerStyle={{ padding: 20 }}>
-
           <DropdownWrapper
             label="Cliente"
             isLoading={isLoadingClients}
@@ -258,7 +340,7 @@ const SinglePageShipmentForm = () => {
             isError={isErrorClients}
             items={clients}
             placeholder="Selecciona un cliente"
-            placeholderColor='#71a780'
+            placeholderColor="#71a780"
             renderItemText={(item) => `${item.name}`}
             onItemSelected={(item: ClientT) => handleClientSelected(item)}
             refetch={refetchClients}
@@ -274,7 +356,7 @@ const SinglePageShipmentForm = () => {
             isError={isErrorOrigins}
             items={origins}
             placeholder="Selecciona una origen"
-            placeholderColor='#71a780'
+            placeholderColor="#71a780"
             renderItemText={(item) => `${item.name}`}
             onItemSelected={(item: OriginT) => handleOriginSelected(item)}
             refetch={refetchOrigins}
@@ -290,7 +372,7 @@ const SinglePageShipmentForm = () => {
             isError={isErrorDestinations}
             items={destinations}
             placeholder="Selecciona un destino"
-            placeholderColor='#71a780'
+            placeholderColor="#71a780"
             renderItemText={(item) => `${item.address}`}
             onItemSelected={(item: DestinationT) => handleDestinationSelected(item)}
             refetch={refetchDestinations}
@@ -354,7 +436,7 @@ const SinglePageShipmentForm = () => {
           <Dropdown
             items={driverList}
             placeholder="Selecciona un piloto"
-            placeholderColor='#71a780'
+            placeholderColor="#71a780"
             renderItemText={(item) => `${item?.names}`}
             onItemSelected={(item) => handleDriverSelected(item)}
             initialSelectedItem={driverSelected ?? undefined}
@@ -364,7 +446,7 @@ const SinglePageShipmentForm = () => {
           <Dropdown
             items={vehicleList}
             placeholder="Selecciona un vehiculo"
-            placeholderColor='#71a780'
+            placeholderColor="#71a780"
             renderItemText={(item) => `${item?.plate}`}
             onItemSelected={(item) => handleVehicleSelected(item)}
             initialSelectedItem={vehicleSelected ?? undefined}
@@ -373,8 +455,11 @@ const SinglePageShipmentForm = () => {
           <Text>Notas</Text>
           {/* <TextInput value={notes} onChangeText={handleSelectedNotes} /> */}
 
-          <TouchableOpacity onPress={handleSave} style={{ backgroundColor: "#2073cdbd", padding: 10, borderRadius: 5 }}>
-            <Text style={{ color: "#fff", textAlign: "center" }}>Guardar y Continuar</Text>
+          <TouchableOpacity
+            onPress={handleSave}
+            style={{ backgroundColor: '#2073cdbd', padding: 10, borderRadius: 5 }}
+          >
+            <Text style={{ color: '#fff', textAlign: 'center' }}>Guardar y Continuar</Text>
           </TouchableOpacity>
         </ScrollView>
       </SafeAreaView>
@@ -389,57 +474,57 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 16,
-    fontWeight: "bold",
-    color: "#5db075",
+    fontWeight: 'bold',
+    color: '#5db075',
     marginBottom: 8,
   },
   input: {
     height: 40,
-    borderColor: "#ccc",
+    borderColor: '#ccc',
     borderWidth: 1,
     marginBottom: 16,
     paddingHorizontal: 8,
     borderRadius: 4,
   },
   submitButton: {
-    backgroundColor: "#3f51b5",
+    backgroundColor: '#3f51b5',
     paddingVertical: 10,
     borderRadius: 4,
     marginTop: 20,
   },
   submitButtonText: {
-    color: "#fff",
-    textAlign: "center",
-    fontWeight: "bold",
+    color: '#fff',
+    textAlign: 'center',
+    fontWeight: 'bold',
   },
   cancelButtonAlert: {
-    backgroundColor: "#ff0809bd",
+    backgroundColor: '#ff0809bd',
     paddingVertical: 10,
     paddingHorizontal: 35,
     borderRadius: 4,
     marginTop: 20,
   },
   cancelButtonTextAlert: {
-    color: "#fff",
+    color: '#fff',
     fontSize: 16,
-    textAlign: "center",
+    textAlign: 'center',
   },
   continueButtonAlert: {
-    backgroundColor: "#3f51b5",
+    backgroundColor: '#3f51b5',
     paddingVertical: 10,
     paddingHorizontal: 35,
     borderRadius: 4,
     marginTop: 20,
   },
   continueButtonTextAlert: {
-    color: "#fff",
+    color: '#fff',
     fontSize: 16,
-    textAlign: "center",
+    textAlign: 'center',
   },
   disabledButton: {
-    backgroundColor: "#9fa8da",
+    backgroundColor: '#9fa8da',
     opacity: 0.7,
-  }
+  },
 });
 
 export default SinglePageShipmentForm;

@@ -1,5 +1,14 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, TouchableOpacity, FlatList, StyleSheet, Modal, TouchableWithoutFeedback, TextInput } from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  FlatList,
+  StyleSheet,
+  Modal,
+  TouchableWithoutFeedback,
+  TextInput,
+} from 'react-native';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import Space from './Space';
 import { deepEqual } from 'utils/common/deepEqual';
@@ -40,12 +49,16 @@ const Dropdown = <T extends {}>({
 
   // Determinar dinámicamente la clave del objeto a partir de la lista inicial de items
   const keyName = useRef<string | null>(
-    items?.length > 0 ? Object.keys(items[0]).find((key: T) => renderItemText(items[0]) === items[0][key].toString()) ?? null : null
+    items?.length > 0
+      ? (Object.keys(items[0]).find(
+          (key: T) => renderItemText(items[0]) === items[0][key].toString(),
+        ) ?? null)
+      : null,
   );
 
   useEffect(() => {
     setInitialSelectedItemS(initialSelectedItem ?? null);
-  }, [])
+  }, []);
 
   useEffect(() => {
     setSelectedItem(initialSelectedItemS ?? null);
@@ -61,7 +74,7 @@ const Dropdown = <T extends {}>({
   }, [isFocused]);
 
   const handleItemPress = (item: T) => {
-    let filterItemsTemp: T[] = []
+    let filterItemsTemp: T[] = [];
     if (initialSelectedItem) {
       filterItemsTemp = items;
     }
@@ -93,7 +106,7 @@ const Dropdown = <T extends {}>({
     setEditableOpened(false);
     setFocused(false);
     if (inputValue) {
-      setInputValue(selectedItem?.[keyName?.current] + '')
+      setInputValue(selectedItem?.[keyName?.current] + '');
     }
   };
 
@@ -118,21 +131,27 @@ const Dropdown = <T extends {}>({
         onPress={handleOpenDropdown}
         ref={dropdownButtonRef}
       >
-        {
-          isEditable && isEditableOpened 
-            ? <TextInput
-                ref={inputRef}
-                placeholder="Escribe un contenedor"
-                value={inputValue}
-                onChangeText={setInputValue}
-                onSubmitEditing={handleNewValueSubmit}
-                returnKeyType="done"
-                editable={isEditableOpened}
-              />
-            : <Text style={selectedItem ? styles.dropdownText : { color: placeholderColor ?? styles.placeholder.color }}>
-                {selectedItem ? renderItemText(selectedItem) : placeholder}
-              </Text>
-        }
+        {isEditable && isEditableOpened ? (
+          <TextInput
+            ref={inputRef}
+            placeholder="Escribe un contenedor"
+            value={inputValue}
+            onChangeText={setInputValue}
+            onSubmitEditing={handleNewValueSubmit}
+            returnKeyType="done"
+            editable={isEditableOpened}
+          />
+        ) : (
+          <Text
+            style={
+              selectedItem
+                ? styles.dropdownText
+                : { color: placeholderColor ?? styles.placeholder.color }
+            }
+          >
+            {selectedItem ? renderItemText(selectedItem) : placeholder}
+          </Text>
+        )}
       </TouchableOpacity>
       <Modal
         transparent

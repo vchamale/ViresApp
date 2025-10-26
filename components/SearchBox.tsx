@@ -1,5 +1,13 @@
 import React from 'react';
-import { View, TextInput, StyleSheet, TextInputProps, StyleProp, ViewStyle, Text } from 'react-native';
+import {
+  View,
+  TextInput,
+  StyleSheet,
+  TextInputProps,
+  StyleProp,
+  ViewStyle,
+  Text,
+} from 'react-native';
 import IconMapper from './IconMapper'; // Asegúrate de tener este componente en tu proyecto.
 
 type SearchBoxProps = TextInputProps & {
@@ -31,10 +39,10 @@ const styles = StyleSheet.create({
   container: {
     height: 45,
     flexDirection: 'row',
-    alignItems: 'center', 
+    alignItems: 'center',
     borderWidth: 1,
     borderColor: '#5db075',
-    borderRadius: 8, 
+    borderRadius: 8,
     padding: 8,
     backgroundColor: '#fff',
   },
@@ -44,7 +52,7 @@ const styles = StyleSheet.create({
     width: '92%',
     height: 45,
     paddingHorizontal: 10,
-    borderWidth: 0, 
+    borderWidth: 0,
   },
 });
 

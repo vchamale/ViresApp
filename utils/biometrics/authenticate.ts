@@ -1,23 +1,21 @@
 import * as LocalAuthentication from 'expo-local-authentication';
 import { getValidToken } from 'utils/secureStore';
 
-export async function authenticate(refreshTokenMutation: (refreshToken: string) => Promise<{ accessToken: string}>) {
+export async function authenticate(
+  refreshTokenMutation: (refreshToken: string) => Promise<{ accessToken: string }>,
+) {
   try {
     const result = await LocalAuthentication.authenticateAsync({
       promptMessage: 'Autenticación biométrica requerida',
       fallbackLabel: 'Usar contraseña', // (Opcional) Solo para iOS
-      cancelLabel: 'Cancelar',          // (Opcional) Solo para Android
+      cancelLabel: 'Cancelar', // (Opcional) Solo para Android
     });
 
     if (result.success) {
       console.log('Biometric authentication successful');
 
       // Obtener token válido usando la función reutilizable
-      const token = await getValidToken(
-        'accessToken',
-        'refreshToken',
-        refreshTokenMutation
-      );
+      const token = await getValidToken('accessToken', 'refreshToken', refreshTokenMutation);
 
       if (token) {
         return token;

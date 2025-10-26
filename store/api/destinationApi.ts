@@ -6,7 +6,7 @@ export const destinationApi = createApi({
   reducerPath: 'destination',
   baseQuery: createBaseQuery(api.vires.destination),
   tagTypes: ['Destination'],
-  endpoints: build => ({
+  endpoints: (build) => ({
     getAllDestinations: build.query<any, any>({
       query: ({ search }) => {
         const params: Record<string, string> = {};
@@ -27,7 +27,7 @@ export const destinationApi = createApi({
         return {
           url: '/',
           method: 'POST',
-          body
+          body,
         };
       },
       invalidatesTags: ['Destination'],
@@ -37,7 +37,7 @@ export const destinationApi = createApi({
         return {
           url: `/${id}`,
           method: 'PUT',
-          body
+          body,
         };
       },
       invalidatesTags: ['Destination'],
@@ -46,12 +46,18 @@ export const destinationApi = createApi({
       query({ id }) {
         return {
           url: `/${id}`,
-          method: 'DELETE'
+          method: 'DELETE',
         };
       },
       invalidatesTags: ['Destination'],
-    })
-  })
+    }),
+  }),
 });
 
-export const { useCreateDestinationMutation, useUpdateDestinationMutation, useGetAllDestinationsQuery, useGetDestinationsByIdQuery, useLazyGetAllDestinationsQuery } = destinationApi;
+export const {
+  useCreateDestinationMutation,
+  useUpdateDestinationMutation,
+  useGetAllDestinationsQuery,
+  useGetDestinationsByIdQuery,
+  useLazyGetAllDestinationsQuery,
+} = destinationApi;

@@ -1,8 +1,8 @@
-import { ContainerT } from "./Container";
-import { CurrencyT } from "./Currency";
-import { DriverT } from "./Driver";
-import { PolicyT } from "./Policy";
-import { TruckT } from "./Truck";
+import { ContainerT } from './Container';
+import { CurrencyT } from './Currency';
+import { DriverT } from './Driver';
+import { PolicyT } from './Policy';
+import { TruckT } from './Truck';
 
 export type TenantT = {
   mainEmail: string;
@@ -43,12 +43,19 @@ export type DestinationT = {
 export type PriceT = {
   amount: number;
   currency: CurrencyT | null;
-}
+};
 
 export type ShipmentStatusT = {
-  description: "Creado" | "Ruta" | "Entregado" | "Finalizado" | "Cobrado" | "Cancelado" | "Eliminado";
+  description:
+    | 'Creado'
+    | 'Ruta'
+    | 'Entregado'
+    | 'Finalizado'
+    | 'Cobrado'
+    | 'Cancelado'
+    | 'Eliminado';
   shipmentStatusId: number;
-}
+};
 
 export type ShipmentT = {
   shipmentId?: number;
@@ -63,4 +70,4 @@ export type ShipmentT = {
   driver: DriverT | null;
   truck: TruckT | null;
   notes: string;
-}
+};

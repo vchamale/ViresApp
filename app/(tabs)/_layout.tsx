@@ -7,7 +7,7 @@ import SimpleLineIcons from '@expo/vector-icons/SimpleLineIcons';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 
 export default function TabLayout() {
-  const router = useRouter()
+  const router = useRouter();
   return (
     <Tabs screenOptions={{ tabBarActiveTintColor: '#71a780', headerShown: false }}>
       <Tabs.Screen
@@ -32,7 +32,7 @@ export default function TabLayout() {
               {...props}
               style={styles.fabButton}
               onPress={() => {
-                router.push('/shipments/create/add-shipment-client')
+                router.push('/shipments/create/add-shipment-client');
               }}
             >
               <View style={styles.fabIconContainer}>
@@ -53,12 +53,14 @@ export default function TabLayout() {
         name="configuration"
         options={{
           title: 'Configuración',
-          tabBarIcon: ({ color }) => <MaterialCommunityIcons name="cog-outline" size={24} color={color} />,
+          tabBarIcon: ({ color }) => (
+            <MaterialCommunityIcons name="cog-outline" size={24} color={color} />
+          ),
         }}
       />
     </Tabs>
   );
-};
+}
 
 const styles = StyleSheet.create({
   tabBar: {

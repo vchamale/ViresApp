@@ -1,8 +1,8 @@
-import { Dimensions, SafeAreaView, StyleSheet, View } from "react-native";
-import Svg, { Path } from 'react-native-svg'
+import { Dimensions, SafeAreaView, StyleSheet, View } from 'react-native';
+import Svg, { Path } from 'react-native-svg';
 
 const Test = () => {
-  const { width } = Dimensions.get("window");
+  const { width } = Dimensions.get('window');
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <Svg height="100%" width="100%" style={StyleSheet.absoluteFill}>
@@ -16,7 +16,7 @@ const Test = () => {
         />
       </Svg>
     </SafeAreaView>
-  )
-}
+  );
+};
 
 export default Test;

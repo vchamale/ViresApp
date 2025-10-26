@@ -1,8 +1,8 @@
-import DashboardButton from "@components/DashboardButton";
-import Space from "@components/Space";
-import { useRouter } from "expo-router";
-import { FC } from "react";
-import { Pressable, SafeAreaView, Switch, Text, TextInput, View } from "react-native";
+import DashboardButton from '@components/DashboardButton';
+import Space from '@components/Space';
+import { useRouter } from 'expo-router';
+import { FC } from 'react';
+import { Pressable, SafeAreaView, Switch, Text, TextInput, View } from 'react-native';
 
 type ConfigurationPropsT = {
   navigation: any;
@@ -18,7 +18,7 @@ const Configuration: FC<ConfigurationPropsT> = ({ navigation }) => {
         <Text
           style={{
             fontSize: 24,
-            fontWeight: "bold",
+            fontWeight: 'bold',
             marginBottom: 20,
           }}
         >
@@ -26,22 +26,22 @@ const Configuration: FC<ConfigurationPropsT> = ({ navigation }) => {
         </Text>
         {/* Cambiar contraseña */}
         <Pressable
-          onPress={() => router.push("./settings/change-password")}
+          onPress={() => router.push('./settings/change-password')}
           style={{
             paddingVertical: 15,
             borderBottomWidth: 1,
-            borderBottomColor: "#ddd",
+            borderBottomColor: '#ddd',
           }}
         >
           <Text style={{ fontSize: 18 }}>Cambiar Contraseña</Text>
         </Pressable>
         {/* Configuraciones Generales */}
         <Pressable
-          onPress={() => router.push("./settings/general")}
+          onPress={() => router.push('./settings/general')}
           style={{
             paddingVertical: 15,
             borderBottomWidth: 1,
-            borderBottomColor: "#ddd",
+            borderBottomColor: '#ddd',
           }}
         >
           <Text style={{ fontSize: 18 }}>Configuraciones Generales</Text>
@@ -49,19 +49,16 @@ const Configuration: FC<ConfigurationPropsT> = ({ navigation }) => {
         {/* Habilitar biométricas */}
         <View
           style={{
-            flexDirection: "row",
-            justifyContent: "space-between",
-            alignItems: "center",
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
             paddingVertical: 15,
             borderBottomWidth: 1,
-            borderBottomColor: "#ddd",
+            borderBottomColor: '#ddd',
           }}
         >
           <Text style={{ fontSize: 18 }}>Habilitar Biométricas</Text>
-          <Switch
-            value={false}
-            onValueChange={(value) => {}}
-          />
+          <Switch value={false} onValueChange={(value) => {}} />
         </View>
       </View>
     </SafeAreaView>

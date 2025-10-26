@@ -4,7 +4,7 @@ import { RootState } from '../configureStore';
 const counterSlice = createSlice({
   name: 'counterSlice',
   initialState: {
-    counter: 0
+    counter: 0,
   },
   reducers: {
     increment(state, action: PayloadAction<number>) {
@@ -12,8 +12,8 @@ const counterSlice = createSlice({
     },
     decrement(state, action: PayloadAction<number>) {
       state.counter = state.counter - action.payload;
-    }
-  }
+    },
+  },
 });
 
 export const { increment, decrement } = counterSlice.actions;

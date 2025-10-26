@@ -1,8 +1,8 @@
-import React from "react";
-import { Pressable, Text, View } from "react-native";
-import Space from "./Space";
-import { Href, Router, useRouter } from "expo-router";
-import IconMapper from "./IconMapper";
+import React from 'react';
+import { Pressable, Text, View } from 'react-native';
+import Space from './Space';
+import { Href, Router, useRouter } from 'expo-router';
+import IconMapper from './IconMapper';
 
 interface DashboardButtonProps {
   label: string;
@@ -15,10 +15,10 @@ const DashboardButton = ({ label, route, icon }: DashboardButtonProps) => {
   return (
     <View
       style={{
-        width: "45%",
+        width: '45%',
         marginLeft: 10,
         marginRight: 5,
-        marginVertical: 10
+        marginVertical: 10,
       }}
     >
       <Pressable
@@ -28,18 +28,18 @@ const DashboardButton = ({ label, route, icon }: DashboardButtonProps) => {
       >
         <View
           style={{
-            flexDirection: "row",
-            justifyContent: "center",
+            flexDirection: 'row',
+            justifyContent: 'center',
           }}
         >
           <View
             style={{
-              flexDirection: "column",
+              flexDirection: 'column',
             }}
           >
             <View
               style={{
-                backgroundColor: "#5db075",
+                backgroundColor: '#5db075',
                 padding: 32,
                 borderRadius: 8,
               }}
@@ -49,9 +49,7 @@ const DashboardButton = ({ label, route, icon }: DashboardButtonProps) => {
               </View>
             </View>
             <Space vertical size={10} />
-            <Text style={{ textAlign: "center", color: "#5db075" }}>
-              {label}
-            </Text>
+            <Text style={{ textAlign: 'center', color: '#5db075' }}>{label}</Text>
           </View>
         </View>
       </Pressable>

@@ -1,8 +1,8 @@
-import DashboardButton from "@components/DashboardButton";
-import Space from "@components/Space";
-import { useRouter } from "expo-router";
-import { FC } from "react";
-import { Pressable, SafeAreaView, Text, TextInput, View } from "react-native";
+import DashboardButton from '@components/DashboardButton';
+import Space from '@components/Space';
+import { useRouter } from 'expo-router';
+import { FC } from 'react';
+import { Pressable, SafeAreaView, Text, TextInput, View } from 'react-native';
 import { Button } from 'bds-design-craft';
 
 type HomePropsT = {
@@ -19,19 +19,27 @@ const Home: FC<HomePropsT> = ({ navigation }) => {
         <Space vertical size={10} />
         <View
           style={{
-            flexDirection: "row",
-            justifyContent: "space-between",
+            flexDirection: 'row',
+            justifyContent: 'space-between',
           }}
         >
           <View>
-            <Text style={{
-              fontWeight: '700',
-              fontSize: 20
-            }}>Hola Kevin</Text>
+            <Text
+              style={{
+                fontWeight: '700',
+                fontSize: 20,
+              }}
+            >
+              Hola Kevin
+            </Text>
             <Space vertical size={10} />
-            <Text style={{
-              color: '#525358'
-            }}>Sabado, 7 de Diciembre</Text>
+            <Text
+              style={{
+                color: '#525358',
+              }}
+            >
+              Sabado, 7 de Diciembre
+            </Text>
           </View>
           <View
             style={{
@@ -40,12 +48,12 @@ const Home: FC<HomePropsT> = ({ navigation }) => {
           >
             <Pressable
               onPress={() => {
-                router.push("./login/sign-in");
+                router.push('./login/sign-in');
               }}
             >
               <Text
                 style={{
-                  color: "#5db075",
+                  color: '#5db075',
                   fontSize: 20,
                 }}
               >
@@ -55,22 +63,32 @@ const Home: FC<HomePropsT> = ({ navigation }) => {
           </View>
         </View>
         <Space vertical size={10} />
-        <View style={{
-          flex: 1,
-          backgroundColor: '#88c69a',
-          borderRadius: 20,
-          padding: 20
-        }}>
-          <Text style={{
-            color: '#fff',
-            fontWeight: '900',
-            fontSize: 20
-          }}>Viaje en Curso</Text>
-          <Text style={{
-            color: '#fff',
-            fontWeight: '900',
-            fontSize: 20
-          }}>No tienes viajes en curso</Text>
+        <View
+          style={{
+            flex: 1,
+            backgroundColor: '#88c69a',
+            borderRadius: 20,
+            padding: 20,
+          }}
+        >
+          <Text
+            style={{
+              color: '#fff',
+              fontWeight: '900',
+              fontSize: 20,
+            }}
+          >
+            Viaje en Curso
+          </Text>
+          <Text
+            style={{
+              color: '#fff',
+              fontWeight: '900',
+              fontSize: 20,
+            }}
+          >
+            No tienes viajes en curso
+          </Text>
         </View>
         {/* <View
           style={{
@@ -104,14 +122,10 @@ const Home: FC<HomePropsT> = ({ navigation }) => {
           style={{
             flex: 1,
             flexDirection: 'row',
-            flexWrap: 'wrap'
+            flexWrap: 'wrap',
           }}
         >
-          <DashboardButton
-            route={"/shipments/shipment"}
-            label={"Viajes"}
-            icon={"truck"}
-          />
+          <DashboardButton route={'/shipments/shipment'} label={'Viajes'} icon={'truck'} />
           {/* <DashboardButton
             route={"/clients/client"}
             label={"Clientes"}
@@ -127,16 +141,8 @@ const Home: FC<HomePropsT> = ({ navigation }) => {
             label={"Test"}
             icon={"tools"}
           /> */}
-          <DashboardButton
-            route={"/destination"}
-            label={"destination"}
-            icon={"tools"}
-          />
-          <DashboardButton
-            route={"/origin"}
-            label={"origin"}
-            icon={"tools"}
-          />
+          <DashboardButton route={'/destination'} label={'destination'} icon={'tools'} />
+          <DashboardButton route={'/origin'} label={'origin'} icon={'tools'} />
         </View>
       </View>
     </SafeAreaView>

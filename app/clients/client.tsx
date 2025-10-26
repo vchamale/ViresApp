@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useState } from "react";
+import React, { FC, useCallback, useState } from 'react';
 import {
   FlatList,
   RefreshControl,
@@ -8,28 +8,28 @@ import {
   TextInput,
   TouchableOpacity,
   View,
-} from "react-native";
-import { useRouter } from "expo-router";
-import CustomHeader from "@components/CustomHeader";
-import Space from "@components/Space";
-import SearchBox from "@components/SearchBox";
+} from 'react-native';
+import { useRouter } from 'expo-router';
+import CustomHeader from '@components/CustomHeader';
+import Space from '@components/Space';
+import SearchBox from '@components/SearchBox';
 
 const ClientList: FC = () => {
   // Estado
   const [refreshing, setRefreshing] = useState(false);
-  const [searchTerm, setSearchTerm] = useState<string>("");
+  const [searchTerm, setSearchTerm] = useState<string>('');
   const [clients, setClients] = useState<any[]>([
     {
-      address: "Direccion de Prueba 1",
+      address: 'Direccion de Prueba 1',
       clientId: 1,
-      contactName: "Contacto 1",
-      email: "testemail@test.com",
-      name: "Cliente de Prueba 1",
-      nit: "123456789",
+      contactName: 'Contacto 1',
+      email: 'testemail@test.com',
+      name: 'Cliente de Prueba 1',
+      nit: '123456789',
       status: true,
-      telephone: "123456789",
+      telephone: '123456789',
       tenant: {
-        tenantName: "ViresApp",
+        tenantName: 'ViresApp',
       },
     },
   ]);
@@ -48,7 +48,7 @@ const ClientList: FC = () => {
 
   const handleSearch = () => {
     // Lógica de búsqueda simulada
-    console.log("Buscando clientes con el término:", searchTerm);
+    console.log('Buscando clientes con el término:', searchTerm);
   };
 
   const renderItem = ({ item }: { item: any }) => (
@@ -66,23 +66,17 @@ const ClientList: FC = () => {
       <Text style={styles.clientInfo}>Teléfono: {item.telephone}</Text>
       <Text style={styles.clientInfo}>Correo: {item.email}</Text>
       <Text style={styles.clientInfo}>Dirección: {item.address}</Text>
-      <Text style={styles.clientInfo}>
-        Estado: {item.status ? "Activo" : "Inactivo"}
-      </Text>
+      <Text style={styles.clientInfo}>Estado: {item.status ? 'Activo' : 'Inactivo'}</Text>
       <Text style={styles.clientInfo}>Tenant: {item.tenant?.tenantName}</Text>
     </TouchableOpacity>
   );
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: "#fff" }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
       <View style={{ padding: 15, flex: 1 }}>
-        <CustomHeader
-          title="Clientes"
-          onBackPress={() => router.back()}
-          showHelpButton={true}
-        />
+        <CustomHeader title="Clientes" onBackPress={() => router.back()} showHelpButton={true} />
         <Space vertical size={15} />
-        <Text style={{ color: "#5db075", fontWeight: "700" }}>Buscar Cliente</Text>
+        <Text style={{ color: '#5db075', fontWeight: '700' }}>Buscar Cliente</Text>
         <Space vertical size={5} />
         <SearchBox
           iconName="search"
@@ -93,16 +87,16 @@ const ClientList: FC = () => {
           onChangeText={setSearchTerm}
         />
         <Space vertical size={15} />
-        <View style={{ flexDirection: "row" }}>
-          <View style={{ width: "50%", paddingRight: 10 }}>
+        <View style={{ flexDirection: 'row' }}>
+          <View style={{ width: '50%', paddingRight: 10 }}>
             <TouchableOpacity
               style={styles.createButton}
-              onPress={() => router.push("/clients/create-client")}
+              onPress={() => router.push('/clients/create-client')}
             >
               <Text style={styles.buttonText}>Nuevo Cliente</Text>
             </TouchableOpacity>
           </View>
-          <View style={{ width: "50%" }}>
+          <View style={{ width: '50%' }}>
             <TouchableOpacity style={styles.searchButton} onPress={handleSearch}>
               <Text style={styles.buttonText}>Buscar</Text>
             </TouchableOpacity>
@@ -114,9 +108,7 @@ const ClientList: FC = () => {
           keyExtractor={(item) => item.clientId.toString()}
           contentContainerStyle={styles.listContainer}
           renderItem={renderItem}
-          refreshControl={
-            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-          }
+          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
         />
       </View>
     </SafeAreaView>
@@ -129,11 +121,11 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   clientCard: {
-    backgroundColor: "#f8f9fa",
+    backgroundColor: '#f8f9fa',
     borderRadius: 8,
     padding: 15,
     marginBottom: 10,
-    shadowColor: "#000",
+    shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
@@ -141,28 +133,28 @@ const styles = StyleSheet.create({
   },
   clientName: {
     fontSize: 18,
-    fontWeight: "bold",
-    color: "#333",
+    fontWeight: 'bold',
+    color: '#333',
   },
   clientInfo: {
     fontSize: 14,
-    color: "#555",
+    color: '#555',
     marginTop: 5,
   },
   searchButton: {
-    backgroundColor: "#5db075",
+    backgroundColor: '#5db075',
     paddingVertical: 10,
     borderRadius: 5,
   },
   createButton: {
-    backgroundColor: "#007BFF",
+    backgroundColor: '#007BFF',
     paddingVertical: 10,
     borderRadius: 4,
   },
   buttonText: {
-    color: "#fff",
-    textAlign: "center",
-    fontWeight: "bold",
+    color: '#fff',
+    textAlign: 'center',
+    fontWeight: 'bold',
   },
 });
 

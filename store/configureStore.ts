@@ -1,26 +1,26 @@
-import { configureStore } from "@reduxjs/toolkit";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { persistStore, persistReducer } from "redux-persist";
-import { authApi } from "./api/authApi";
-import rootReducers from "./reducers";
-import { shipmentApi } from "@api/shipmentApi";
-import { destinationApi } from "@api/destinationApi";
-import { originApi } from "@api/originApi";
-import { truckApi } from "@api/truckApi";
-import { clientApi } from "@api/clientApi";
-import { currencyApi } from "@api/currencyApi";
-import { driverApi } from "@api/driverApi";
-import { containerApi } from "@api/containerApi";
-import { documentApi } from "@api/documentApi";
-import { makeApi } from "@api/makeApi";
-import { shipmentStatusApi } from "@api/shipmentStatusApi";
-import { roleApi } from "@api/roleApi";
+import { configureStore } from '@reduxjs/toolkit';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { persistStore, persistReducer } from 'redux-persist';
+import { authApi } from './api/authApi';
+import rootReducers from './reducers';
+import { shipmentApi } from '@api/shipmentApi';
+import { destinationApi } from '@api/destinationApi';
+import { originApi } from '@api/originApi';
+import { truckApi } from '@api/truckApi';
+import { clientApi } from '@api/clientApi';
+import { currencyApi } from '@api/currencyApi';
+import { driverApi } from '@api/driverApi';
+import { containerApi } from '@api/containerApi';
+import { documentApi } from '@api/documentApi';
+import { makeApi } from '@api/makeApi';
+import { shipmentStatusApi } from '@api/shipmentStatusApi';
+import { roleApi } from '@api/roleApi';
 
 // 🔹 Configuración de persistencia
 const persistConfig = {
-  key: "root",
+  key: 'root',
   storage: AsyncStorage, // Guardará el estado en AsyncStorage
-  whitelist: ["auth"], // Opcional: define qué slices de estado quieres persistir
+  whitelist: ['auth'], // Opcional: define qué slices de estado quieres persistir
 };
 
 // Reducer persistido
@@ -28,9 +28,9 @@ const persistedReducer = persistReducer(persistConfig, rootReducers);
 
 const store = configureStore({
   reducer: persistedReducer,
-  middleware: getDefaultMiddleware =>
+  middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
-      serializableCheck: false
+      serializableCheck: false,
     })
       .concat(authApi.middleware)
       .concat(roleApi.middleware)
@@ -46,7 +46,7 @@ const store = configureStore({
       .concat(driverApi.middleware)
       .concat(containerApi.middleware),
   preloadedState: {},
-  devTools: !Object.is(process.env.NODE_ENV, 'production')
+  devTools: !Object.is(process.env.NODE_ENV, 'production'),
 });
 
 // 🔹 Persistor para manejar la persistencia

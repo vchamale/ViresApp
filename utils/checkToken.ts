@@ -5,10 +5,10 @@ const checkToken = async () => {
   if (!token) {
     return false;
   }
-  
-  const decoded = { exp: 123 } //jwtDecode(token);
+
+  const decoded = { exp: 123 }; //jwtDecode(token);
   const currentTime = Date.now() / 1000;
-  
+
   if (decoded.exp < currentTime) {
     return false;
   }
