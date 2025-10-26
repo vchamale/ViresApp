@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useState } from 'react';
+import React, { FC, useCallback, useEffect, useState } from 'react';
 import {
   FlatList,
   RefreshControl,
@@ -37,6 +37,10 @@ const ClientList: FC = () => {
 
     trigger(params);
   };
+
+  useEffect( () => {
+    handleSearch()
+  }, [])
 
   const renderItem = ({ item }: { item: any }) => (
     <ClientCard

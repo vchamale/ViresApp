@@ -15,7 +15,7 @@ const Management: FC = () => {
     // { label: 'Punto de Partida', path: '/origin', size: 20, iconName: 'map-marker-outline' },
     { label: 'Vehículo', path: '/vehicles', size: 20, iconName: 'truck-outline' },
     { label: 'Piloto', path: '/drivers', size: 16, iconName: 'drivers-license-o' },
-    { label: 'Cliente', path: '/clients', size: 20, iconName: 'user' },
+    { label: 'Clientes', path: '/clients', size: 20, iconName: 'user' },
   ];
 
   return (
