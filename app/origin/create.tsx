@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, SafeAreaView, StyleSheet } from 'react-native';
-import { useRouter } from 'expo-router';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import CustomHeader from '@components/CustomHeader';
 import Space from '@components/Space';
 import BackgroundView from '@components/BackgroundView';
@@ -10,6 +10,10 @@ import { useCreateOriginMutation } from '@api/originApi';
 const CreateOrigin: React.FC = () => {
   const [name, setName] = useState<string>('');
   const [address, setAddress] = useState<string>('');
+
+  const { clientId } = useLocalSearchParams();
+
+  console.log('asdasd ', clientId)
 
   const router = useRouter();
 
@@ -26,6 +30,7 @@ const CreateOrigin: React.FC = () => {
     const originDetails = {
       name,
       address,
+      clientId
     };
 
     console.log('Detalles del punto de partida:', originDetails);

@@ -51,6 +51,15 @@ export const destinationApi = createApi({
       },
       invalidatesTags: ['Destination'],
     }),
+    getDestinationsByClientId: build.query<any, { clientId: number | string; search?: string }>({
+      query: ({ clientId, search }) => {
+        const params: Record<string, string> = {};
+        if (search) params.search = search;
+        const qs = new URLSearchParams(params).toString();
+        return `/client/${clientId}?${qs}`;
+      },
+      providesTags: ['Destination'],
+    }),
   }),
 });
 
@@ -60,4 +69,5 @@ export const {
   useGetAllDestinationsQuery,
   useGetDestinationsByIdQuery,
   useLazyGetAllDestinationsQuery,
+  useLazyGetDestinationsByClientIdQuery
 } = destinationApi;
