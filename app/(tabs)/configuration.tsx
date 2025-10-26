@@ -1,6 +1,6 @@
 import { FC } from 'react';
 import { SafeAreaView, StyleSheet, Text, View, Switch, Pressable } from 'react-native';
-import { useRouter } from 'expo-router';
+import { useRouter, Href } from 'expo-router';
 import CustomHeader from '@components/CustomHeader';
 import Space from '@components/Space';
 import IconMapper from '@components/IconMapper';
@@ -8,25 +8,25 @@ import IconMapper from '@components/IconMapper';
 const Configuration: FC = () => {
   const router = useRouter();
 
-  const options = [
+  const options: Array<{ label: string; path: Href; iconName: string }> = [
     {
       label: 'Cambiar Contraseña',
-      path: './settings/change-password',
+      path: './settings/change-password' as Href,
       iconName: 'lock-outline',
     },
     {
       label: 'Configuraciones Generales',
-      path: './settings/general',
+      path: './settings/general' as Href,
       iconName: 'settings-outline',
     },
     {
       label: 'Notificaciones',
-      path: './settings/notifications',
+      path: './settings/notifications' as Href,
       iconName: 'notifications-outline',
     },
     {
       label: 'Idioma',
-      path: './settings/language',
+      path: './settings/language' as Href,
       iconName: 'language-outline',
     },
   ];
