@@ -4,6 +4,7 @@ import Dropdown from './Dropdown';
 import DropdownSkeleton from './skeleton/DropdownSkeleton';
 
 type DropdownWrapperProps<T> = {
+  isDropdown?: boolean;
   isLoading: boolean;
   isFetching: boolean;
   isError: boolean;
@@ -21,6 +22,7 @@ type DropdownWrapperProps<T> = {
 };
 
 const DropdownWrapper = <T,>({
+  isDropdown = true,
   isLoading,
   isFetching,
   isError,
@@ -43,6 +45,7 @@ const DropdownWrapper = <T,>({
         <DropdownSkeleton />
       ) : items ? (
         <Dropdown
+          isDropdown={isDropdown}
           items={items}
           placeholder={placeholder}
           renderItemText={renderItemText}

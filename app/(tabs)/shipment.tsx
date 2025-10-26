@@ -78,7 +78,7 @@ const Shipment: FC = () => {
   }, [handleSearch]);
 
   const handleCreateNewShipment = () => {
-    router.push('/shipments/create/add-shipment-client');
+    router.push('/shipments/create/single/create');
   };
 
   const renderItem = ({ item }: { item: ShipmentT }) => {

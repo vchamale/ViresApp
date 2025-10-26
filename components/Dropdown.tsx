@@ -14,6 +14,7 @@ import Space from './Space';
 import { deepEqual } from 'utils/common/deepEqual';
 
 interface DropdownProps<T> {
+  isDropdown?: boolean;
   items: T[];
   placeholder: string;
   placeholderColor?: string;
@@ -26,6 +27,7 @@ interface DropdownProps<T> {
 }
 
 const Dropdown = <T extends {}>({
+  isDropdown,
   items,
   placeholder,
   placeholderColor,
@@ -153,51 +155,53 @@ const Dropdown = <T extends {}>({
           </Text>
         )}
       </TouchableOpacity>
-      <Modal
-        transparent
-        visible={isDropdownOpen}
-        animationType="fade"
-        onRequestClose={handleCloseDropdown}
-      >
-        <TouchableWithoutFeedback onPress={handleCloseDropdown}>
-          <View style={styles.modalOverlay}>
-            <View
-              style={[
-                styles.dropdownContainer,
-                {
-                  top: dropdownPosition.top,
-                  left: dropdownPosition.left,
-                  width: dropdownPosition.width,
-                },
-              ]}
-            >
-              <FlatList
-                data={filteredItems}
-                keyExtractor={(item, index) => `${index}`}
-                renderItem={({ item }) => (
-                  <TouchableOpacity
-                    style={styles.dropdownItem}
-                    onPress={() => handleItemPress(item)}
-                  >
-                    <Text style={styles.dropdownItemText}>{renderItemText(item)}</Text>
-                  </TouchableOpacity>
-                )}
-                ListFooterComponent={
-                  linkText ? (
-                    <TouchableOpacity onPress={onLinkPress} style={styles.linkContainer}>
-                      <View style={styles.footerLink}>
-                        <Text style={styles.linkText}>{linkText}</Text>
-                        <Space horizontal size={10} />
-                        <AntDesign name="plus" size={20} color="blue" />
-                      </View>
+      {isDropdown &&
+        <Modal
+          transparent
+          visible={isDropdownOpen}
+          animationType="fade"
+          onRequestClose={handleCloseDropdown}
+        >
+          <TouchableWithoutFeedback onPress={handleCloseDropdown}>
+            <View style={styles.modalOverlay}>
+              <View
+                style={[
+                  styles.dropdownContainer,
+                  {
+                    top: dropdownPosition.top,
+                    left: dropdownPosition.left,
+                    width: dropdownPosition.width,
+                  },
+                ]}
+              >
+                <FlatList
+                  data={filteredItems}
+                  keyExtractor={(item, index) => `${index}`}
+                  renderItem={({ item }) => (
+                    <TouchableOpacity
+                      style={styles.dropdownItem}
+                      onPress={() => handleItemPress(item)}
+                    >
+                      <Text style={styles.dropdownItemText}>{renderItemText(item)}</Text>
                     </TouchableOpacity>
-                  ) : null
-                }
-              />
+                  )}
+                  ListFooterComponent={
+                    linkText ? (
+                      <TouchableOpacity onPress={onLinkPress} style={styles.linkContainer}>
+                        <View style={styles.footerLink}>
+                          <Text style={styles.linkText}>{linkText}</Text>
+                          <Space horizontal size={10} />
+                          <AntDesign name="plus" size={20} color="blue" />
+                        </View>
+                      </TouchableOpacity>
+                    ) : null
+                  }
+                />
+              </View>
             </View>
-          </View>
-        </TouchableWithoutFeedback>
-      </Modal>
+          </TouchableWithoutFeedback>
+        </Modal>
+      }
     </View>
   );
 };

@@ -125,7 +125,11 @@ const Home: FC<HomePropsT> = ({ navigation }) => {
             flexWrap: 'wrap',
           }}
         >
-          <DashboardButton route={'/shipments/shipment'} label={'Viajes'} icon={'truck'} />
+          <DashboardButton
+            route={"/shipments/create/single/create"}
+            label={"Viajes"}
+            icon={"truck"}
+          />
           {/* <DashboardButton
             route={"/clients/client"}
             label={"Clientes"}

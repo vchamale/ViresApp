@@ -289,13 +289,13 @@ const SinglePageShipmentForm = () => {
           title="Crear Viaje"
           backgroundColor="#71a780"
           color="#fff"
-          onBackPress={() => setResetShipmentAlertVisible(true)}
-          showChangeViewButton={true}
-          isSinglePage={isSingleShipmentCreatePage}
-          onChangeViewPress={() => {
-            dispatch(setSingleShipmentCreatePage(false));
-            router.replace('/shipments/create/add-shipment-client');
-          }}
+          onBackPress={() => router.back()}
+          // showChangeViewButton={true}
+          // isSinglePage={isSingleShipmentCreatePage}
+          // onChangeViewPress={() => {
+          //   dispatch(setSingleShipmentCreatePage(false));
+          //   router.replace('/shipments/create/add-shipment-client');
+          // }}
         />
         <CustomAlert
           isVisible={isResetShipmentAlertVisible}
@@ -387,6 +387,7 @@ const SinglePageShipmentForm = () => {
             isFetching={isFetchingContainers}
             isError={isErrorContainer}
             items={containers}
+            isDropdown={false}
             placeholder="Selecciona un contenedor"
             renderItemText={(item) => `${item.containerNumber}`}
             onItemSelected={(item: ContainerT) => handleContainerSelected(item)}

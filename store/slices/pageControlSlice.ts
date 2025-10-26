@@ -4,7 +4,7 @@ import { RootState } from '../configureStore';
 const pageControlSlice = createSlice({
   name: 'pageControlSlice',
   initialState: {
-    isSingleShipmentCreatePage: false,
+    isSingleShipmentCreatePage: true
   },
   reducers: {
     setSingleShipmentCreatePage(state, action: PayloadAction<boolean>) {
