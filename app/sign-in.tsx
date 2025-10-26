@@ -46,8 +46,6 @@ const SignIn: React.FC = () => {
     return () => backHandler.remove();
   }, []);
 
-  console.log('>>>>> on sign in')
-
   const onSubmit = async () => {
     setLoading(true);
     try {
