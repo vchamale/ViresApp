@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -13,31 +13,16 @@ import { useRouter } from 'expo-router';
 import { useAppDispatch, useAppSelector } from '@hooks/useRedux';
 import {
   shipmentSelector,
-  addClient,
-  addShipmentRoute,
-  addContainerDetails,
-  addTransportDetails,
-  addOrigin,
-  addDestination,
-  addContainer,
-  addPolicy,
-  addWeight,
-  addPrice,
-  addCurrency,
-  addDriver,
-  addTruck,
-  addNotes,
   reset,
 } from '@slice/shipmentSlice';
 import Dropdown from '@components/Dropdown';
 import CustomHeader from '@components/CustomHeader';
-import { pageControlSelector, setSingleShipmentCreatePage } from '@slice/pageControlSlice';
 import BackgroundView from '@components/BackgroundView';
 import Space from '@components/Space';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useGetAllShipmentsStatusQuery } from '@api/shipmentStatusApi';
-import { useGetAllOriginsQuery } from '@api/originApi';
-import { useGetAllDestinationsQuery } from '@api/destinationApi';
+import { useLazyGetOriginsByClientIdQuery } from '@api/originApi';
+import { useLazyGetDestinationsByClientIdQuery } from '@api/destinationApi';
 import { useGetAllTrucksQuery } from '@api/truckApi';
 import { useGetAllDriversQuery } from '@api/driverApi';
 import { useGetAllClientsQuery } from '@api/clientApi';
@@ -57,22 +42,20 @@ const SinglePageShipmentForm = () => {
   const [containerNumber, setContainerNumber] = useState<string>('');
   const [weight, setWeight] = useState<string>('');
   const [price, setPrice] = useState<string>('');
-  // const [client, setClient] = useState<string>("");
-  // const [driver, setDriver] = useState<string>("");
-  const [vehicle, setVehicle] = useState<string>('');
-  const [isAlertVisible, setAlertVisible] = useState<boolean>(false);
-  const [isModified, setIsModified] = useState<boolean>(false);
   const [shipmentStatusSelected, setShipmentStatusSelected] = useState(null);
+  const [clientSelected, setClientSelected] = useState<ClientT | null>(null);
+  const [policySelected, setPolicySelected] = useState<PolicyT | null>(null);
   const [originSelected, setOriginSelected] = useState(null);
-  const [destinationSelected, setDestinationSelected] = useState(null);
-  const [clientSelected, setClientSelected] = useState(null);
+  const [destinationSelected, setDestinationSelected] = useState<DestinationT | null>(null);
   const [vehicleSelected, setVehicleSelected] = useState(null);
   const [driverSelected, setDriverSelected] = useState(null);
   const [isResetShipmentAlertVisible, setResetShipmentAlertVisible] = useState<boolean>(false);
 
   // Store
   const shipment = useAppSelector(shipmentSelector);
-  const { isSingleShipmentCreatePage } = useAppSelector(pageControlSelector);
+
+  const [triggerOrigins, originsQuery] = useLazyGetOriginsByClientIdQuery();
+  const [triggerDestinations, destinationsQuery] = useLazyGetDestinationsByClientIdQuery();
 
   // Queries
   const {
@@ -83,22 +66,8 @@ const SinglePageShipmentForm = () => {
     refetch: refetchClients,
     isFetching: isFetchingClients,
   } = useGetAllClientsQuery({});
-  const {
-    currentData: origins,
-    isError: isErrorOrigins,
-    error: errorOrigins,
-    isLoading: isLoadingOrigins,
-    refetch: refetchOrigins,
-    isFetching: isFetchingOrigins,
-  } = useGetAllOriginsQuery({});
-  const {
-    currentData: destinations,
-    isError: isErrorDestinations,
-    error: errorDestinations,
-    isLoading: isLoadingDestinations,
-    refetch: refetchDestinations,
-    isFetching: isFetchingDestinations,
-  } = useGetAllDestinationsQuery({});
+  
+ 
   const {
     currentData: containers,
     isError: isErrorContainer,
@@ -107,6 +76,7 @@ const SinglePageShipmentForm = () => {
     refetch: refetchContainers,
     isFetching: isFetchingContainers,
   } = useGetAllContainersQuery({});
+
   const {
     currentData: policies,
     isError: isErrorPolicies,
@@ -120,7 +90,7 @@ const SinglePageShipmentForm = () => {
     isLoading: isShipmentStatusLoading,
     isError: isShipmentStatusError,
   } = useGetAllShipmentsStatusQuery({});
-  // const { data: clientList, isLoading: isClientLoading, isError: isClientError} = useGetAllClientsQuery({});
+
   const {
     data: vehicleList,
     isLoading: isVehicleLoading,
@@ -132,88 +102,7 @@ const SinglePageShipmentForm = () => {
     isError: isdriverError,
   } = useGetAllDriversQuery({});
 
-  // Effects
-  useEffect(() => {
-    if (shipment) {
-      setContainerNumber(shipment.container?.containerNumber || '');
-      setWeight(shipment.weight?.toString() || '');
-      setPrice(shipment.price?.toString() || '');
-    }
-  }, [shipment]);
-
-  useEffect(() => {
-    if (shipment && shipmentStatusList?.length > 0) {
-      const shipmentStatus = shipmentStatusList?.find(
-        (shipmentStatus: any) => shipment.shipmentStatusId === shipmentStatus.shipmentStatusId,
-      );
-      setShipmentStatusSelected(shipmentStatus);
-    }
-  }, [shipmentStatusList]);
-
-  // useEffect(() => {
-  //   if (shipment && originList?.length > 0) {
-  //     const origin = originList?.find((origin: any) => shipment.originId === origin.originId)
-  //     setOriginSelected(origin);
-  //   }
-  // }, [originList]);
-
-  // useEffect(() => {
-  //   if (shipment && destinationList?.length > 0) {
-  //     const destination = destinationList?.find((destination: any) => shipment.destinationId === destination.destinationId)
-  //     setDestinationSelected(destination);
-  //   }
-  // }, [destinationList]);
-
-  // useEffect(() => {
-  //   if (parsedShipment && clientList?.length > 0) {
-  //     const client = clientList?.find((client: any) => parsedShipment.clientId === client.clientId)
-  //     setClientSelected(client);
-  //   }
-  // }, [clientList]);
-
-  useEffect(() => {
-    if (shipment && vehicleList?.length > 0) {
-      const vehicle = vehicleList?.find((truck: any) => shipment.truckId === truck.truckId);
-      setVehicleSelected(vehicle);
-    }
-  }, [vehicleList]);
-
-  useEffect(() => {
-    if (shipment && driverList?.length > 0) {
-      const driver = driverList?.find((driver: any) => shipment.user?.userId === driver.userId);
-      setDriverSelected(driver);
-    }
-  }, [vehicleList]);
-
-  useEffect(() => {
-    setIsModified(
-      containerNumber !== shipment.container?.containerNumber ||
-        shipmentStatusSelected?.shipment !== shipment.shipmentStatus?.shipmentStatusId ||
-        originSelected?.originId !== shipment.origin?.originId ||
-        destinationSelected?.destinationId !== shipment.destination?.destinationId ||
-        vehicleSelected?.truckId !== shipment.truck?.truckId ||
-        driverSelected?.userId !== shipment.user?.userId ||
-        price !== shipment.price ||
-        weight !== shipment.weight,
-    );
-  }, [
-    containerNumber,
-    shipment.container?.containerNumber,
-    shipmentStatusSelected?.shipmentStatusId,
-    shipment.shipmentStatus?.shipmentStatusId,
-    originSelected?.originId,
-    shipment.origin?.originId,
-    destinationSelected?.destinationId,
-    shipment.destination?.destinationId,
-    vehicleSelected?.truckId,
-    shipment.truck?.truckId,
-    driverSelected?.userId,
-    shipment.user?.userId,
-    price,
-    shipment.price,
-    weight,
-    shipment.weight,
-  ]);
+  
 
   const handleSave = () => {
     if (
@@ -232,49 +121,7 @@ const SinglePageShipmentForm = () => {
     router.push('/shipments/summary');
   };
 
-  const handleClientSelected = (value: any) => {
-    dispatch(addClient(value));
-  };
-
-  const handleOriginSelected = (item: any) => {
-    dispatch(addOrigin(item));
-  };
-
-  const handleDestinationSelected = (value: any) => {
-    dispatch(addDestination(value));
-  };
-
-  const handleContainerSelected = (value: any) => {
-    dispatch(addContainer(value));
-  };
-
-  const handlePolicySelected = (value: any) => {
-    dispatch(addPolicy(value));
-  };
-
-  const handleWeightSelected = (value: any) => {
-    dispatch(addWeight(value));
-  };
-
-  const handlePriceSelected = (value: any) => {
-    dispatch(addPrice(value));
-  };
-
-  const handleCurrencySelected = (value: any) => {
-    dispatch(addCurrency(value));
-  };
-
-  const handleDriverSelected = (value: any) => {
-    dispatch(addDriver(value));
-  };
-
-  const handleVehicleSelected = (value: any) => {
-    dispatch(addTruck(value));
-  };
-
-  const handleNotesSelected = (value: any) => {
-    dispatch(addNotes(value));
-  };
+  // new
 
   const handleResetShipment = () => {
     dispatch(reset());
@@ -289,13 +136,7 @@ const SinglePageShipmentForm = () => {
           title="Crear Viaje"
           backgroundColor="#71a780"
           color="#fff"
-          onBackPress={() => router.back()}
-          // showChangeViewButton={true}
-          // isSinglePage={isSingleShipmentCreatePage}
-          // onChangeViewPress={() => {
-          //   dispatch(setSingleShipmentCreatePage(false));
-          //   router.replace('/shipments/create/add-shipment-client');
-          // }}
+          onBackPress={() => setResetShipmentAlertVisible(true)}
         />
         <CustomAlert
           isVisible={isResetShipmentAlertVisible}
@@ -342,7 +183,11 @@ const SinglePageShipmentForm = () => {
             placeholder="Selecciona un cliente"
             placeholderColor="#71a780"
             renderItemText={(item) => `${item.name}`}
-            onItemSelected={(item: ClientT) => handleClientSelected(item)}
+            onItemSelected={(item: ClientT) => {
+              setClientSelected(item)
+              triggerOrigins({ clientId: item.clientId })
+              triggerDestinations({ clientId: item.clientId })
+            }}
             refetch={refetchClients}
             linkText="Agregar nuevo cliente"
             onLinkPress={() => console.log('Botón tipo link presionado')}
@@ -351,15 +196,15 @@ const SinglePageShipmentForm = () => {
 
           <DropdownWrapper
             label="Origen"
-            isLoading={isLoadingOrigins}
-            isFetching={isFetchingOrigins}
-            isError={isErrorOrigins}
-            items={origins}
+            isLoading={originsQuery.isLoading}
+            isFetching={originsQuery.isFetching}
+            isError={originsQuery.isError}
+            items={originsQuery.data ?? []}
             placeholder="Selecciona una origen"
             placeholderColor="#71a780"
             renderItemText={(item) => `${item.name}`}
             onItemSelected={(item: OriginT) => handleOriginSelected(item)}
-            refetch={refetchOrigins}
+            refetch={() => triggerOrigins}
             linkText="Agregar nuevo origen"
             onLinkPress={() => console.log('Botón tipo link presionado')}
             {...(shipment.origin && { initialSelectedItem: shipment.origin })}
@@ -367,15 +212,15 @@ const SinglePageShipmentForm = () => {
 
           <DropdownWrapper
             label="Destino"
-            isLoading={isLoadingDestinations}
-            isFetching={isFetchingDestinations}
-            isError={isErrorDestinations}
-            items={destinations}
+            isLoading={destinationsQuery.isLoading}
+            isFetching={destinationsQuery.isFetching}
+            isError={destinationsQuery.isError}
+            items={destinationsQuery.data ?? []}
             placeholder="Selecciona un destino"
             placeholderColor="#71a780"
-            renderItemText={(item) => `${item.address}`}
+            renderItemText={(item) => `${item.name}`}
             onItemSelected={(item: DestinationT) => handleDestinationSelected(item)}
-            refetch={refetchDestinations}
+            refetch={() => triggerDestinations}
             linkText="Agregar nuevo destino"
             onLinkPress={() => console.log('Botón tipo link presionado')}
             {...(shipment.destination && { initialSelectedItem: shipment.destination })}
@@ -404,8 +249,9 @@ const SinglePageShipmentForm = () => {
             items={policies}
             placeholder="Selecciona o Digita una póliza"
             renderItemText={(item) => `${item.documentNumber}`}
-            onItemSelected={(item: PolicyT) => handlePolicySelected(item)}
+            onItemSelected={(item: PolicyT) => setPolicySelected(item)}
             refetch={refetchPolicies}
+            isDropdown={false}
             linkText="Agregar Póliza"
             onLinkPress={() => console.log('Botón tipo link presionado')}
             isEditable={true}

@@ -138,7 +138,10 @@ const Dropdown = <T extends {}>({
             ref={inputRef}
             placeholder="Escribe un contenedor"
             value={inputValue}
-            onChangeText={setInputValue}
+            onChangeText={(val) => {
+              console.log('val ', val)
+              setInputValue(val)
+            }}
             onSubmitEditing={handleNewValueSubmit}
             returnKeyType="done"
             editable={isEditableOpened}
