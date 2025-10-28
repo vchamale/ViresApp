@@ -92,7 +92,6 @@ const AddContainerDetails = () => {
   // effects
   useEffect(() => {
     if (currencies?.length) {
-      console.log('hiii ', currencies?.[0]);
       dispatch(addCurrency(currencies?.[0]));
     }
   }, [currencies]);

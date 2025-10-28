@@ -1,4 +1,4 @@
-import { ContainerT } from './Container';
+import { ContainerT, SizeT } from './Container';
 import { CurrencyT } from './Currency';
 import { DriverT } from './Driver';
 import { PolicyT } from './Policy';
@@ -63,7 +63,24 @@ export type ShipmentT = {
   origin?: OriginT | null;
   destination?: DestinationT | null;
   shipmentStatus?: ShipmentStatusT | null;
+  size: SizeT;
   container: ContainerT | null;
+  policy: PolicyT | null;
+  weight: number;
+  price: PriceT;
+  driver: DriverT | null;
+  truck: TruckT | null;
+  notes: string;
+};
+
+export type ShipmentCreationT = {
+  shipmentId?: number;
+  clientId?: ClientT | null;
+  originId?: OriginT | null;
+  destinationId?: DestinationT | null;
+  shipmentStatusId?: ShipmentStatusT | null;
+  sizeId: SizeT;
+  containerId: ContainerT | null;
   policy: PolicyT | null;
   weight: number;
   price: PriceT;

@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import { useRouter } from 'expo-router';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useCreateShipmentMutation } from '@api/shipmentApi';
 import Space from '@components/Space';
 import { useAppSelector } from '@hooks/useRedux';
@@ -22,11 +22,14 @@ const SaveShipment: FC<SaveShipmentPropsT> = ({}) => {
   const [refreshing, setRefreshing] = useState(false);
   const [isCreatingShipmentLoading, setCreatingShipmentLoading] = useState(true);
 
+  const { shipment: stringShipment } = useLocalSearchParams(); // Recibe los datos del envío como string
+
+  console.log('string ship ', stringShipment);
+  const shipment = JSON.parse(stringShipment as string);
+  console.log('parse ship ', shipment);
+
   // hooks
   const router = useRouter();
-
-  // Store
-  const shipment = useAppSelector(shipmentSelector);
 
   // Api calls
   // Mutations
@@ -58,20 +61,25 @@ const SaveShipment: FC<SaveShipmentPropsT> = ({}) => {
 
     try {
       const newShipment = {
-        originId: shipment.origin?.originId,
-        destinationId: shipment.destination?.destinationId,
-        containerId: shipment.container?.containerId,
-        driverId: shipment.driver?.userId,
-        truckId: shipment.truck?.truckId,
-        price: shipment.price.amount,
+        originId: shipment?.originId,
+        clientId: shipment?.clientId,
+        destinationId: shipment?.destinationId,
+        documentNumber: shipment.documentNumber,
+        container: shipment?.container,
+        driverId: shipment.driverId,
+        truckId: shipment?.truckId,
+        sizeId: shipment?.sizeId,
+        price: shipment.price,
         weight: shipment.weight,
         notes: shipment.notes,
         shipmentStatusId: 1,
         dateCreated: new Date(),
-        currencyId: shipment.price.currency?.currencyId,
+        currencyId: shipment.currencyId,
       };
 
       console.log('newShipment ', newShipment);
+
+      // return
 
       await saveShipment(newShipment);
       setTimeout(() => {
@@ -133,10 +141,10 @@ const SaveShipment: FC<SaveShipmentPropsT> = ({}) => {
           ) : (
             <>
               <Text style={{ fontSize: 15, textAlign: 'center' }}>
-                Se ha creado un nuevo viaje:
+                Se ha creado un nuevo viaje
               </Text>
               <Space vertical size={25} />
-              <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
+              {/* <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
                 <Text style={{ fontSize: 15, textAlign: 'center' }}>Cliente:</Text>
                 <Text style={{ fontSize: 15, textAlign: 'center' }}>{shipment.client?.name}</Text>
               </View>
@@ -157,7 +165,7 @@ const SaveShipment: FC<SaveShipmentPropsT> = ({}) => {
                 <Text
                   style={{ fontSize: 15, textAlign: 'center' }}
                 >{`${shipment.driver?.names} ${shipment.driver?.lastNames}`}</Text>
-              </View>
+              </View> */}
               <Space vertical size={15} />
               <View
                 style={{

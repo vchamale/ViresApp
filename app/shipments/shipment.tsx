@@ -13,7 +13,7 @@ import {
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { useGetAllSipmentsQuery, useLazyGetAllSipmentsQuery } from '@api/shipmentApi';
+import { useLazyGetAllShipmentsQuery } from '@api/shipmentApi';
 import CustomHeader from '@components/CustomHeader';
 import Space from '@components/Space';
 import SearchBox from '@components/SearchBox';
@@ -36,7 +36,9 @@ const Shipment: FC = () => {
   const router = useRouter();
 
   // Api calls
-  const [trigger, { data: shipments, isLoading, isError }] = useLazyGetAllSipmentsQuery();
+  const [trigger, { data: shipments, isLoading, isError, error }] = useLazyGetAllShipmentsQuery();
+
+  console.log('asdasd ', error)
 
   // Functions
   const onRefresh = useCallback(() => {

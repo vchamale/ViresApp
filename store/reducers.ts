@@ -16,6 +16,7 @@ import { shipmentStatusApi } from '@api/shipmentStatusApi';
 import { roleApi } from '@api/roleApi';
 import userSlice from '@slice/userSlice';
 import pageControlSlice from '@slice/pageControlSlice';
+import { sizeApi } from '@api/sizeApi';
 
 // Acción para reiniciar el estado global
 export const resetStore = createAction('RESET_STORE');
@@ -30,6 +31,7 @@ const initialState = {
 
 const appReducers = combineReducers({
   [authApi.reducerPath]: authApi.reducer,
+  [sizeApi.reducerPath]: sizeApi.reducer,
   [roleApi.reducerPath]: roleApi.reducer,
   [shipmentApi.reducerPath]: shipmentApi.reducer,
   [shipmentStatusApi.reducerPath]: shipmentStatusApi.reducer,
@@ -39,9 +41,9 @@ const appReducers = combineReducers({
   [truckApi.reducerPath]: truckApi.reducer,
   [makeApi.reducerPath]: makeApi.reducer,
   [clientApi.reducerPath]: clientApi.reducer,
-  [currencyApi.reducerPath]: currencyApi.reducer,
   [driverApi.reducerPath]: driverApi.reducer,
   [containerApi.reducerPath]: containerApi.reducer,
+  [currencyApi.reducerPath]: currencyApi.reducer,
   [counterSlice.name]: counterSlice.reducer,
   [pageControlSlice.name]: pageControlSlice.reducer,
   [shipmentSlice.name]: shipmentSlice.reducer,

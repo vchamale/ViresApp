@@ -55,6 +55,8 @@ const Shipment: FC = () => {
   const [trigger, { data: shipments, isLoading, isError, error, isUninitialized }] =
     useLazyGetAllShipmentsQuery();
 
+    console.log('er e' , error)
+
   const handleSearch = () => {
     setRefreshing(true);
     const params: Record<string, string> = {};

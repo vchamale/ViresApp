@@ -17,5 +17,6 @@ export const api = {
     currency: `${baseApi.vires}/api/currencies`,
     driver: `${baseApi.vires}/api/drivers`,
     container: `${baseApi.vires}/api/containers`,
+    size: `${baseApi.vires}/api/sizes`,
   },
 };

@@ -19,6 +19,7 @@ type DropdownWrapperProps<T> = {
   isEditable?: boolean;
   linkText?: string;
   onLinkPress?: () => void;
+  onEnterValue?: (value: string) => void;
 };
 
 const DropdownWrapper = <T,>({
@@ -37,6 +38,7 @@ const DropdownWrapper = <T,>({
   initialSelectedItem,
   linkText,
   onLinkPress,
+  onEnterValue,
 }: DropdownWrapperProps<T>) => {
   return (
     <View style={styles.container}>
@@ -55,6 +57,7 @@ const DropdownWrapper = <T,>({
           linkText={linkText}
           onLinkPress={onLinkPress}
           initialSelectedItem={initialSelectedItem}
+          onEnterValue={onEnterValue}
         />
       ) : isError ? (
         <Button

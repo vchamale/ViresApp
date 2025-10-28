@@ -33,6 +33,12 @@ import { useGetAllContainersQuery } from '@api/containerApi';
 import { useGetAllDocumentsQuery } from '@api/documentApi';
 import { ContainerT } from '@types/Container';
 import { PolicyT } from '@types/Policy';
+import { DriverT } from '@types/Driver';
+import { TruckT } from '@types/Truck';
+import { useGetAllCurrencysQuery } from '@api/currencyApi';
+import { CurrencyT } from '@types/Currency';
+import { useGetAllSizesQuery } from '@api/sizeApi';
+import { SizeT } from '@types/Size';
 
 const SinglePageShipmentForm = () => {
   const dispatch = useAppDispatch();
@@ -43,12 +49,17 @@ const SinglePageShipmentForm = () => {
   const [weight, setWeight] = useState<string>('');
   const [price, setPrice] = useState<string>('');
   const [shipmentStatusSelected, setShipmentStatusSelected] = useState(null);
+  const [containerSelected, setContainerSelected] = useState<ContainerT | null>(null);
+  const [containerValue, setContainerValue] = useState<string>('');
+  const [sizeContainerSelected, setSizeContainerSelected] = useState<SizeT | null>(null);
+  const [currencySelected, setCurrencySelected] = useState<CurrencyT | null>(null);
   const [clientSelected, setClientSelected] = useState<ClientT | null>(null);
   const [policySelected, setPolicySelected] = useState<PolicyT | null>(null);
-  const [originSelected, setOriginSelected] = useState(null);
+  const [policyValue, setPolicyValue] = useState<string>('');
+  const [originSelected, setOriginSelected] = useState<OriginT | null>(null);
   const [destinationSelected, setDestinationSelected] = useState<DestinationT | null>(null);
-  const [vehicleSelected, setVehicleSelected] = useState(null);
-  const [driverSelected, setDriverSelected] = useState(null);
+  const [vehicleSelected, setVehicleSelected] = useState<TruckT | null>(null);
+  const [driverSelected, setDriverSelected] = useState<DriverT | null>(null);
   const [isResetShipmentAlertVisible, setResetShipmentAlertVisible] = useState<boolean>(false);
 
   // Store
@@ -80,45 +91,89 @@ const SinglePageShipmentForm = () => {
   const {
     currentData: policies,
     isError: isErrorPolicies,
+    isFetching: isFetchingPolicies,
     error: errorPolicies,
     isLoading: isLoadingPolicies,
     refetch: refetchPolicies,
-    isFetching: isFetchingPolicies,
   } = useGetAllDocumentsQuery({});
-  const {
-    data: shipmentStatusList,
-    isLoading: isShipmentStatusLoading,
-    isError: isShipmentStatusError,
-  } = useGetAllShipmentsStatusQuery({});
+
+  console.log('policies ', policies)
+  console.log('policies errorPolicies ', errorPolicies)
 
   const {
-    data: vehicleList,
+    data: vehicles,
     isLoading: isVehicleLoading,
+    isFetching: isVehicleFetching,
     isError: isVehicleError,
+    refetch: refetchVehicles
   } = useGetAllTrucksQuery({});
+
   const {
-    data: driverList,
-    isLoading: isdriverLoading,
-    isError: isdriverError,
+    data: drivers,
+    isLoading: isDriverLoading,
+    isFetching: isDriverFetching,
+    isError: isDriverError,
+    refetch: refetchDrivers
   } = useGetAllDriversQuery({});
 
-  
+  const {
+    data: sizes,
+    isLoading: isSizesLoading,
+    isFetching: isSizesFetching,
+    isError: isSizesError,
+    refetch: refetchSizes
+  } = useGetAllSizesQuery({});
+
+  console.log('sizes ', sizes)
 
   const handleSave = () => {
+    console.log({
+      containerValue,
+      clientSelected,
+      weight,
+      price,
+      policyValue,
+      originId: originSelected?.originId,
+      destinationId: destinationSelected?.destinationId,
+      truckId: vehicleSelected?.truckId,
+      license: driverSelected?.license,
+      sizeId: sizeContainerSelected?.sizeId
+    })
     if (
-      !containerNumber ||
+      !containerValue ||
+      !policyValue ||
+      !clientSelected ||
       !weight ||
       !price ||
-      !shipmentStatusSelected?.shipmentStatusId ||
       !originSelected?.originId ||
       !destinationSelected?.destinationId ||
-      !vehicleSelected?.truckId
+      !vehicleSelected?.truckId ||
+      !driverSelected?.license ||
+      !sizeContainerSelected?.sizeId
     ) {
       alert('Por favor completa todos los campos obligatorios');
       return;
     }
 
-    router.push('/shipments/summary');
+    const shipment = JSON.stringify({
+      originId: originSelected?.originId,
+      destinationId: destinationSelected?.destinationId,
+      clientId: clientSelected?.clientId,
+      documentNumber: policyValue,
+      container: containerValue,
+      driverId: driverSelected?.userId,
+      truckId: vehicleSelected?.truckId,
+      sizeId: sizeContainerSelected?.sizeId,
+      price: price,
+      weight: weight,
+      notes: '',
+      shipmentStatusId: 1,
+      dateCreated: new Date(),
+      currencyId: 1,
+    })
+    
+
+    router.push({ pathname: '/shipments/create/save-shipment', params: { shipment } });
   };
 
   // new
@@ -179,7 +234,7 @@ const SinglePageShipmentForm = () => {
             isLoading={isLoadingClients}
             isFetching={isFetchingClients}
             isError={isErrorClients}
-            items={clients}
+            items={clients ?? []}
             placeholder="Selecciona un cliente"
             placeholderColor="#71a780"
             renderItemText={(item) => `${item.name}`}
@@ -191,7 +246,6 @@ const SinglePageShipmentForm = () => {
             refetch={refetchClients}
             linkText="Agregar nuevo cliente"
             onLinkPress={() => console.log('Botón tipo link presionado')}
-            {...(shipment.client && { initialSelectedItem: shipment.client })}
           />
 
           <DropdownWrapper
@@ -203,11 +257,10 @@ const SinglePageShipmentForm = () => {
             placeholder="Selecciona una origen"
             placeholderColor="#71a780"
             renderItemText={(item) => `${item.name}`}
-            onItemSelected={(item: OriginT) => handleOriginSelected(item)}
+            onItemSelected={(item: OriginT) => setOriginSelected(item)}
             refetch={() => triggerOrigins}
             linkText="Agregar nuevo origen"
             onLinkPress={() => console.log('Botón tipo link presionado')}
-            {...(shipment.origin && { initialSelectedItem: shipment.origin })}
           />
 
           <DropdownWrapper
@@ -219,44 +272,71 @@ const SinglePageShipmentForm = () => {
             placeholder="Selecciona un destino"
             placeholderColor="#71a780"
             renderItemText={(item) => `${item.name}`}
-            onItemSelected={(item: DestinationT) => handleDestinationSelected(item)}
+            onItemSelected={(item: DestinationT) => setDestinationSelected(item)}
             refetch={() => triggerDestinations}
             linkText="Agregar nuevo destino"
             onLinkPress={() => console.log('Botón tipo link presionado')}
-            {...(shipment.destination && { initialSelectedItem: shipment.destination })}
           />
 
-          <DropdownWrapper
+          {/* <DropdownWrapper
             label="No. Contenedor"
             isLoading={isLoadingContainer}
             isFetching={isFetchingContainers}
             isError={isErrorContainer}
-            items={containers}
+            items={containers ?? []}
             isDropdown={false}
             placeholder="Selecciona un contenedor"
             renderItemText={(item) => `${item.containerNumber}`}
-            onItemSelected={(item: ContainerT) => handleContainerSelected(item)}
+            onItemSelected={(item: ContainerT) => setContainerSelected(item)}
             refetch={refetchContainers}
             isEditable={true}
-            {...(shipment.container && { initialSelectedItem: shipment.container })}
+            onEnterValue={setContainerValue}
+          /> */}
+
+          <Text style={styles.label}>No. Contenedor</Text>
+          <TextInput
+            style={styles.input}
+            value={containerValue}
+            onChangeText={setContainerValue}
+            placeholder="Digita una numero de contenedor"
           />
 
           <DropdownWrapper
+            label="Tamaño Contenedor"
+            isLoading={isSizesLoading}
+            isFetching={isSizesFetching}
+            isError={isSizesError}
+            items={sizes ?? []}
+            placeholder="Selecciona un tamaño"
+            renderItemText={(item) => `${item.description}`}
+            onItemSelected={(item: SizeT) => setSizeContainerSelected(item)}
+            refetch={refetchSizes}
+          />
+
+          <Text style={styles.label}>No. Póliza</Text>
+          <TextInput
+            style={styles.input}
+            value={policyValue}
+            onChangeText={setPolicyValue}
+            placeholder="Digita una póliza"
+          />
+
+          {/* <DropdownWrapper
             label="No. Póliza"
             isLoading={isLoadingPolicies}
             isFetching={isFetchingPolicies}
             isError={isErrorPolicies}
-            items={policies}
+            items={policies ?? []}
+            isDropdown={false}
             placeholder="Selecciona o Digita una póliza"
             renderItemText={(item) => `${item.documentNumber}`}
             onItemSelected={(item: PolicyT) => setPolicySelected(item)}
             refetch={refetchPolicies}
-            isDropdown={false}
             linkText="Agregar Póliza"
             onLinkPress={() => console.log('Botón tipo link presionado')}
             isEditable={true}
-            {...(shipment.policy && { initialSelectedItem: shipment.policy })}
-          />
+            onEnterValue={setPolicyValue}
+          /> */}
 
           <Text style={styles.label}>Peso (Kg)</Text>
           <TextInput
@@ -276,31 +356,31 @@ const SinglePageShipmentForm = () => {
             placeholder="Ingrese el precio"
           />
 
-          {/* <Text>Moneda</Text>
-          <Dropdown items={[]} onItemSelected={handleSelectedCurrency} initialSelectedItem={currency} /> */}
-
-          <Text style={styles.label}>Piloto</Text>
-          <Dropdown
-            items={driverList}
+          <DropdownWrapper
+            label="Piloto"
+            isLoading={isDriverLoading}
+            isFetching={isDriverFetching}
+            isError={isDriverError}
+            items={drivers ?? []}
             placeholder="Selecciona un piloto"
-            placeholderColor="#71a780"
-            renderItemText={(item) => `${item?.names}`}
-            onItemSelected={(item) => handleDriverSelected(item)}
-            initialSelectedItem={driverSelected ?? undefined}
+            renderItemText={(item) => `${item.names}`}
+            onItemSelected={(item: DriverT) => setDriverSelected(item)}
+            refetch={refetchDrivers}
           />
 
-          <Text style={styles.label}>Vehiculo</Text>
-          <Dropdown
-            items={vehicleList}
+          <DropdownWrapper
+            label="Vehiculo"
+            isLoading={isVehicleLoading}
+            isFetching={isVehicleFetching}
+            isError={isVehicleError}
+            items={vehicles ?? []}
             placeholder="Selecciona un vehiculo"
-            placeholderColor="#71a780"
-            renderItemText={(item) => `${item?.plate}`}
-            onItemSelected={(item) => handleVehicleSelected(item)}
-            initialSelectedItem={vehicleSelected ?? undefined}
+            renderItemText={(item) => `${item.plate}`}
+            onItemSelected={(item: TruckT) => setVehicleSelected(item)}
+            refetch={refetchVehicles}
           />
 
           <Text>Notas</Text>
-          {/* <TextInput value={notes} onChangeText={handleSelectedNotes} /> */}
 
           <TouchableOpacity
             onPress={handleSave}

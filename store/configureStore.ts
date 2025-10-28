@@ -15,6 +15,7 @@ import { documentApi } from '@api/documentApi';
 import { makeApi } from '@api/makeApi';
 import { shipmentStatusApi } from '@api/shipmentStatusApi';
 import { roleApi } from '@api/roleApi';
+import { sizeApi } from '@api/sizeApi';
 
 // 🔹 Configuración de persistencia
 const persistConfig = {
@@ -33,18 +34,19 @@ const store = configureStore({
       serializableCheck: false,
     })
       .concat(authApi.middleware)
+      .concat(sizeApi.middleware)
       .concat(roleApi.middleware)
       .concat(shipmentApi.middleware)
       .concat(shipmentStatusApi.middleware)
       .concat(documentApi.middleware)
       .concat(destinationApi.middleware)
       .concat(originApi.middleware)
-      .concat(clientApi.middleware)
       .concat(truckApi.middleware)
       .concat(makeApi.middleware)
-      .concat(currencyApi.middleware)
+      .concat(clientApi.middleware)
       .concat(driverApi.middleware)
-      .concat(containerApi.middleware),
+      .concat(containerApi.middleware)
+      .concat(currencyApi.middleware),
   preloadedState: {},
   devTools: !Object.is(process.env.NODE_ENV, 'production'),
 });
