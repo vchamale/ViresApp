@@ -6,7 +6,6 @@ const useLogout = () => {
 
   const logout = async () => {
     // Elimina el token de almacenamiento seguro
-    console.log('here deleting');
     await deleteToken('accessToken');
 
     // Redirige a la pantalla de inicio de sesión

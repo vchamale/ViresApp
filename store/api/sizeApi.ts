@@ -1,7 +1,7 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { api } from '../../config/config';
 import createBaseQuery from 'store/util/baseQuery';
-import { SizeT } from '@types/Size';
+import { SizeT } from '@models/Size';
 
 export const sizeApi = createApi({
   reducerPath: 'size',

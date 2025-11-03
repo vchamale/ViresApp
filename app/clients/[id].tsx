@@ -238,9 +238,6 @@ const ClientView = () => {
       .finally(() => setRefreshing(false));
   }, [activeTab, loadDestinations, loadOrigins]);
 
-
-  console.log('saldkasd ', originsQuery)
-
   const origins = originsQuery.data ?? [];
   const destinations = destinationsQuery.data ?? [];
 

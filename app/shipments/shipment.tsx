@@ -21,7 +21,7 @@ import IconMapper from '@components/IconMapper';
 import CalendarBox from '@components/CalendarBox';
 import { ActivityIndicator } from '@react-native-material/core';
 import ShipmentCard from '@components/ShipmentCard';
-import { ShipmentT } from '@types/Shipment';
+import { ShipmentT } from '@models/Shipment';
 
 const Shipment: FC = () => {
   // State

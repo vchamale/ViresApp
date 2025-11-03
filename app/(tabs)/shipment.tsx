@@ -21,7 +21,7 @@ import IconMapper from '@components/IconMapper';
 import CalendarBox from '@components/CalendarBox';
 import { ActivityIndicator } from '@react-native-material/core';
 import ShipmentCard from '@components/ShipmentCard';
-import { ShipmentT } from '@types/Shipment';
+import { ShipmentT } from '@models/Shipment';
 import { format } from 'date-fns';
 
 const Shipment: FC = () => {
@@ -54,8 +54,6 @@ const Shipment: FC = () => {
   // Api calls
   const [trigger, { data: shipments, isLoading, isError, error, isUninitialized }] =
     useLazyGetAllShipmentsQuery();
-
-    console.log('er e' , error)
 
   const handleSearch = () => {
     setRefreshing(true);

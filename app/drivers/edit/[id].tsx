@@ -18,7 +18,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { useUpdateDriverMutation } from '@api/driverApi';
 import Dropdown from '@components/Dropdown';
 import { useGetAllTrucksQuery } from '@api/truckApi';
-import { type TruckT } from '@types/Truck';
+import { type TruckT } from '@models/Truck';
 
 const EditDriver: React.FC = () => {
   const { driver, id } = useLocalSearchParams();

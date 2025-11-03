@@ -20,7 +20,7 @@ import Dropdown from '@components/Dropdown';
 import CustomHeader from '@components/CustomHeader';
 import { useAppDispatch, useAppSelector } from '@hooks/useRedux';
 import { addClient, reset, shipmentSelector } from '@slice/shipmentSlice';
-import { ClientT } from '@types/Shipment';
+import { ClientT } from '@models/Shipment';
 import { useSnackbar } from '@components/context/SnackbarContext';
 import BackgroundView from '@components/BackgroundView';
 import Space from '@components/Space';

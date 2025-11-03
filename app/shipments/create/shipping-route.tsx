@@ -21,7 +21,7 @@ import CustomHeader from '@components/CustomHeader';
 import { useAppDispatch, useAppSelector } from '@hooks/useRedux';
 import { addDestination, addOrigin, shipmentSelector } from '@slice/shipmentSlice';
 import { useSnackbar } from '@components/context/SnackbarContext';
-import { DestinationT, OriginT } from '@types/Shipment';
+import { DestinationT, OriginT } from '@models/Shipment';
 import BackgroundView from '@components/BackgroundView';
 import Space from '@components/Space';
 import DropdownWrapper from '@components/DropdownWrapper';

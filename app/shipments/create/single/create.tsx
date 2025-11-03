@@ -15,30 +15,28 @@ import {
   shipmentSelector,
   reset,
 } from '@slice/shipmentSlice';
-import Dropdown from '@components/Dropdown';
 import CustomHeader from '@components/CustomHeader';
 import BackgroundView from '@components/BackgroundView';
 import Space from '@components/Space';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { useGetAllShipmentsStatusQuery } from '@api/shipmentStatusApi';
 import { useLazyGetOriginsByClientIdQuery } from '@api/originApi';
 import { useLazyGetDestinationsByClientIdQuery } from '@api/destinationApi';
 import { useGetAllTrucksQuery } from '@api/truckApi';
 import { useGetAllDriversQuery } from '@api/driverApi';
 import { useGetAllClientsQuery } from '@api/clientApi';
 import DropdownWrapper from '@components/DropdownWrapper';
-import { ClientT, DestinationT, OriginT } from '@types/Shipment';
+import { ClientT, DestinationT, OriginT } from '@models/Shipment';
 import CustomAlert from '@components/CustomAlert';
 import { useGetAllContainersQuery } from '@api/containerApi';
 import { useGetAllDocumentsQuery } from '@api/documentApi';
-import { ContainerT } from '@types/Container';
-import { PolicyT } from '@types/Policy';
-import { DriverT } from '@types/Driver';
-import { TruckT } from '@types/Truck';
+import { ContainerT } from '@models/Container';
+import { PolicyT } from '@models/Policy';
+import { DriverT } from '@models/Driver';
+import { TruckT } from '@models/Truck';
 import { useGetAllCurrencysQuery } from '@api/currencyApi';
-import { CurrencyT } from '@types/Currency';
+import { CurrencyT } from '@models/Currency';
 import { useGetAllSizesQuery } from '@api/sizeApi';
-import { SizeT } from '@types/Size';
+import { SizeT } from '@models/Size';
 
 const SinglePageShipmentForm = () => {
   const dispatch = useAppDispatch();
@@ -123,8 +121,6 @@ const SinglePageShipmentForm = () => {
     isError: isSizesError,
     refetch: refetchSizes
   } = useGetAllSizesQuery({});
-
-  console.log('sizes ', sizes)
 
   const handleSave = () => {
     console.log({

@@ -33,11 +33,11 @@ import Space from '@components/Space';
 import Dropdown from '@components/Dropdown';
 import CustomHeader from '@components/CustomHeader';
 // Types
-import { CurrencyT } from '@types/Currency';
-import { ContainerT } from '@types/Container';
+import { CurrencyT } from '@models/Currency';
+import { ContainerT } from '@models/Container';
 import BackgroundView from '@components/BackgroundView';
 import { useGetAllDocumentsQuery } from '@api/documentApi';
-import { PolicyT } from '@types/Policy';
+import { PolicyT } from '@models/Policy';
 import DropdownWrapper from '@components/DropdownWrapper';
 import { pageControlSelector, setSingleShipmentCreatePage } from '@slice/pageControlSlice';
 

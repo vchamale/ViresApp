@@ -16,7 +16,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { useCreateDriverMutation } from '@api/driverApi';
 import { useGetAllTrucksQuery } from '@api/truckApi';
 import Dropdown from '@components/Dropdown';
-import { type TruckT } from '@types/Truck';
+import { type TruckT } from '@models/Truck';
 import { useGetAllRolesQuery } from '@api/roleApi';
 
 const CreateDriver: React.FC = () => {

@@ -13,8 +13,6 @@ const CreateOrigin: React.FC = () => {
 
   const { clientId } = useLocalSearchParams();
 
-  console.log('asdasd ', clientId)
-
   const router = useRouter();
 
   // mutations

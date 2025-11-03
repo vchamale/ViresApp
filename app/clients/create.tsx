@@ -99,7 +99,7 @@ const CreateClient: React.FC = () => {
               style={styles.input}
               value={contactName}
               onChangeText={setContactName}
-              placeholder="Ingrese el nit"
+              placeholder="Ingrese el nombre de contacto"
             />
 
             <Text style={styles.label}>No. de Telefono</Text>
@@ -107,7 +107,7 @@ const CreateClient: React.FC = () => {
               style={styles.input}
               value={telephone}
               onChangeText={setTelephone}
-              placeholder="Ingrese el nit"
+              placeholder="Ingrese el número de teléfono"
             />
 
             <Text style={styles.label}>Email</Text>
@@ -115,11 +115,11 @@ const CreateClient: React.FC = () => {
               style={styles.input}
               value={email}
               onChangeText={setEmail}
-              placeholder="Ingrese el nit"
+              placeholder="Ingrese el correo electrónico"
             />
           </View>
           <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
-            <Text style={styles.submitButtonText}>Guardar Destino</Text>
+            <Text style={styles.submitButtonText}>Crear Cliente</Text>
           </TouchableOpacity>
           <Space vertical size={20} />
         </ScrollView>

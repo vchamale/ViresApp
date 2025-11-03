@@ -11,7 +11,7 @@
       "@hooks/*": ["hooks/*"],
       "@constants/*": ["constants/*"],
       "@assets/*": ["assets/*"],
-      "@types/*": ["types/*"],
+      "@models/*": ["types/*"],
       "@util/*": ["util/*"]
     }
   },

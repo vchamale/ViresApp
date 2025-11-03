@@ -54,8 +54,6 @@ const ClientList: FC = () => {
     />
   );
 
-  console.log('sasd ', clients);
-
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
       <View style={{ padding: 15, flex: 1 }}>
