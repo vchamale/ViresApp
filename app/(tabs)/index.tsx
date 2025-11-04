@@ -12,6 +12,7 @@ import ImageNavigationCard from '@components/ImageNavigationCard';
 const options = [
   { label: 'Viajes', path: '/shipment', size: 20, iconName: 'truck-outline' },
   { label: 'Clientes', path: '/clients', size: 20, iconName: 'user' },
+  { label: 'Reportes', path: '/reports', size: 20, iconName: 'user' },
 ];
 
 const Home = () => {
