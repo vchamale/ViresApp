@@ -23,14 +23,16 @@ import { useGetAllDestinationsQuery } from '@api/destinationApi';
 import { useGetAllClientsQuery } from '@api/clientApi';
 import { useGetAllTrucksQuery } from '@api/truckApi';
 import { useGetAllDriversQuery } from '@api/driverApi';
+import { formatNumber } from 'utils/formatNumber';
+import CurrencyInput from "react-native-currency-input";
 
 const EditShipment: React.FC = () => {
   const { shipment, id } = useLocalSearchParams(); // Recibe los datos del envío como string
   const parsedShipment = JSON.parse(shipment as string);
 
   const [containerNumber, setContainerNumber] = useState<string>('');
-  const [weight, setWeight] = useState<string>('');
-  const [price, setPrice] = useState<string>('');
+  const [weight, setWeight] = useState<number>(0);
+  const [price, setPrice] = useState<number>(0);
   const [client, setClient] = useState<string>('');
   const [driver, setDriver] = useState<string>('');
   const [vehicle, setVehicle] = useState<string>('');
@@ -58,18 +60,25 @@ const EditShipment: React.FC = () => {
     data: originList,
     isLoading: isOriginLoading,
     isError: isOriginError,
-  } = useGetAllOriginsQuery({});
+  } = useGetAllOriginsQuery({ clientId: parsedShipment.clientId });
+
   const {
     data: destinationList,
     isLoading: isDestinationLoading,
     isError: isDestinationError,
-  } = useGetAllDestinationsQuery({});
-  // const { data: clientList, isLoading: isClientLoading, isError: isClientError} = useGetAllClientsQuery({});
+  } = useGetAllDestinationsQuery({ clientId: parsedShipment.clientId });
+
   const {
     data: vehicleList,
     isLoading: isVehicleLoading,
     isError: isVehicleError,
+    error
   } = useGetAllTrucksQuery({});
+
+  // console.log('destinationList ', vehicleList)
+  // console.log('err ', error)
+
+
   const {
     data: driverList,
     isLoading: isdriverLoading,
@@ -191,9 +200,9 @@ const EditShipment: React.FC = () => {
         shipmentStatus: shipmentStatusSelected?.shipmentStatusId,
         origin: originSelected?.originId,
         destination: destinationSelected?.destinationId,
+        driver: driverSelected?.userId,
         truck: vehicleSelected?.truckId,
       };
-
       console.log('Envío actualizado:', updatedShipment);
 
       const response = await modifyShipment({ id, body: updatedShipment }).unwrap(); // unwrap para manejar errores
@@ -218,16 +227,21 @@ const EditShipment: React.FC = () => {
     setDestinationSelected(item);
   };
 
-  // const handleClientSelected = (item: any) => {
-  //   setClientSelected(item);
-  // }
-
   const handleVehicleSelected = (item: any) => {
     setVehicleSelected(item);
   };
 
   const handleDriverSelected = (item: any) => {
     setDriverSelected(item);
+  };
+
+  const handleChange = (setter: (v: string) => void) => (text: string) => {
+    const clean = text.replace(/[^0-9.]/g, "");
+    setter(clean);
+  };
+
+  const handleBlur = (setter: (v: string) => void, value: string) => {
+    setter(formatNumber(value));
   };
 
   return (
@@ -244,7 +258,7 @@ const EditShipment: React.FC = () => {
           isVisible={isAlertVisible}
           title="Estas seguro de modificar?"
           titleColor="#ff0809bd"
-          text="Estas a punto de modificar la poliza, deseas continuar?"
+          text="Estas a punto de modificar este viaje, deseas continuar?"
           onClose={() => {
             setAlertVisible(false);
           }}
@@ -278,7 +292,8 @@ const EditShipment: React.FC = () => {
         <ScrollView style={styles.container}>
           <Text style={styles.label}>No. Contenedor</Text>
           <TextInput
-            style={styles.input}
+            editable={false}
+            style={styles.disabledInput}
             value={containerNumber}
             onChangeText={setContainerNumber}
             placeholder="Ingrese el número del contenedor"
@@ -311,16 +326,6 @@ const EditShipment: React.FC = () => {
             initialSelectedItem={destinationSelected ?? undefined}
           />
 
-          {/* <Text style={styles.label}>Cliente</Text>
-          <Dropdown
-            items={clientList}
-            placeholder="Selecciona un cliente"
-            placeholderColor='#71a780'
-            renderItemText={(item) => `${item?.name}`}
-            onItemSelected={(item) => handleClientSelected(item)}
-            initialSelectedItem={clientSelected ?? undefined}
-          /> */}
-
           <Text style={styles.label}>Piloto</Text>
           <Dropdown
             items={driverList}
@@ -342,21 +347,28 @@ const EditShipment: React.FC = () => {
           />
 
           <Text style={styles.label}>Peso (Kg)</Text>
-          <TextInput
-            style={styles.input}
+          <CurrencyInput
             value={weight}
-            onChangeText={setWeight}
-            keyboardType="numeric"
+            onChangeValue={setWeight}
+            delimiter=","
+            separator="."
+            precision={2}
             placeholder="Ingrese el peso"
+            keyboardType="decimal-pad"
+            style={styles.input}
           />
 
           <Text style={styles.label}>Precio</Text>
-          <TextInput
-            style={styles.input}
+          <CurrencyInput
             value={price}
-            onChangeText={setPrice}
-            keyboardType="numeric"
+            onChangeValue={setPrice}
+            prefix="Q "
+            delimiter=","
+            separator="."
+            precision={2}
             placeholder="Ingrese el precio"
+            // keyboardType="decimal-pad"
+            style={styles.input}
           />
 
           <TouchableOpacity
@@ -391,9 +403,19 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
     borderRadius: 4,
   },
+  disabledInput: {
+    height: 40,
+    borderColor: '#ccc',
+    backgroundColor: '#dcdcdcff',
+    borderWidth: 1,
+    marginBottom: 16,
+    paddingHorizontal: 8,
+    borderRadius: 4,
+  },
   submitButton: {
     backgroundColor: '#3f51b5',
     paddingVertical: 10,
+    marginBottom: 50,
     borderRadius: 4,
     marginTop: 20,
   },

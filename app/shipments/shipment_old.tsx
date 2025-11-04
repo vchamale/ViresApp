@@ -63,12 +63,13 @@ const Shipment: FC = () => {
         containerNumber={item.container?.containerNumber as string}
         destination={item.destination?.name as string}
         date={new Date().toDateString()}
-        onViewPress={() =>
+        onViewPress={() => {
+          console.log('onViewPress ', item);
           router.push({
             pathname: `/shipments/[id]`,
             params: { id: item.shipmentId, shipment: JSON.stringify(item) },
           })
-        }
+        }}
       />
     );
   };

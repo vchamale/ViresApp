@@ -29,7 +29,9 @@ const ShipmentView = () => {
   const [modifyShipment] = useUpdateShipmentMutation();
 
   // queries
-  const { data: shipment, isLoading, isError } = useGetShipmentByIdQuery(id);
+  const { data: shipment, isLoading, isError, error } = useGetShipmentByIdQuery(id);
+  console.log('ship ', shipment)
+  console.log('ship error ', error)
   const [
     trigger,
     { data: shipmentStatusResp, isLoading: isLoadingSS, isError: isErrorSS, error: errorSS },

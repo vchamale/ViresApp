@@ -88,12 +88,13 @@ const Shipment: FC = () => {
         containerNumber={item.container?.containerNumber as string}
         destination={item.destination?.name as string}
         date={new Date(item?.dateCreated).toDateString()}
-        onViewPress={() =>
+        onViewPress={() =>{
+          console.log('asdas ', item.shipmentId)
           router.push({
             pathname: `/shipments/[id]`,
             params: { id: item.shipmentId },
           })
-        }
+        }}
       />
     );
   };

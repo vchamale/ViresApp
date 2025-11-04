@@ -8,10 +8,11 @@ export const destinationApi = createApi({
   tagTypes: ['Destination'],
   endpoints: (build) => ({
     getAllDestinations: build.query<any, any>({
-      query: ({ search }) => {
+      query: ({ search, clientId }) => {
         const params: Record<string, string> = {};
 
         if (search) params.search = search;
+        if (clientId) params.clientId = clientId;
 
         const queryString = new URLSearchParams(params).toString();
         return `/?${queryString}`;
