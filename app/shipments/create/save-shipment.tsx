@@ -1,6 +1,8 @@
 import { FC, useCallback, useEffect, useState } from 'react';
 import {
   ActivityIndicator,
+  Alert,
+  Button,
   Pressable,
   SafeAreaView,
   StyleSheet,
@@ -21,6 +23,8 @@ const SaveShipment: FC<SaveShipmentPropsT> = ({}) => {
   // State
   const [refreshing, setRefreshing] = useState(false);
   const [isCreatingShipmentLoading, setCreatingShipmentLoading] = useState(true);
+  const [shipmentId, setShipmentId] = useState<number | null>(null);
+  const [newShipment, setNewShipment] = useState<number | null>(null);
 
   const { shipment: stringShipment } = useLocalSearchParams(); // Recibe los datos del envío como string
 
@@ -49,11 +53,14 @@ const SaveShipment: FC<SaveShipmentPropsT> = ({}) => {
   }, []);
 
   const handleGoTravel = () => {
-    router.replace('/shipments/shipment');
+    router.replace('/(tabs)/shipment');
   };
 
-  const handleEditShipment = () => {
-    router.replace('/shipments/update/modify-shipment');
+  const handleEditShipment = (id: number) => {
+    router.push({
+      pathname: `/shipments/edit/[id]`,
+      params: { id: shipmentId, snapshot: JSON.stringify(newShipment) },
+    })
   };
 
   const handleCreateShipment = async () => {
@@ -81,7 +88,20 @@ const SaveShipment: FC<SaveShipmentPropsT> = ({}) => {
 
       // return
 
-      await saveShipment(newShipment);
+      const { data, error } = await saveShipment(newShipment);
+      
+
+      if (error) {
+        Alert.alert('Algo ocurrio', 'Favor intentar mas tarde', [
+        {  
+          text: 'Aceptar',
+          onPress: () => router.replace('/(tabs)'),
+        },
+        ])
+      }
+
+      setShipmentId(data.create_new_shipment as number);
+      setNewShipment(newShipment);
       setTimeout(() => {
         setCreatingShipmentLoading(false);
       }, 500);
@@ -143,30 +163,7 @@ const SaveShipment: FC<SaveShipmentPropsT> = ({}) => {
               <Text style={{ fontSize: 15, textAlign: 'center' }}>
                 Se ha creado un nuevo viaje
               </Text>
-              <Space vertical size={25} />
-              {/* <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
-                <Text style={{ fontSize: 15, textAlign: 'center' }}>Cliente:</Text>
-                <Text style={{ fontSize: 15, textAlign: 'center' }}>{shipment.client?.name}</Text>
-              </View>
-              <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
-                <Text style={{ fontSize: 15, textAlign: 'center' }}>Destino:</Text>
-                <Text style={{ fontSize: 15, textAlign: 'center' }}>
-                  {shipment.destination?.name}
-                </Text>
-              </View>
-              <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
-                <Text style={{ fontSize: 15, textAlign: 'center' }}>Contenedor:</Text>
-                <Text style={{ fontSize: 15, textAlign: 'center' }}>
-                  {shipment.container?.containerNumber}
-                </Text>
-              </View>
-              <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
-                <Text style={{ fontSize: 15, textAlign: 'center' }}>Piloto:</Text>
-                <Text
-                  style={{ fontSize: 15, textAlign: 'center' }}
-                >{`${shipment.driver?.names} ${shipment.driver?.lastNames}`}</Text>
-              </View> */}
-              <Space vertical size={15} />
+              <Space vertical size={40} />
               <View
                 style={{
                   backgroundColor: '#5db075',

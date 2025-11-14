@@ -56,7 +56,7 @@ const ShipmentView = () => {
   const handleEdit = () => {
     router.push({
       pathname: `/shipments/edit/[id]`,
-      params: { id, shipment: JSON.stringify(shipment) },
+      params: { id, snapshot: JSON.stringify(shipment) },
     });
   };
 
