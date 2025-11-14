@@ -52,7 +52,6 @@ const ShipmentView = () => {
     truck,
     notes,
   } = shipment ?? {};
-  console.log('shipment ', shipment);
 
   const handleEdit = () => {
     router.push({

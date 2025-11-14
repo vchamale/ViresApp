@@ -92,7 +92,6 @@ const EditVehicle: React.FC = () => {
 
   const handleUpdateVehicle = async () => {
     try {
-      console.log({ id, body: { plate, vin, year, model: modelSelected } });
       const response = await updateVehicle({
         id,
         body: { plate, vin, year, modelId: modelSelected?.modelId },

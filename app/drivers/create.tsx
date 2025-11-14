@@ -77,7 +77,7 @@ const CreateDriver: React.FC = () => {
     <BackgroundView>
       <SafeAreaView style={{ flex: 1 }}>
         <CustomHeader
-          title="Agregar Conductor"
+          title="Agregar Piloto"
           backgroundColor="#71a780"
           color="#fff"
           onBackPress={() => router.back()}

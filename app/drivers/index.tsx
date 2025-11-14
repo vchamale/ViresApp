@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useState } from 'react';
+import React, { FC, useCallback, useState, useEffect } from 'react';
 import {
   FlatList,
   RefreshControl,
@@ -36,6 +36,10 @@ const DriverList: FC = () => {
 
     trigger(params);
   };
+
+  useEffect(() => {
+    handleSearch();
+  }, [])
 
   const renderItem = ({ item }: { item: any }) => (
     <DriverCard

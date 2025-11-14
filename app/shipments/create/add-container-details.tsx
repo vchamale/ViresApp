@@ -108,7 +108,6 @@ const AddContainerDetails = () => {
   };
 
   const handleSelectContainer = (container: ContainerT) => {
-    console.log('container ', container);
     if (!container.containerId) {
     }
     dispatch(addContainer(container));

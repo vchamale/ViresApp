@@ -39,7 +39,7 @@ const AddVehicle: React.FC = () => {
   const [create] = useCreateTruckMutation();
 
   const handleSubmit = async () => {
-    if (!plate || !vin || !year || !modelSelected?.modelId) {
+    if (!plate || !year || !modelSelected?.modelId) {
       alert('Por favor completa todos los campos obligatorios');
       return;
     }

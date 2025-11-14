@@ -40,8 +40,6 @@ const CreateClient = () => {
       status,
     };
 
-    console.log('Detalles del cliente:', clientDetails);
-
     // Aquí se puede realizar un dispatch o una llamada API para guardar los datos
     alert('Cliente guardado correctamente');
     router.back();

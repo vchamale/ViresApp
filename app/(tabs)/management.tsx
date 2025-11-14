@@ -6,7 +6,7 @@ import MenuOptionsList from '@components/MenuOptionsList';
 
 const Management: FC = () => {
   const options = [
-    { label: 'Póliza', path: '/documents', size: 21, iconName: 'document-text-outline' },
+    //{ label: 'Póliza', path: '/documents', size: 21, iconName: 'document-text-outline' },
     // { label: "Contenedor", path: "/shipments/create/add-shipment-client", size: 17, iconName: "container" },
     // { label: 'Destino', path: '/destination', size: 15, iconName: 'map' },
     // { label: 'Punto de Partida', path: '/origin', size: 20, iconName: 'map-marker-outline' },

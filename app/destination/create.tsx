@@ -32,11 +32,9 @@ const CreateDestination: React.FC = () => {
       clientId
     };
 
-    console.log('Detalles del punto de partida:', destinationDetails);
 
     // Simulación de envío de datos
     const resp = await create(destinationDetails);
-    console.log('resp ', resp);
     router.back();
   };
 

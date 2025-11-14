@@ -89,7 +89,6 @@ const Shipment: FC = () => {
         destination={item.destination?.name as string}
         date={new Date(item?.dateCreated).toDateString()}
         onViewPress={() =>{
-          console.log('asdas ', item.shipmentId)
           router.push({
             pathname: `/shipments/[id]`,
             params: { id: item.shipmentId },

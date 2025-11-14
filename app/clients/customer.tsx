@@ -11,7 +11,6 @@ const Customer: FC<CustomerPropsT> = ({}) => {
   const router = useRouter();
 
   const { data } = useGetAllClientsQuery({});
-  console.log('data ', data);
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
