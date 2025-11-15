@@ -8,12 +8,16 @@ export const shipmentApi = createApi({
   tagTypes: ['Shipment'],
   endpoints: (build) => ({
     getAllShipments: build.query<any, any>({
-      query: ({ search, startDate, endDate }) => {
+      query: ({ search, startDate, endDate, driverId, clientId }) => {
         const params: Record<string, string> = {};
 
         if (search) params.search = search;
         if (startDate) params.startDate = startDate;
         if (endDate) params.endDate = endDate;
+        if (driverId) params.driverId = driverId;
+        if (clientId) params.clientId = clientId;
+
+        console.log('asdasd ', params)
 
         const queryString = new URLSearchParams(params).toString();
         return `/?${queryString}`;

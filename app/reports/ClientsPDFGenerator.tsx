@@ -1,17 +1,17 @@
-// components/ClientsPdfGenerator.tsx
-import React from "react";
-import { Button } from "react-native";
-import * as Print from "expo-print";
-import { shareAsync } from "expo-sharing";
+import React, { ReactNode } from 'react';
+import { Button } from 'react-native';
+import * as Print from 'expo-print';
+import { shareAsync } from 'expo-sharing';
 
 interface ClientsPdfGeneratorProps {
   clients: any[];
+  renderTrigger?: (onGenerate: () => void) => ReactNode;
 }
 
-const ClientsPdfGenerator: React.FC<ClientsPdfGeneratorProps> = ({ clients }) => {
+const ClientsPdfGenerator: React.FC<ClientsPdfGeneratorProps> = ({ clients, renderTrigger }) => {
   const generatePdf = async () => {
     if (!clients || clients.length === 0) {
-      alert("No hay clientes para generar el PDF");
+      alert('No hay clientes para generar el PDF');
       return;
     }
 
@@ -21,14 +21,14 @@ const ClientsPdfGenerator: React.FC<ClientsPdfGeneratorProps> = ({ clients }) =>
         <tr>
           <td>${c.clientId}</td>
           <td>${c.name}</td>
-          <td>${c.nit || "-"}</td>
-          <td>${c.address || "-"}</td>
-          <td>${c.email || "-"}</td>
-          <td>${c.telephone || "-"}</td>
+          <td>${c.nit || '-'}</td>
+          <td>${c.address || '-'}</td>
+          <td>${c.email || '-'}</td>
+          <td>${c.telephone || '-'}</td>
         </tr>
-      `
+      `,
       )
-      .join("");
+      .join('');
 
     const html = `
       <html>
@@ -65,12 +65,14 @@ const ClientsPdfGenerator: React.FC<ClientsPdfGeneratorProps> = ({ clients }) =>
     `;
 
     const { uri } = await Print.printToFileAsync({ html });
-    await shareAsync(uri, { mimeType: "application/pdf" });
+    await shareAsync(uri, { mimeType: 'application/pdf' });
   };
 
-  return (
-    <Button title="Generar PDF de Clientes" onPress={generatePdf} />
-  );
+  if (renderTrigger) {
+    return <>{renderTrigger(generatePdf)}</>;
+  }
+
+  return <Button title="Generar PDF de Clientes" onPress={generatePdf} />;
 };
 
 export default ClientsPdfGenerator;
