@@ -1,5 +1,5 @@
 const baseApi = {
-  vires: process.env.EXPO_PUBLIC_API_URL
+  vires: 'http://157.230.184.78:3000'
 };
 
 export const api = {

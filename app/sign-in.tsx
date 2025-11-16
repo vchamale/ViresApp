@@ -43,6 +43,7 @@ const SignIn: React.FC = () => {
   }, []);
 
   const onSubmit = async () => {
+    console.log('asdl')
     setLoading(true);
     try {
       if (!email) {
@@ -57,7 +58,12 @@ const SignIn: React.FC = () => {
         return;
       }
 
-      const { accessToken, refreshToken } = await login({ email, password }).unwrap();
+      console.log('ajsdlknasldnasd ')
+
+      const resp = await login({ email, password }).unwrap();
+      console.log('ajsdlknasldnasd 2')
+      console.log('resp ', resp)
+      const { accessToken, refreshToken } = resp
       if (accessToken) {
         await saveToken('accessToken', accessToken);
         await saveToken('refreshToken', refreshToken);
@@ -65,9 +71,11 @@ const SignIn: React.FC = () => {
         if (name) {
           await saveUserName(name);
         }
+        console.log('asdasdasd asdl')
         router.push('/(tabs)');
       }
     } catch (err: unknown) {
+      console.log('err ',err)
       if ((err as FetchBaseQueryError).status === 'FETCH_ERROR') {
         setErrorMessage('Error de red. Por favor, verifica tu conexión a internet.');
       } else if ((err as any).status === 400) {
