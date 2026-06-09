@@ -1,13 +1,13 @@
 import React from "react";
-import FontAwesome from '@expo/vector-icons/FontAwesome';
-import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
-import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
-import Ionicons from "@expo/vector-icons/Ionicons";
-import Octicons from '@expo/vector-icons/Octicons';
-import MaterialIcons from '@expo/vector-icons/MaterialIcons';
-import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
-import Fontisto from '@expo/vector-icons/Fontisto';
-import { AntDesign } from "@expo/vector-icons";
+import FontAwesome from "@react-native-vector-icons/fontawesome";
+import FontAwesome5 from "@react-native-vector-icons/fontawesome5";
+import FontAwesome6 from "@react-native-vector-icons/fontawesome6";
+import Ionicons from "@react-native-vector-icons/ionicons";
+import Octicons from "@react-native-vector-icons/octicons";
+import MaterialIcons from "@react-native-vector-icons/material-icons";
+import MaterialCommunityIcons from "@react-native-vector-icons/material-design-icons";
+import Fontisto from "@react-native-vector-icons/fontisto";
+import AntDesign from "@react-native-vector-icons/ant-design";
 
 type IconData = {
   library: "FontAwesome" | "FontAwesome5" | "FontAwesome6" | "Ionicons" | "Octicons" | "Fontisto" | "MaterialIcons" | "MaterialCommunityIcons" | "AntDesign";

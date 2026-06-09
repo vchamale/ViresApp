@@ -11,7 +11,7 @@ import { useRouter } from "expo-router";
 import CustomHeader from "@components/CustomHeader";
 import Space from "@components/Space";
 import BackgroundView from "@components/BackgroundView";
-import { MaterialIcons } from "@expo/vector-icons";
+import MaterialIcons from "@react-native-vector-icons/material-icons";
 import { useCreateDestinationMutation } from "@api/destinationApi";
 import Dropdown from "@components/Dropdown";
 import { useGetAllClientsQuery } from "@api/clientApi";

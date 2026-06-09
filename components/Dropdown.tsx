@@ -171,7 +171,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, TouchableOpacity, FlatList, StyleSheet, Modal, TouchableWithoutFeedback, TextInput } from 'react-native';
-import AntDesign from '@expo/vector-icons/AntDesign';
+import AntDesign from "@react-native-vector-icons/ant-design";
 import Space from './Space';
 import { deepEqual } from 'utils/common/deepEqual';
 

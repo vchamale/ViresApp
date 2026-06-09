@@ -1,4 +1,4 @@
-import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
+import FontAwesome6 from "@react-native-vector-icons/fontawesome6";
 import { StyleSheet, Text, View } from 'react-native';
 import { TouchableOpacity } from 'react-native';
 import Space from './Space';

@@ -14,7 +14,7 @@ import CustomHeader from "@components/CustomHeader";
 import Space from "@components/Space";
 import BackgroundView from "@components/BackgroundView";
 import Dropdown from "@components/Dropdown";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import MaterialCommunityIcons from "@react-native-vector-icons/material-design-icons";
 import CustomAlert from "@components/CustomAlert";
 import { useUpdateShipmentMutation } from "@api/shipmentApi";
 import { useGetAllShipmentsStatusQuery } from "@api/shipmentStatusApi";

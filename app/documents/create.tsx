@@ -11,7 +11,7 @@ import { useRouter } from "expo-router";
 import CustomHeader from "@components/CustomHeader";
 import Space from "@components/Space";
 import BackgroundView from "@components/BackgroundView";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import MaterialCommunityIcons from "@react-native-vector-icons/material-design-icons";
 import { useCreateDocumentMutation } from "@api/documentApi";
 
 const AddPolicy: React.FC = () => {

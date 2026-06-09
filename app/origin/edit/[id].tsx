@@ -14,7 +14,7 @@ import Space from "@components/Space";
 import BackgroundView from "@components/BackgroundView";
 import { useUpdateOriginMutation } from "@api/originApi";
 import CustomAlert from "@components/CustomAlert";
-import { MaterialIcons } from "@expo/vector-icons";
+import MaterialIcons from "@react-native-vector-icons/material-icons";
 
 const EditOrigin: React.FC = () => {
   const { origin, id } = useLocalSearchParams();

@@ -14,7 +14,7 @@ import CustomHeader from "@components/CustomHeader";
 import Space from "@components/Space";
 import BackgroundView from "@components/BackgroundView";
 import CustomAlert from "@components/CustomAlert";
-import { MaterialIcons } from "@expo/vector-icons";
+import MaterialIcons from "@react-native-vector-icons/material-icons";
 import { useUpdateDriverMutation } from "@api/driverApi";
 import Dropdown from "@components/Dropdown";
 import { useGetAllTrucksQuery } from "@api/truckApi";

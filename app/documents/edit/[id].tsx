@@ -9,7 +9,7 @@ import {
   Pressable,
 } from "react-native";
 import { useRouter, useLocalSearchParams } from "expo-router";
-import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
+import MaterialCommunityIcons from "@react-native-vector-icons/material-design-icons";
 import CustomHeader from "@components/CustomHeader";
 import Space from "@components/Space";
 import BackgroundView from "@components/BackgroundView";

@@ -3,7 +3,7 @@ import React, { useEffect } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, SafeAreaView, FlatList, TouchableOpacity } from 'react-native';
 // Expo stuff
 import { useRouter } from 'expo-router';
-import { Octicons } from '@expo/vector-icons';
+import Octicons from "@react-native-vector-icons/octicons";
 // API
 import { useGetAllContainersQuery } from '@api/containerApi';
 import { useGetAllCurrencysQuery } from '@api/currencyApi';

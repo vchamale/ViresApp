@@ -1,10 +1,10 @@
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import { Tabs, useRouter } from 'expo-router';
-import FontAwesome from '@expo/vector-icons/FontAwesome';
-import AntDesign from '@expo/vector-icons/AntDesign';
-import Feather from '@expo/vector-icons/Feather';
-import SimpleLineIcons from '@expo/vector-icons/SimpleLineIcons';
-import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
+import FontAwesome from "@react-native-vector-icons/fontawesome";
+import AntDesign from "@react-native-vector-icons/ant-design";
+import Feather from "@react-native-vector-icons/feather";
+import SimpleLineIcons from "@react-native-vector-icons/simple-line-icons";
+import MaterialCommunityIcons from "@react-native-vector-icons/material-design-icons";
 
 export default function TabLayout() {
   const router = useRouter()

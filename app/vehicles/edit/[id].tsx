@@ -13,7 +13,7 @@ import { useRouter, useLocalSearchParams } from "expo-router";
 import CustomHeader from "@components/CustomHeader";
 import Space from "@components/Space";
 import BackgroundView from "@components/BackgroundView";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import MaterialCommunityIcons from "@react-native-vector-icons/material-design-icons";
 import { useUpdateTruckMutation } from "@api/truckApi";
 import CustomAlert from "@components/CustomAlert";
 import Dropdown from "@components/Dropdown";

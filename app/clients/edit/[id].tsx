@@ -15,7 +15,7 @@ import Space from "@components/Space";
 import BackgroundView from "@components/BackgroundView";
 import CustomAlert from "@components/CustomAlert";
 import { useUpdateClientMutation } from "@api/clientApi";
-import { FontAwesome5 } from "@expo/vector-icons";
+import FontAwesome5 from "@react-native-vector-icons/fontawesome5";
 
 const EditClient: React.FC = () => {
   const { client, id } = useLocalSearchParams(); // Recibe los datos del cliente

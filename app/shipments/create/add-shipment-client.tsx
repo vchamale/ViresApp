@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { View, Button, StyleSheet, SafeAreaView, FlatList, TouchableOpacity, Text, Pressable } from 'react-native';
 // Expo stuff
 import { useRouter } from 'expo-router';
-import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
+import FontAwesome6 from "@react-native-vector-icons/fontawesome6";
 // API
 import { useGetAllClientsQuery } from '@api/clientApi';
 // Components

@@ -8,7 +8,7 @@ import CustomHeader from '@components/CustomHeader';
 import { pageControlSelector, setSingleShipmentCreatePage } from '@slice/pageControlSlice';
 import BackgroundView from '@components/BackgroundView';
 import Space from '@components/Space';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import MaterialCommunityIcons from "@react-native-vector-icons/material-design-icons";
 import { useGetAllShipmentsStatusQuery } from '@api/shipmentStatusApi';
 import { useGetAllOriginsQuery } from '@api/originApi';
 import { useGetAllDestinationsQuery } from '@api/destinationApi';

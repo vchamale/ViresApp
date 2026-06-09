@@ -21,7 +21,7 @@ import { addDriver, addNotes, addTruck, shipmentSelector } from '@slice/shipment
 import { DriverT } from '@types/Driver';
 import { TruckT } from '@types/Truck';
 import BackgroundView from '@components/BackgroundView';
-import { FontAwesome6 } from '@expo/vector-icons';
+import FontAwesome6 from "@react-native-vector-icons/fontawesome6";
 import { pageControlSelector, setSingleShipmentCreatePage } from '@slice/pageControlSlice';
 
 const AddTransportDetails = () => {

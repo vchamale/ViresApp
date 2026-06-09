@@ -13,7 +13,7 @@ import { useCreateShipmentMutation } from "@api/shipmentApi";
 import Space from "@components/Space";
 import { useAppSelector } from "@hooks/useRedux";
 import { shipmentSelector } from "@slice/shipmentSlice";
-import { FontAwesome6 } from "@expo/vector-icons";
+import FontAwesome6 from "@react-native-vector-icons/fontawesome6";
 
 type SaveShipmentPropsT = {};
 

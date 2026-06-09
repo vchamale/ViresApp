@@ -14,7 +14,7 @@ import Space from "@components/Space";
 import BackgroundView from "@components/BackgroundView";
 import { useUpdateDestinationMutation } from "@api/destinationApi";
 import CustomAlert from "@components/CustomAlert";
-import { MaterialIcons } from "@expo/vector-icons";
+import MaterialIcons from "@react-native-vector-icons/material-icons";
 import { useGetAllClientsQuery } from "@api/clientApi";
 import Dropdown from "@components/Dropdown";
 
