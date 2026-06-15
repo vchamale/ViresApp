@@ -1,4 +1,4 @@
-import React, { createContext, useState, useContext, ReactNode } from 'react';
+import { createContext, useState, use, ReactNode } from 'react';
 import { Snackbar } from '@react-native-material/core';
 
 type SnackbarOptions = {
@@ -14,7 +14,7 @@ type SnackbarContextType = {
 const SnackbarContext = createContext<SnackbarContextType | undefined>(undefined);
 
 export const useSnackbar = () => {
-  const context = useContext(SnackbarContext);
+  const context = use(SnackbarContext);
   if (!context) {
     throw new Error('useSnackbar debe ser usado dentro de SnackbarProvider');
   }
@@ -33,7 +33,7 @@ export const SnackbarProvider = ({ children }: { children: ReactNode }) => {
   };
 
   return (
-    <SnackbarContext.Provider value={{ showSnackbar }}>
+    <SnackbarContext value={{ showSnackbar }}>
       {children}
       {snackbarOptions && (
         <Snackbar
@@ -47,6 +47,6 @@ export const SnackbarProvider = ({ children }: { children: ReactNode }) => {
           }}
         />
       )}
-    </SnackbarContext.Provider>
+    </SnackbarContext>
   );
 };
