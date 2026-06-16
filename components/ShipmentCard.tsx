@@ -3,7 +3,6 @@ import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import IconMapper from '@components/IconMapper';
 import Space from './Space';
 import { statusMapper } from 'utils/common/statusMapper';
-import AnimatedText from './AnimatedText';
 
 type CardProps = {
   containerNumber: string;
@@ -20,21 +19,18 @@ const ShipmentCard: React.FC<CardProps> = ({
   status,
   onViewPress,
 }) => {
+  // Resolver el mapper UNA vez, no dos accesos por render.
+  const statusInfo = statusMapper[status];
+
   return (
     <View style={styles.card}>
       <View style={styles.row}>
-        <View style={{ alignContent: 'center', alignItems: 'center' }}>
-          <IconMapper {...statusMapper[status]} size={24} />
+        <View style={styles.statusBox}>
+          <IconMapper {...statusInfo} size={24} />
           <Space vertical size={10} />
-          <AnimatedText
-            style={{ color: statusMapper[status].color, fontWeight: '900' }}
-            size={40}
-            textSize={85}
-            fontSize={12}
-            speed={20}
-          >
+          <Text numberOfLines={1} style={[styles.statusText, { color: statusInfo?.color }]}>
             {status?.toUpperCase()}
-          </AnimatedText>
+          </Text>
         </View>
         <View style={styles.column}>
           <View style={styles.column}>
@@ -46,7 +42,9 @@ const ShipmentCard: React.FC<CardProps> = ({
           <View style={styles.destinationContainer}>
             <Text style={styles.label}>Destino</Text>
             <View style={styles.destinationRow}>
-              <Text style={styles.text}>{destination}</Text>
+              <Text style={styles.text} numberOfLines={1}>
+                {destination}
+              </Text>
             </View>
           </View>
         </View>
@@ -68,7 +66,9 @@ const ShipmentCard: React.FC<CardProps> = ({
   );
 };
 
-export default ShipmentCard;
+// React.memo: evita re-render de TODAS las celdas cuando el padre cambia estado
+// (búsqueda, fechas, refreshing). Las props son primitivas + un callback estable.
+export default React.memo(ShipmentCard);
 
 const styles = StyleSheet.create({
   card: {
@@ -85,6 +85,14 @@ const styles = StyleSheet.create({
   },
   column: {
     flexDirection: 'column',
+  },
+  statusBox: {
+    alignContent: 'center',
+    alignItems: 'center',
+  },
+  statusText: {
+    fontWeight: '900',
+    fontSize: 12,
   },
   row: {
     flexDirection: 'row',

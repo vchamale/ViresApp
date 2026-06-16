@@ -1,8 +1,16 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 
+type Client = {
+  clientId: number | string;
+  name?: string;
+  nit?: string;
+  address?: string;
+  email?: string;
+};
+
 type ClientCardProps = {
-  client: any;
+  client: Client;
   onViewPress: () => void;
 };
 
@@ -12,21 +20,29 @@ const ClientCard: React.FC<ClientCardProps> = ({ client, onViewPress }) => {
       <View style={styles.row}>
         <View style={styles.column}>
           <Text style={styles.label}>Nombre</Text>
-          <Text style={styles.text}>{client?.name}</Text>
+          <Text style={styles.text} numberOfLines={1}>
+            {client?.name}
+          </Text>
         </View>
         <View style={styles.column}>
           <Text style={styles.label}>NIT</Text>
-          <Text style={styles.text}>{client?.nit}</Text>
+          <Text style={styles.text} numberOfLines={1}>
+            {client?.nit}
+          </Text>
         </View>
       </View>
       <View style={styles.row}>
         <View style={styles.column}>
           <Text style={styles.label}>Dirección</Text>
-          <Text style={styles.text}>{client?.address}</Text>
+          <Text style={styles.text} numberOfLines={1}>
+            {client?.address}
+          </Text>
         </View>
         <View style={styles.column}>
           <Text style={styles.label}>Email</Text>
-          <Text style={styles.text}>{client?.email}</Text>
+          <Text style={styles.text} numberOfLines={1}>
+            {client?.email}
+          </Text>
         </View>
       </View>
       <TouchableOpacity onPress={onViewPress} style={styles.viewButton}>
@@ -36,7 +52,7 @@ const ClientCard: React.FC<ClientCardProps> = ({ client, onViewPress }) => {
   );
 };
 
-export default ClientCard;
+export default React.memo(ClientCard);
 
 const styles = StyleSheet.create({
   card: {

@@ -30,8 +30,6 @@ const ShipmentView = () => {
 
   // queries
   const { data: shipment, isLoading, isError, error } = useGetShipmentByIdQuery(id);
-  console.log('ship ', shipment)
-  console.log('ship error ', error)
   const [
     trigger,
     { data: shipmentStatusResp, isLoading: isLoadingSS, isError: isErrorSS, error: errorSS },
@@ -73,14 +71,10 @@ const ShipmentView = () => {
         shipmentStatusId: shipmentStatusResponse?.shipmentStatusId,
       };
 
-      console.log('Envío actualizado:', updatedShipment);
-
-      const response = await modifyShipment({ id, body: updatedShipment }).unwrap(); // unwrap para manejar errores
-      console.log('Shipment updated successfully:', response);
+      await modifyShipment({ id, body: updatedShipment }).unwrap(); // unwrap para manejar errores
       setAlertVisible(false);
       router.back();
     } catch (error) {
-      console.error('Error updating shipment:', error);
       alert('Hubo un error al actualizar el shipmento.');
     }
   };
