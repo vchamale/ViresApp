@@ -5,7 +5,6 @@ import {
   SafeAreaView,
   StyleSheet,
   Text,
-  TextInput,
   TouchableOpacity,
   View,
   Platform,
@@ -55,23 +54,22 @@ const Shipment: FC = () => {
   const [trigger, { data: shipments, isLoading, isError, error, isUninitialized }] =
     useLazyGetAllShipmentsQuery();
 
-  const handleSearch = () => {
+  // Memoizado para estabilizar onRefresh y el RefreshControl.
+  const handleSearch = useCallback(() => {
     setRefreshing(true);
     const params: Record<string, string> = {};
     if (searchTerm) params.search = searchTerm;
     if (startDate) {
-      const formattedStartDate = format(startDate as Date, 'yyyy-MM-dd');
-      params.startDate = formattedStartDate;
+      params.startDate = format(startDate, 'yyyy-MM-dd');
     }
     if (endDate) {
-      const formattedEndDate = format(endDate, 'yyyy-MM-dd');
-      params.endDate = formattedEndDate;
+      params.endDate = format(endDate, 'yyyy-MM-dd');
     }
 
     trigger(params)
       .unwrap()
       .finally(() => setRefreshing(false));
-  };
+  }, [searchTerm, startDate, endDate, trigger]);
 
   const onRefresh = useCallback(() => {
     handleSearch();
@@ -81,22 +79,29 @@ const Shipment: FC = () => {
     router.push('/shipments/create/single/create');
   };
 
-  const renderItem = ({ item }: { item: ShipmentT }) => {
-    return (
+  const renderItem = useCallback(
+    ({ item }: { item: ShipmentT }) => (
       <ShipmentCard
         status={item.shipmentStatus?.description?.toLowerCase() as string}
         containerNumber={item.container?.containerNumber as string}
         destination={item.destination?.name as string}
         date={new Date(item?.dateCreated).toDateString()}
-        onViewPress={() =>{
+        onViewPress={() =>
           router.push({
             pathname: `/shipments/[id]`,
             params: { id: item.shipmentId },
           })
-        }}
+        }
       />
-    );
-  };
+    ),
+    [router],
+  );
+
+  const keyExtractor = useCallback(
+    (item: ShipmentT) =>
+      `${item?.container?.containerNumber as string}-${item?.shipmentId}`,
+    [],
+  );
 
   useEffect(() => {
     handleSearch()
@@ -208,12 +213,15 @@ const Shipment: FC = () => {
         {!!shipments?.length && !(isLoading || refreshing) && (
           <FlatList
             data={shipments}
-            keyExtractor={(item) =>
-              `${item?.container?.containerNumber as string}-${item?.shipmentId}`
-            }
+            keyExtractor={keyExtractor}
             contentContainerStyle={styles.table}
             renderItem={renderItem}
             refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+            initialNumToRender={6}
+            maxToRenderPerBatch={6}
+            windowSize={7}
+            removeClippedSubviews
+            updateCellsBatchingPeriod={50}
           />
         )}
         {!shipments?.length && !isUninitialized && !isLoading && !refreshing && (

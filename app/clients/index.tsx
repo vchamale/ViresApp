@@ -5,7 +5,6 @@ import {
   SafeAreaView,
   StyleSheet,
   Text,
-  TextInput,
   TouchableOpacity,
   View,
 } from 'react-native';
@@ -31,28 +30,35 @@ const ClientList: FC = () => {
       .finally(() => setRefreshing(false));
   }, [trigger]);
 
-  const handleSearch = () => {
+  const handleSearch = useCallback(() => {
     const params: Record<string, string> = {};
     if (searchTerm) params.search = searchTerm;
 
     trigger(params);
-  };
+  }, [searchTerm, trigger]);
 
-  useEffect( () => {
-    handleSearch()
-  }, [])
+  // Solo en el montaje. La búsqueda posterior es manual (botón Buscar).
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(() => {
+    handleSearch();
+  }, []);
 
-  const renderItem = ({ item }: { item: any }) => (
-    <ClientCard
-      client={item}
-      onViewPress={() =>
-        router.push({
-          pathname: '/clients/[id]',
-          params: { id: item.clientId },
-        })
-      }
-    />
+  const renderItem = useCallback(
+    ({ item }: { item: any }) => (
+      <ClientCard
+        client={item}
+        onViewPress={() =>
+          router.push({
+            pathname: '/clients/[id]',
+            params: { id: item.clientId },
+          })
+        }
+      />
+    ),
+    [router],
   );
+
+  const keyExtractor = useCallback((item: any) => item.clientId.toString(), []);
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
@@ -88,10 +94,15 @@ const ClientList: FC = () => {
         <Space vertical size={15} />
         <FlatList
           data={clients}
-          keyExtractor={(item) => item.clientId.toString()}
+          keyExtractor={keyExtractor}
           contentContainerStyle={styles.listContainer}
           renderItem={renderItem}
           refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+          initialNumToRender={6}
+          maxToRenderPerBatch={6}
+          windowSize={7}
+          removeClippedSubviews
+          updateCellsBatchingPeriod={50}
         />
       </View>
     </SafeAreaView>
