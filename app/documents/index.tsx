@@ -4,13 +4,13 @@ import {
   FlatList,
   Platform,
   RefreshControl,
-  SafeAreaView,
   StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
   View,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import CustomHeader from '@components/CustomHeader';
 import Space from '@components/Space';

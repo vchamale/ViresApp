@@ -1,5 +1,12 @@
 import React, { FC } from 'react';
-import { ImageBackground, StyleSheet, Text, TouchableOpacity, View, ImageSourcePropType } from 'react-native';
+import {
+  ImageBackground,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  ImageSourcePropType,
+} from 'react-native';
 import { useRouter, Href } from 'expo-router';
 import { BlurView } from 'expo-blur';
 
@@ -32,7 +39,11 @@ const ImageNavigationCard: FC<ImageNavigationCardProps> = ({
   };
 
   return (
-    <TouchableOpacity style={[styles.container, { height }]} onPress={handlePress} activeOpacity={0.8}>
+    <TouchableOpacity
+      style={[styles.container, { height }]}
+      onPress={handlePress}
+      activeOpacity={0.8}
+    >
       <ImageBackground source={imageBackground} style={styles.imageBackground} resizeMode="cover">
         <BlurView intensity={0} style={styles.blurView}>
           <Text style={styles.title}>{title}</Text>

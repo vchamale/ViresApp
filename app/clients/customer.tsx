@@ -2,7 +2,8 @@ import { useGetAllClientsQuery } from '@api/clientApi';
 import Space from '@components/Space';
 import { useRouter } from 'expo-router';
 import { FC } from 'react';
-import { Pressable, SafeAreaView, Text, View } from 'react-native';
+import { Pressable, Text, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 type CustomerPropsT = {};
 

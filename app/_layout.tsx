@@ -11,6 +11,7 @@ import store from 'store/configureStore';
 import { ActivityIndicator, View } from 'react-native';
 import checkToken from 'utils/checkToken';
 import { SnackbarProvider } from '@components/context/SnackbarContext';
+import { SafeAreaProvider, initialWindowMetrics } from 'react-native-safe-area-context';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -50,20 +51,22 @@ const RootLayout = () => {
   }
 
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Provider store={store}>
-        <SnackbarProvider>
-          <Stack
-            initialRouteName={initialRoute ?? 'sign-in'}
-            screenOptions={(_) => ({ headerShown: false })}
-          >
-            <Stack.Screen name="sign-in" />
-            <Stack.Screen name="(tabs)" />
-            <Stack.Screen name="+not-found" />
-          </Stack>
-        </SnackbarProvider>
-      </Provider>
-    </ThemeProvider>
+    <SafeAreaProvider initialMetrics={initialWindowMetrics}>
+      <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+        <Provider store={store}>
+          <SnackbarProvider>
+            <Stack
+              initialRouteName={initialRoute ?? 'sign-in'}
+              screenOptions={(_) => ({ headerShown: false })}
+            >
+              <Stack.Screen name="sign-in" />
+              <Stack.Screen name="(tabs)" />
+              <Stack.Screen name="+not-found" />
+            </Stack>
+          </SnackbarProvider>
+        </Provider>
+      </ThemeProvider>
+    </SafeAreaProvider>
   );
 };
 

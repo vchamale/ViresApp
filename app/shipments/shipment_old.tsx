@@ -2,7 +2,6 @@ import { FC, useCallback, useState } from 'react';
 import {
   FlatList,
   Pressable,
-  SafeAreaView,
   StyleSheet,
   Text,
   TextInput,
@@ -11,6 +10,7 @@ import {
   Platform,
   RefreshControl,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { useLazyGetAllShipmentsQuery } from '@api/shipmentApi';
@@ -38,7 +38,7 @@ const Shipment: FC = () => {
   // Api calls
   const [trigger, { data: shipments, isLoading, isError, error }] = useLazyGetAllShipmentsQuery();
 
-  console.log('asdasd ', error)
+  console.log('asdasd ', error);
 
   // Functions
   const onRefresh = useCallback(() => {
@@ -68,7 +68,7 @@ const Shipment: FC = () => {
           router.push({
             pathname: `/shipments/[id]`,
             params: { id: item.shipmentId, shipment: JSON.stringify(item) },
-          })
+          });
         }}
       />
     );

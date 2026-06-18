@@ -4,12 +4,12 @@ import {
   Alert,
   Button,
   Pressable,
-  SafeAreaView,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useCreateShipmentMutation } from '@api/shipmentApi';
 import Space from '@components/Space';
@@ -60,7 +60,7 @@ const SaveShipment: FC<SaveShipmentPropsT> = ({}) => {
     router.push({
       pathname: `/shipments/edit/[id]`,
       params: { id: shipmentId, snapshot: JSON.stringify(newShipment) },
-    })
+    });
   };
 
   const handleCreateShipment = async () => {
@@ -89,15 +89,14 @@ const SaveShipment: FC<SaveShipmentPropsT> = ({}) => {
       // return
 
       const { data, error } = await saveShipment(newShipment);
-      
 
       if (error) {
         Alert.alert('Algo ocurrio', 'Favor intentar mas tarde', [
-        {  
-          text: 'Aceptar',
-          onPress: () => router.replace('/(tabs)'),
-        },
-        ])
+          {
+            text: 'Aceptar',
+            onPress: () => router.replace('/(tabs)'),
+          },
+        ]);
       }
 
       setShipmentId(data.create_new_shipment as number);
@@ -160,9 +159,7 @@ const SaveShipment: FC<SaveShipmentPropsT> = ({}) => {
             <ActivityIndicator color="#71a780" size={100} />
           ) : (
             <>
-              <Text style={{ fontSize: 15, textAlign: 'center' }}>
-                Se ha creado un nuevo viaje
-              </Text>
+              <Text style={{ fontSize: 15, textAlign: 'center' }}>Se ha creado un nuevo viaje</Text>
               <Space vertical size={40} />
               <View
                 style={{

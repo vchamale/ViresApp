@@ -4,12 +4,12 @@ import {
   View,
   Button,
   StyleSheet,
-  SafeAreaView,
   FlatList,
   TouchableOpacity,
   Text,
   Pressable,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 // Expo stuff
 import { useRouter } from 'expo-router';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';

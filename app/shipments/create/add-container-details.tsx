@@ -6,10 +6,10 @@ import {
   TextInput,
   Button,
   StyleSheet,
-  SafeAreaView,
   FlatList,
   TouchableOpacity,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 // Expo stuff
 import { useRouter } from 'expo-router';
 import { Octicons } from '@expo/vector-icons';

@@ -1,13 +1,6 @@
 import React, { useState } from 'react';
-import {
-  View,
-  Text,
-  TextInput,
-  StyleSheet,
-  SafeAreaView,
-  TouchableOpacity,
-  Switch,
-} from 'react-native';
+import { View, Text, TextInput, StyleSheet, TouchableOpacity, Switch } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import CustomHeader from '@components/CustomHeader';
 import BackgroundView from '@components/BackgroundView';

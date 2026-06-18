@@ -2,7 +2,6 @@ import { FC, useCallback, useEffect, useState } from 'react';
 import {
   FlatList,
   Pressable,
-  SafeAreaView,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -10,6 +9,7 @@ import {
   Platform,
   RefreshControl,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { useGetAllShipmentsQuery, useLazyGetAllShipmentsQuery } from '@api/shipmentApi';
@@ -98,14 +98,13 @@ const Shipment: FC = () => {
   );
 
   const keyExtractor = useCallback(
-    (item: ShipmentT) =>
-      `${item?.container?.containerNumber as string}-${item?.shipmentId}`,
+    (item: ShipmentT) => `${item?.container?.containerNumber as string}-${item?.shipmentId}`,
     [],
   );
 
   useEffect(() => {
-    handleSearch()
-  }, [])
+    handleSearch();
+  }, []);
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>

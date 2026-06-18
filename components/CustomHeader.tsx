@@ -1,12 +1,6 @@
 import React from 'react';
-import {
-  Text,
-  TouchableOpacity,
-  StyleSheet,
-  SafeAreaView,
-  StatusBar,
-  StatusBarStyle,
-} from 'react-native';
+import { Text, TouchableOpacity, StyleSheet, StatusBar, StatusBarStyle } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 

@@ -1,6 +1,7 @@
 import { useRouter } from 'expo-router';
 import { FC, useEffect } from 'react';
-import { BackHandler, SafeAreaView } from 'react-native';
+import { BackHandler } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import checkToken from 'utils/checkToken';
 
 type HomePropsT = {

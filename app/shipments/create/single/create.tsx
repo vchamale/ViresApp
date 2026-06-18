@@ -4,17 +4,14 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  SafeAreaView,
   ScrollView,
   StyleSheet,
   Pressable,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { useAppDispatch, useAppSelector } from '@hooks/useRedux';
-import {
-  shipmentSelector,
-  reset,
-} from '@slice/shipmentSlice';
+import { shipmentSelector, reset } from '@slice/shipmentSlice';
 import CustomHeader from '@components/CustomHeader';
 import BackgroundView from '@components/BackgroundView';
 import Space from '@components/Space';
@@ -75,8 +72,7 @@ const SinglePageShipmentForm = () => {
     refetch: refetchClients,
     isFetching: isFetchingClients,
   } = useGetAllClientsQuery({});
-  
- 
+
   const {
     currentData: containers,
     isError: isErrorContainer,
@@ -95,15 +91,15 @@ const SinglePageShipmentForm = () => {
     refetch: refetchPolicies,
   } = useGetAllDocumentsQuery({});
 
-  console.log('policies ', policies)
-  console.log('policies errorPolicies ', errorPolicies)
+  console.log('policies ', policies);
+  console.log('policies errorPolicies ', errorPolicies);
 
   const {
     data: vehicles,
     isLoading: isVehicleLoading,
     isFetching: isVehicleFetching,
     isError: isVehicleError,
-    refetch: refetchVehicles
+    refetch: refetchVehicles,
   } = useGetAllTrucksQuery({});
 
   const {
@@ -111,7 +107,7 @@ const SinglePageShipmentForm = () => {
     isLoading: isDriverLoading,
     isFetching: isDriverFetching,
     isError: isDriverError,
-    refetch: refetchDrivers
+    refetch: refetchDrivers,
   } = useGetAllDriversQuery({});
 
   const {
@@ -119,7 +115,7 @@ const SinglePageShipmentForm = () => {
     isLoading: isSizesLoading,
     isFetching: isSizesFetching,
     isError: isSizesError,
-    refetch: refetchSizes
+    refetch: refetchSizes,
   } = useGetAllSizesQuery({});
 
   const handleSave = () => {
@@ -133,8 +129,8 @@ const SinglePageShipmentForm = () => {
       destinationId: destinationSelected?.destinationId,
       truckId: vehicleSelected?.truckId,
       license: driverSelected?.license,
-      sizeId: sizeContainerSelected?.sizeId
-    })
+      sizeId: sizeContainerSelected?.sizeId,
+    });
     if (
       !containerValue ||
       !policyValue ||
@@ -166,8 +162,7 @@ const SinglePageShipmentForm = () => {
       shipmentStatusId: 1,
       dateCreated: new Date(),
       currencyId: 1,
-    })
-    
+    });
 
     router.push({ pathname: '/shipments/create/save-shipment', params: { shipment } });
   };
@@ -235,9 +230,9 @@ const SinglePageShipmentForm = () => {
             placeholderColor="#71a780"
             renderItemText={(item) => `${item.name}`}
             onItemSelected={(item: ClientT) => {
-              setClientSelected(item)
-              triggerOrigins({ clientId: item.clientId })
-              triggerDestinations({ clientId: item.clientId })
+              setClientSelected(item);
+              triggerOrigins({ clientId: item.clientId });
+              triggerDestinations({ clientId: item.clientId });
             }}
             refetch={refetchClients}
             linkText="Agregar nuevo cliente"
