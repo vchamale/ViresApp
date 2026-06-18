@@ -327,18 +327,9 @@
 
 // export default Reports;
 
-
-
-
 import React, { FC, useCallback, useMemo, useState } from 'react';
-import {
-  Platform,
-  SafeAreaView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import { Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import CustomHeader from '@components/CustomHeader';
 import Space from '@components/Space';
@@ -398,8 +389,9 @@ const Reports: FC = () => {
   const [endDate, setEndDate] = useState<Date | null>(null);
   const [driverSelected, setDriverSelected] = useState<DriverT | null>(null);
   const [clientSelected, setClientSelected] = useState<ClientT | null>(null);
-  const [shipmentStatusSelected, setShipmentStatusSelected] =
-    useState<ShipmentStatusT | null>(null);
+  const [shipmentStatusSelected, setShipmentStatusSelected] = useState<ShipmentStatusT | null>(
+    null,
+  );
 
   const handleShipmentStatusSelected = (item: ShipmentStatusT | null) => {
     setShipmentStatusSelected(item);

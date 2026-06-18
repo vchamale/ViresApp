@@ -1,6 +1,6 @@
-
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, SafeAreaView, TouchableOpacity, RefreshControl } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, RefreshControl } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import Space from '@components/Space';
 import CustomHeader from '@components/CustomHeader';
@@ -28,8 +28,14 @@ const ClientView = () => {
   const [triggerOrigins, originsQuery] = useLazyGetOriginsByClientIdQuery();
   const [triggerDestinations, destinationsQuery] = useLazyGetDestinationsByClientIdQuery();
 
-  const loadOrigins = useCallback(() => triggerOrigins({ clientId: id as string }), [triggerOrigins, id]);
-  const loadDestinations = useCallback(() => triggerDestinations({ clientId: id as string }), [triggerDestinations, id]);
+  const loadOrigins = useCallback(
+    () => triggerOrigins({ clientId: id as string }),
+    [triggerOrigins, id],
+  );
+  const loadDestinations = useCallback(
+    () => triggerDestinations({ clientId: id as string }),
+    [triggerDestinations, id],
+  );
 
   // carga inicial solo de la pestaña activa
   useEffect(() => {
@@ -40,8 +46,7 @@ const ClientView = () => {
   const onRefreshLocations = useCallback(() => {
     setRefreshing(true);
     const p = activeTab === 'origins' ? loadOrigins() : loadDestinations();
-    Promise.resolve(p)
-      .finally(() => setRefreshing(false));
+    Promise.resolve(p).finally(() => setRefreshing(false));
   }, [activeTab, loadDestinations, loadOrigins]);
 
   const origins = originsQuery.data ?? [];
@@ -50,7 +55,10 @@ const ClientView = () => {
   const isLocationsLoading =
     (activeTab === 'origins' ? originsQuery.isLoading : destinationsQuery.isLoading) || refreshing;
 
-  const currentList = useMemo(() => (activeTab === 'origins' ? origins : destinations), [activeTab, origins, destinations]);
+  const currentList = useMemo(
+    () => (activeTab === 'origins' ? origins : destinations),
+    [activeTab, origins, destinations],
+  );
 
   const handleEditClient = () => {
     router.push({
@@ -70,9 +78,15 @@ const ClientView = () => {
 
   const handleEditLocation = (id: number, object: any) => {
     if (activeTab === 'origins') {
-      router.push({ pathname: '/origin/edit/[id]', params: { origin: JSON.stringify(object), id } });
+      router.push({
+        pathname: '/origin/edit/[id]',
+        params: { origin: JSON.stringify(object), id },
+      });
     } else {
-      router.push({ pathname: '/destination/edit/[id]', params: { destination: JSON.stringify(object), id } });
+      router.push({
+        pathname: '/destination/edit/[id]',
+        params: { destination: JSON.stringify(object), id },
+      });
     }
   };
 
@@ -113,9 +127,7 @@ const ClientView = () => {
         <Space vertical size={30} />
         <ScrollView
           style={styles.container}
-          refreshControl={
-            <RefreshControl refreshing={false} onRefresh={() => {}} />
-          }
+          refreshControl={<RefreshControl refreshing={false} onRefresh={() => {}} />}
         >
           {/* Información básica */}
           <View style={styles.card}>
@@ -163,7 +175,9 @@ const ClientView = () => {
                 onPress={() => setActiveTab('origins')}
                 style={[styles.segmentBtn, activeTab === 'origins' && styles.segmentBtnActive]}
               >
-                <Text style={[styles.segmentText, activeTab === 'origins' && styles.segmentTextActive]}>
+                <Text
+                  style={[styles.segmentText, activeTab === 'origins' && styles.segmentTextActive]}
+                >
                   Puntos de partida
                 </Text>
               </TouchableOpacity>
@@ -171,7 +185,12 @@ const ClientView = () => {
                 onPress={() => setActiveTab('destinations')}
                 style={[styles.segmentBtn, activeTab === 'destinations' && styles.segmentBtnActive]}
               >
-                <Text style={[styles.segmentText, activeTab === 'destinations' && styles.segmentTextActive]}>
+                <Text
+                  style={[
+                    styles.segmentText,
+                    activeTab === 'destinations' && styles.segmentTextActive,
+                  ]}
+                >
                   Puntos de destino
                 </Text>
               </TouchableOpacity>
@@ -182,7 +201,9 @@ const ClientView = () => {
             {/* acciones */}
             <View style={[styles.row, { marginBottom: 10 }]}>
               <Text style={[styles.label, { marginLeft: 6 }]}>
-                {activeTab === 'origins' ? 'Listado de puntos de partida' : 'Listado de puntos de destino'}
+                {activeTab === 'origins'
+                  ? 'Listado de puntos de partida'
+                  : 'Listado de puntos de destino'}
               </Text>
               <TouchableOpacity onPress={handleAdd} style={styles.smallPrimary}>
                 <Text style={styles.smallPrimaryText}>
@@ -219,7 +240,7 @@ const ClientView = () => {
                     <TouchableOpacity
                       style={styles.linkBtn}
                       onPress={() => {
-                        handleEditLocation(item.originId ?? item.destinationId, item)
+                        handleEditLocation(item.originId ?? item.destinationId, item);
                       }}
                     >
                       <Text style={styles.linkBtnText}>Editar</Text>
@@ -353,6 +374,11 @@ const styles = StyleSheet.create({
   itemTitle: { fontWeight: '700', color: '#1f2937' },
   itemSub: { color: '#6b7280', fontSize: 12 },
 
-  linkBtn: { paddingVertical: 6, paddingHorizontal: 8, borderRadius: 8, backgroundColor: '#dbeeed' },
+  linkBtn: {
+    paddingVertical: 6,
+    paddingHorizontal: 8,
+    borderRadius: 8,
+    backgroundColor: '#dbeeed',
+  },
   linkBtnText: { color: '#1e7f76', fontWeight: '700', fontSize: 12 },
 });

@@ -75,9 +75,6 @@
 
 // export default ShipmentsPdfGenerator;
 
-
-
-
 // components/ShipmentsPdfGenerator.tsx
 import React, { ReactNode } from 'react';
 import { Button } from 'react-native';
@@ -108,7 +105,7 @@ const ShipmentsPdfGenerator: React.FC<ShipmentsPdfGeneratorProps> = ({
           <td>${s.client?.name || '-'}</td>
           <td>${s.driver?.names || ''} ${s.driver?.last_names || ''}</td>
         </tr>
-      `
+      `,
       )
       .join('');
 

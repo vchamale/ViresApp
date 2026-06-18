@@ -1,33 +1,39 @@
-import React, { useEffect, useMemo, useState } from 'react'
-import { SafeAreaView, ScrollView, View, Text, TouchableOpacity, TextInput, StyleSheet, Pressable } from 'react-native'
-import { useLocalSearchParams, useRouter } from 'expo-router'
-import { useForm, Controller } from 'react-hook-form'
-import { z } from 'zod'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { MaterialCommunityIcons } from '@expo/vector-icons'
-import BackgroundView from '@components/BackgroundView'
-import CustomHeader from '@components/CustomHeader'
-import Space from '@components/Space'
-import Dropdown from '@components/Dropdown'
-import CustomAlert from '@components/CustomAlert'
-import CurrencyInput from 'react-native-currency-input'
-
+import React, { useEffect, useMemo, useState } from 'react';
 import {
-  useGetShipmentByIdQuery,
-  useUpdateShipmentMutation,
-} from '@api/shipmentApi'
-import { useGetAllShipmentsStatusQuery } from '@api/shipmentStatusApi'
-import { useGetAllOriginsQuery } from '@api/originApi'
-import { useGetAllDestinationsQuery } from '@api/destinationApi'
-import { useGetAllTrucksQuery } from '@api/truckApi'
-import { useGetAllDriversQuery } from '@api/driverApi'
+  ScrollView,
+  View,
+  Text,
+  TouchableOpacity,
+  TextInput,
+  StyleSheet,
+  Pressable,
+} from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { useLocalSearchParams, useRouter } from 'expo-router';
+import { useForm, Controller } from 'react-hook-form';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+import BackgroundView from '@components/BackgroundView';
+import CustomHeader from '@components/CustomHeader';
+import Space from '@components/Space';
+import Dropdown from '@components/Dropdown';
+import CustomAlert from '@components/CustomAlert';
+import CurrencyInput from 'react-native-currency-input';
+
+import { useGetShipmentByIdQuery, useUpdateShipmentMutation } from '@api/shipmentApi';
+import { useGetAllShipmentsStatusQuery } from '@api/shipmentStatusApi';
+import { useGetAllOriginsQuery } from '@api/originApi';
+import { useGetAllDestinationsQuery } from '@api/destinationApi';
+import { useGetAllTrucksQuery } from '@api/truckApi';
+import { useGetAllDriversQuery } from '@api/driverApi';
 
 const NumNonNeg = z
   .preprocess((v) => (v === '' || v === null || v === undefined ? undefined : v), z.coerce.number())
   // Asegura que sea número válido (no NaN)
   .refine((v): v is number => typeof v === 'number' && !Number.isNaN(v), 'Requerido')
   // Asegura no-negativo
-  .refine((v) => v >= 0, 'Requerido')
+  .refine((v) => v >= 0, 'Requerido');
 
 const Schema = z.object({
   containerNumber: z.string().min(1),
@@ -42,35 +48,44 @@ const Schema = z.object({
     .optional(),
   weight: NumNonNeg,
   price: NumNonNeg,
-})
+});
 
-type FormValues = z.infer<typeof Schema>
+type FormValues = z.infer<typeof Schema>;
 
 export default function EditShipment() {
-  const { id, snapshot } = useLocalSearchParams<{ id: string; snapshot?: string }>()
-  const router = useRouter()
-  const [isAlertVisible, setAlertVisible] = useState(false)
+  const { id, snapshot } = useLocalSearchParams<{ id: string; snapshot?: string }>();
+  const router = useRouter();
+  const [isAlertVisible, setAlertVisible] = useState(false);
 
   // Snapshot opcional para defaults instantáneos
   const initialFromSnapshot = useMemo(() => {
-    try { return snapshot ? JSON.parse(snapshot) : undefined } catch { return undefined }
-  }, [snapshot])
+    try {
+      return snapshot ? JSON.parse(snapshot) : undefined;
+    } catch {
+      return undefined;
+    }
+  }, [snapshot]);
 
   // Datos canónicos
   const { data } = useGetShipmentByIdQuery(Number(id), {
     selectFromResult: (res) => res,
     refetchOnMountOrArgChange: true,
-  })
+  });
 
-  const { data: statuses } = useGetAllShipmentsStatusQuery({})
-  const clientId = data?.clientId ?? initialFromSnapshot?.clientId
-  const { data: origins } = useGetAllOriginsQuery({ clientId }, { skip: !clientId })
-  const { data: destinations } = useGetAllDestinationsQuery({ clientId }, { skip: !clientId })
-  const { data: trucks } = useGetAllTrucksQuery({})
-  const { data: drivers } = useGetAllDriversQuery({})
+  const { data: statuses } = useGetAllShipmentsStatusQuery({});
+  const clientId = data?.clientId ?? initialFromSnapshot?.clientId;
+  const { data: origins } = useGetAllOriginsQuery({ clientId }, { skip: !clientId });
+  const { data: destinations } = useGetAllDestinationsQuery({ clientId }, { skip: !clientId });
+  const { data: trucks } = useGetAllTrucksQuery({});
+  const { data: drivers } = useGetAllDriversQuery({});
 
   // Form
-  const { control, handleSubmit, reset, formState: { isDirty, isSubmitting } } = useForm<FormValues>({
+  const {
+    control,
+    handleSubmit,
+    reset,
+    formState: { isDirty, isSubmitting },
+  } = useForm<FormValues>({
     resolver: zodResolver(Schema),
     defaultValues: {
       containerNumber: initialFromSnapshot?.container?.containerNumber ?? '',
@@ -82,10 +97,10 @@ export default function EditShipment() {
       weight: initialFromSnapshot?.weight ?? 0,
       price: initialFromSnapshot?.price ?? 0,
     },
-  })
+  });
 
   useEffect(() => {
-    if (!data) return
+    if (!data) return;
     reset({
       containerNumber: data.container?.containerNumber ?? '',
       shipmentStatusId: data.shipmentStatusId,
@@ -95,10 +110,10 @@ export default function EditShipment() {
       driverUserId: data.user?.userId ?? null,
       weight: data.weight ?? 0,
       price: data.price ?? 0,
-    })
-  }, [data, reset])
+    });
+  }, [data, reset]);
 
-  const [updateShipment] = useUpdateShipmentMutation()
+  const [updateShipment] = useUpdateShipmentMutation();
 
   const onSubmit = async (values: FormValues) => {
     const dto = {
@@ -110,14 +125,14 @@ export default function EditShipment() {
       destination: values.destinationId,
       driver: values.driverUserId ?? undefined,
       truck: values.truckId,
-    }
-    await updateShipment({ id: Number(id), body: dto }).unwrap()
-    setAlertVisible(false)
-    router.back()
-  }
+    };
+    await updateShipment({ id: Number(id), body: dto }).unwrap();
+    setAlertVisible(false);
+    router.back();
+  };
 
   // Primero validamos con RHF y si pasa abrimos el modal de confirmación
-  const attemptSubmit = handleSubmit(() => setAlertVisible(true))
+  const attemptSubmit = handleSubmit(() => setAlertVisible(true));
 
   return (
     <BackgroundView>
@@ -311,7 +326,7 @@ export default function EditShipment() {
         </ScrollView>
       </SafeAreaView>
     </BackgroundView>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
@@ -382,4 +397,4 @@ const styles = StyleSheet.create({
     backgroundColor: '#9fa8da',
     opacity: 0.7,
   },
-})
+});

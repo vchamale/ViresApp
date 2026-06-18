@@ -5,13 +5,13 @@ import { useEffect, useRef, useState } from 'react';
 import {
   ActivityIndicator,
   BackHandler,
-  SafeAreaView,
   StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
   View,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import IconMapper from '@components/IconMapper';
 import { getDecodedToken, saveToken, saveUserName } from 'utils/secureStore';
 import { Screen } from 'react-native-screens';
@@ -43,7 +43,7 @@ const SignIn: React.FC = () => {
   }, []);
 
   const onSubmit = async () => {
-    console.log('asdl')
+    console.log('asdl');
     setLoading(true);
     try {
       if (!email) {
@@ -58,12 +58,12 @@ const SignIn: React.FC = () => {
         return;
       }
 
-      console.log('ajsdlknasldnasd ')
+      console.log('ajsdlknasldnasd ');
 
       const resp = await login({ email, password }).unwrap();
-      console.log('ajsdlknasldnasd 2')
-      console.log('resp ', resp)
-      const { accessToken, refreshToken } = resp
+      console.log('ajsdlknasldnasd 2');
+      console.log('resp ', resp);
+      const { accessToken, refreshToken } = resp;
       if (accessToken) {
         await saveToken('accessToken', accessToken);
         await saveToken('refreshToken', refreshToken);
@@ -71,17 +71,23 @@ const SignIn: React.FC = () => {
         if (name) {
           await saveUserName(name);
         }
-        console.log('asdasdasd asdl')
+        console.log('asdasdasd asdl');
         router.push('/(tabs)');
       }
     } catch (err: unknown) {
-      console.log('err ',err)
-      if ((err as FetchBaseQueryError).status === 'FETCH_ERROR') {
-        setErrorMessage('Error de red. Por favor, verifica tu conexión a internet.');
-      } else if ((err as any).status === 400) {
+      console.log('error status ->', (err as any)?.status);
+      console.log('error full ->', JSON.stringify(err, null, 2));
+      const status = (err as FetchBaseQueryError).status;
+      if (status === 'FETCH_ERROR') {
+        setErrorMessage('Error de red. No se pudo conectar con el servidor.');
+      } else if (status === 'TIMEOUT_ERROR') {
+        setErrorMessage('El servidor tardó demasiado en responder.');
+      } else if (status === 400 || status === 401) {
         setErrorMessage('Credenciales inválidas. Por favor, verifica tus datos.');
-      } else if ((err as any).status === 500) {
+      } else if (status === 500) {
         setErrorMessage('Error del servidor.');
+      } else {
+        setErrorMessage('Ocurrió un error inesperado.');
       }
     } finally {
       setLoading(false);

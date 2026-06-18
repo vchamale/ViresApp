@@ -7,11 +7,11 @@ import {
   Button,
   StyleSheet,
   Alert,
-  SafeAreaView,
   Pressable,
   FlatList,
   TouchableOpacity,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 // Expo stuff
 import { useRouter } from 'expo-router';
 // API

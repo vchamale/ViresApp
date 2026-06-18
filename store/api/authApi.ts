@@ -28,7 +28,7 @@ export const authApi = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: api.vires.auth,
     credentials: 'include',
-    timeout: 3000,
+    timeout: 15000,
     headers: { 'Content-type': 'application/json' },
   }),
   endpoints: (build) => ({

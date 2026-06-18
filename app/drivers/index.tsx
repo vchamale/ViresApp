@@ -1,13 +1,6 @@
 import React, { FC, useCallback, useState, useEffect } from 'react';
-import {
-  FlatList,
-  RefreshControl,
-  SafeAreaView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import { FlatList, RefreshControl, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import CustomHeader from '@components/CustomHeader';
 import Space from '@components/Space';
@@ -39,7 +32,7 @@ const DriverList: FC = () => {
 
   useEffect(() => {
     handleSearch();
-  }, [])
+  }, []);
 
   const renderItem = ({ item }: { item: any }) => (
     <DriverCard

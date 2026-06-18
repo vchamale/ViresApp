@@ -32,7 +32,7 @@ export default function TabLayout() {
               {...props}
               style={styles.fabButton}
               onPress={() => {
-                router.push('/shipments/create/single/create')
+                router.push('/shipments/create/single/create');
               }}
             >
               <View style={styles.fabIconContainer}>

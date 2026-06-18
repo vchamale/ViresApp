@@ -1,5 +1,6 @@
 import React from 'react';
-import { View, Text, SafeAreaView, Pressable, Button } from 'react-native';
+import { View, Text, Pressable, Button } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import Space from '@components/Space';
 import { format } from 'date-fns';
@@ -29,13 +30,10 @@ const Home = () => {
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <View style={{ padding: 15 }}>
-        
         <Space vertical size={10} />
         <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
           <View>
-            <Text style={{ fontWeight: '700', fontSize: 20 }}>
-              Hola {name || 'Invitado'}
-            </Text>
+            <Text style={{ fontWeight: '700', fontSize: 20 }}>Hola {name || 'Invitado'}</Text>
             <Space vertical size={10} />
             <Text style={{ color: '#525358' }}>{formattedDate}</Text>
           </View>
@@ -60,8 +58,6 @@ const Home = () => {
         <MenuOptionsList options={options} />
 
         <Space vertical size={40} />
-
-
       </View>
     </SafeAreaView>
   );

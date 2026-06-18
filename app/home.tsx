@@ -2,7 +2,8 @@ import DashboardButton from '@components/DashboardButton';
 import Space from '@components/Space';
 import { useRouter } from 'expo-router';
 import { FC } from 'react';
-import { Pressable, SafeAreaView, Text, TextInput, View } from 'react-native';
+import { Pressable, Text, TextInput, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { Button } from 'bds-design-craft';
 
 type HomePropsT = {
@@ -126,9 +127,9 @@ const Home: FC<HomePropsT> = ({ navigation }) => {
           }}
         >
           <DashboardButton
-            route={"/shipments/create/single/create"}
-            label={"Viajes"}
-            icon={"truck"}
+            route={'/shipments/create/single/create'}
+            label={'Viajes'}
+            icon={'truck'}
           />
           {/* <DashboardButton
             route={"/clients/client"}

@@ -393,9 +393,6 @@
 
 // export default Dropdown;
 
-
-
-
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import {
   View,
@@ -494,7 +491,7 @@ const Dropdown = <T extends Record<string, any>>({
   // Lista sin el seleccionado (si aplica)
   useEffect(() => {
     setFilteredItems(
-      items?.filter((it) => (selectedItem ? !deepEqual(it, selectedItem) : true)) ?? []
+      items?.filter((it) => (selectedItem ? !deepEqual(it, selectedItem) : true)) ?? [],
     );
   }, [items, selectedItem]);
 
@@ -561,9 +558,7 @@ const Dropdown = <T extends Record<string, any>>({
     }
   };
 
-  const handleNewValueSubmit = (
-    _e?: NativeSyntheticEvent<TextInputSubmitEditingEventData>
-  ) => {
+  const handleNewValueSubmit = (_e?: NativeSyntheticEvent<TextInputSubmitEditingEventData>) => {
     const val = inputValue.trim();
     if (!val) {
       setFocused(false);
@@ -791,7 +786,7 @@ const styles = StyleSheet.create({
     borderColor: '#ccc',
     paddingHorizontal: 0,
     paddingVertical: 0, // clave para no crecer
-    height: 20,         // altura fija compacta
+    height: 20, // altura fija compacta
     lineHeight: 20,
     fontSize: 16,
     marginHorizontal: 10,

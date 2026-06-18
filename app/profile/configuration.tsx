@@ -2,7 +2,8 @@ import DashboardButton from '@components/DashboardButton';
 import Space from '@components/Space';
 import { useRouter } from 'expo-router';
 import { FC } from 'react';
-import { Pressable, SafeAreaView, Switch, Text, TextInput, View } from 'react-native';
+import { Pressable, Switch, Text, TextInput, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 type ConfigurationPropsT = {
   navigation: any;
