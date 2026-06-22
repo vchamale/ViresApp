@@ -1,21 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  StyleSheet,
-  Pressable,
-  ScrollView,
-} from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter, useLocalSearchParams } from 'expo-router';
-import CustomHeader from '@components/CustomHeader';
-import Space from '@components/Space';
-import BackgroundView from '@components/BackgroundView';
-import CustomAlert from '@components/CustomAlert';
-import { useUpdateClientMutation } from '@api/clientApi';
 import { FontAwesome5 } from '@expo/vector-icons';
+import { useUpdateClientMutation } from '@api/clientApi';
+import FormScreen from '@components/layout/FormScreen';
+import FormInput from '@components/form/FormInput';
+import AppButton from '@components/ui/AppButton';
+import ConfirmDialog from '@components/ui/ConfirmDialog';
+import Space from '@components/Space';
+import { theme } from '@constants/theme';
 
 const EditClient: React.FC = () => {
   const { client, id } = useLocalSearchParams(); // Recibe los datos del cliente
@@ -70,32 +62,7 @@ const EditClient: React.FC = () => {
   ]);
 
   const handleSubmit = () => {
-    if (!name) {
-      alert('Por favor completa todos los campos obligatorios');
-      return;
-    }
-
-    if (!address) {
-      alert('Por favor completa todos los campos obligatorios');
-      return;
-    }
-
-    if (!nit) {
-      alert('Por favor completa todos los campos obligatorios');
-      return;
-    }
-
-    if (!contactName) {
-      alert('Por favor completa todos los campos obligatorios');
-      return;
-    }
-
-    if (!telephone) {
-      alert('Por favor completa todos los campos obligatorios');
-      return;
-    }
-
-    if (!email) {
+    if (!name || !address || !nit || !contactName || !telephone || !email) {
       alert('Por favor completa todos los campos obligatorios');
       return;
     }
@@ -118,172 +85,58 @@ const EditClient: React.FC = () => {
   };
 
   return (
-    <BackgroundView>
-      <SafeAreaView style={{ flex: 1 }}>
-        <CustomHeader
-          title="Editar Cliente"
-          backgroundColor="#71a780"
-          color="#fff"
-          onBackPress={() => router.back()}
-        />
-        <CustomAlert
-          isVisible={isAlertVisible}
-          title="Estas seguro de modificar?"
-          titleColor="#ff0809bd"
-          text="Estas a punto de modificar la poliza, deseas continuar?"
-          onClose={() => {
-            setAlertVisible(false);
-          }}
-          buttons={[
-            <Pressable
-              onPress={() => {
-                setAlertVisible(false);
-              }}
-            >
-              <View style={styles.cancelButtonAlert}>
-                <Text style={styles.cancelButtonTextAlert}>Cancelar</Text>
-              </View>
-            </Pressable>,
-            <Pressable
-              onPress={() => {
-                handleUpdateClient();
-                setAlertVisible(false);
-              }}
-            >
-              <View style={styles.continueButtonAlert}>
-                <Text style={styles.continueButtonTextAlert}>Modificar</Text>
-              </View>
-            </Pressable>,
-          ]}
-        />
-        <Space vertical size={50} />
-        <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
-          <FontAwesome5 name="user-plus" size={150} color="#fff" />
-        </View>
-        <Space vertical size={120} />
-        <ScrollView style={styles.container}>
-          <Text style={styles.label}>NIT</Text>
-          <TextInput
-            style={styles.input}
-            value={nit}
-            onChangeText={setNit}
-            placeholder="Ingrese el NIT"
-          />
-
-          <Text style={styles.label}>Nombre</Text>
-          <TextInput
-            style={styles.input}
-            value={name}
-            onChangeText={setName}
-            placeholder="Ingrese el nombre"
-          />
-
-          <Text style={styles.label}>Dirección</Text>
-          <TextInput
-            style={styles.input}
-            value={address}
-            onChangeText={setAddress}
-            placeholder="Ingrese la dirección"
-          />
-
-          <Text style={styles.label}>Contacto</Text>
-          <TextInput
-            style={styles.input}
-            value={contactName}
-            onChangeText={setContactName}
-            placeholder="Ingrese el nombre del contacto"
-          />
-
-          <Text style={styles.label}>Teléfono</Text>
-          <TextInput
-            style={styles.input}
-            value={telephone}
-            onChangeText={setTelephone}
-            keyboardType="phone-pad"
-            placeholder="Ingrese el teléfono"
-          />
-
-          <Text style={styles.label}>Correo Electrónico</Text>
-          <TextInput
-            style={styles.input}
-            value={email}
-            onChangeText={setEmail}
-            keyboardType="email-address"
-            placeholder="Ingrese el correo electrónico"
-          />
-
-          <TouchableOpacity
-            style={[styles.submitButton, !isModified && styles.disabledButton]}
-            onPress={handleSubmit}
-            disabled={!isModified}
-          >
-            <Text style={styles.submitButtonText}>Guardar Cambios</Text>
-          </TouchableOpacity>
-          <Space vertical size={30} />
-        </ScrollView>
-      </SafeAreaView>
-    </BackgroundView>
+    <FormScreen
+      title="Editar Cliente"
+      onBack={() => router.back()}
+      icon={<FontAwesome5 name="user-plus" size={150} color={theme.colors.white} />}
+    >
+      <ConfirmDialog
+        visible={isAlertVisible}
+        text="Estas a punto de modificar la poliza, deseas continuar?"
+        onCancel={() => setAlertVisible(false)}
+        onConfirm={handleUpdateClient}
+      />
+      <FormInput label="NIT" value={nit} onChangeText={setNit} placeholder="Ingrese el NIT" />
+      <FormInput
+        label="Nombre"
+        value={name}
+        onChangeText={setName}
+        placeholder="Ingrese el nombre"
+      />
+      <FormInput
+        label="Dirección"
+        value={address}
+        onChangeText={setAddress}
+        placeholder="Ingrese la dirección"
+      />
+      <FormInput
+        label="Contacto"
+        value={contactName}
+        onChangeText={setContactName}
+        placeholder="Ingrese el nombre del contacto"
+      />
+      <FormInput
+        label="Teléfono"
+        value={telephone}
+        onChangeText={setTelephone}
+        keyboardType="phone-pad"
+        placeholder="Ingrese el teléfono"
+      />
+      <FormInput
+        label="Correo Electrónico"
+        value={email}
+        onChangeText={setEmail}
+        keyboardType="email-address"
+        placeholder="Ingrese el correo electrónico"
+      />
+      <AppButton
+        title="Guardar Cambios"
+        onPress={handleSubmit}
+        disabled={!isModified}
+      />
+      <Space vertical size={30} />
+    </FormScreen>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 20,
-  },
-  label: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: '#5db075',
-    marginBottom: 8,
-  },
-  input: {
-    height: 40,
-    borderColor: '#ccc',
-    borderWidth: 1,
-    marginBottom: 16,
-    paddingHorizontal: 8,
-    borderRadius: 4,
-  },
-  disabledButton: {
-    backgroundColor: '#9fa8da',
-    opacity: 0.7,
-  },
-  submitButton: {
-    backgroundColor: '#3f51b5',
-    paddingVertical: 10,
-    borderRadius: 4,
-    marginTop: 20,
-  },
-  submitButtonText: {
-    color: '#fff',
-    textAlign: 'center',
-    fontWeight: 'bold',
-  },
-  cancelButtonAlert: {
-    backgroundColor: '#ff0809bd',
-    paddingVertical: 10,
-    paddingHorizontal: 35,
-    borderRadius: 4,
-    marginTop: 20,
-  },
-  cancelButtonTextAlert: {
-    color: '#fff',
-    fontSize: 16,
-    textAlign: 'center',
-  },
-  continueButtonAlert: {
-    backgroundColor: '#3f51b5',
-    paddingVertical: 10,
-    paddingHorizontal: 35,
-    borderRadius: 4,
-    marginTop: 20,
-  },
-  continueButtonTextAlert: {
-    color: '#fff',
-    fontSize: 16,
-    textAlign: 'center',
-  },
-});
 
 export default EditClient;
