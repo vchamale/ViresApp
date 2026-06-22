@@ -37,7 +37,7 @@ const AddPolicy: React.FC = () => {
     <FormScreen
       title="Agregar Póliza"
       onBack={() => router.back()}
-      icon={<MaterialCommunityIcons name="file-document" size={150} color={theme.colors.white} />}
+      icon={<MaterialCommunityIcons name="file-document" size={22} color={theme.colors.white} />}
     >
       <FormInput
         label="No. Documento"

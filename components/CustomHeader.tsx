@@ -1,11 +1,13 @@
 import React from 'react';
-import { Text, TouchableOpacity, StyleSheet, StatusBar, StatusBarStyle } from 'react-native';
+import { Text, TouchableOpacity, StyleSheet, StatusBar, StatusBarStyle, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 
 type HeaderProps = {
   title: string;
+  /** Ícono pequeño del módulo, mostrado junto al título (ej. <FontAwesome5 ... size={22} />). */
+  moduleIcon?: React.ReactNode;
   statusBar?: {
     barStyle: StatusBarStyle;
     backgroundColor: string;
@@ -25,6 +27,7 @@ type HeaderProps = {
 
 const CustomHeader: React.FC<HeaderProps> = ({
   title,
+  moduleIcon,
   backgroundColor,
   color,
   statusBar,
@@ -53,7 +56,10 @@ const CustomHeader: React.FC<HeaderProps> = ({
           <Ionicons name="arrow-back" size={24} color={color ?? '#71a780'} />
         </TouchableOpacity>
       )}
-      <Text style={[styles.title, color ? { color } : null]}>{title}</Text>
+      <View style={styles.titleWrap}>
+        <Text style={[styles.title, color ? { color } : null]}>{title}</Text>
+        {moduleIcon ? <View style={styles.moduleIcon}>{moduleIcon}</View> : null}
+      </View>
       {showHelpButton && (
         <TouchableOpacity onPress={onHelpPress} style={styles.helpButton}>
           <Ionicons name="help-circle-outline" size={34} color={color ?? '#71a780'} />
@@ -93,10 +99,21 @@ const styles = StyleSheet.create({
     position: 'absolute',
     right: 5,
   },
+  titleWrap: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+    // Deja margen para no chocar con los botones absolutos (back / acciones).
+    paddingHorizontal: 44,
+  },
   title: {
     fontSize: 18,
     color: '#71a780',
     fontWeight: 'bold',
+  },
+  moduleIcon: {
+    justifyContent: 'center',
   },
 });
 

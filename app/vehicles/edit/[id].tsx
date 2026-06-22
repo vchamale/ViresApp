@@ -103,7 +103,7 @@ const EditVehicle: React.FC = () => {
     <FormScreen
       title="Editar Vehículo"
       onBack={() => router.back()}
-      icon={<MaterialCommunityIcons name="archive-edit" size={150} color={theme.colors.white} />}
+      icon={<MaterialCommunityIcons name="archive-edit" size={22} color={theme.colors.white} />}
     >
       <ConfirmDialog
         visible={isAlertVisible}

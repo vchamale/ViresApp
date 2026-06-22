@@ -88,7 +88,7 @@ const EditDestination: React.FC = () => {
     <FormScreen
       title="Editar Destino"
       onBack={() => router.back()}
-      icon={<MaterialIcons name="edit-location-alt" size={150} color={theme.colors.white} />}
+      icon={<MaterialIcons name="edit-location-alt" size={22} color={theme.colors.white} />}
     >
       <ConfirmDialog
         visible={isAlertVisible}

@@ -45,7 +45,7 @@ const CreateClient: React.FC = () => {
     <FormScreen
       title="Agregar Cliente"
       onBack={() => router.back()}
-      icon={<FontAwesome5 name="user-edit" size={150} color={theme.colors.white} />}
+      icon={<FontAwesome5 name="user-edit" size={22} color={theme.colors.white} />}
     >
       <FormInput
         label="Nombre"
