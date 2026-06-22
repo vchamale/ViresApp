@@ -105,6 +105,7 @@ const ShippingRoute = () => {
         <View style={styles.container}>
           <CustomHeader
             title={'Ruta de viaje'}
+            moduleIcon={<FontAwesome6 name="route" size={22} color="#fff" />}
             backgroundColor="#71a780"
             color="#fff"
             isSinglePage={isSingleShipmentCreatePage}
@@ -117,13 +118,10 @@ const ShippingRoute = () => {
               router.back();
             }}
           />
-          <Space vertical size={50} />
-          <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
-            <FontAwesome6 name="route" size={100} color="#fff" />
-          </View>
-          <Space vertical size={180} />
+          <Space vertical size={16} />
           <FlatList
             contentContainerStyle={styles.flatListContainer}
+            keyboardShouldPersistTaps="handled"
             data={[{ key: 'form' }]}
             keyExtractor={(item) => item.key}
             renderItem={() => (

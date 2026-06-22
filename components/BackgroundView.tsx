@@ -8,10 +8,12 @@ const BackgroundView = ({ children }: { children: React.ReactNode }) => {
   return (
     <View style={styles.container}>
       <Svg height="100%" width="100%" style={StyleSheet.absoluteFill}>
+        {/* Banda de marca compacta: línea recta justo debajo del header,
+            en vez del bloque de ~425px que antes ocupaba media pantalla. */}
         <Path
-          d={`M0,0 
-              L0,240
-              C1,450,${width / 1.1},250,${width},425
+          d={`M0,0
+              L0,120
+              L${width},120
               L${width},0
               Z`}
           fill="#71a780"

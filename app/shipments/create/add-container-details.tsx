@@ -190,6 +190,7 @@ const AddContainerDetails = () => {
         <View style={styles.container}>
           <CustomHeader
             title={'Detalle del Contenedor'}
+            moduleIcon={<Octicons name="container" size={22} color="#fff" />}
             backgroundColor="#71a780"
             color="#fff"
             onBackPress={() => {
@@ -202,13 +203,10 @@ const AddContainerDetails = () => {
               router.replace('/shipments/create/single/create');
             }}
           />
-          <Space vertical size={50} />
-          <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
-            <Octicons name="container" size={100} color="#fff" />
-          </View>
-          <Space vertical size={120} />
+          <Space vertical size={16} />
           <FlatList
             contentContainerStyle={styles.flatListContainer}
+            keyboardShouldPersistTaps="handled"
             data={[{ key: 'form' }]}
             keyExtractor={(item) => item.key}
             renderItem={() => (

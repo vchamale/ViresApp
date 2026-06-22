@@ -56,7 +56,7 @@ const AddVehicle: React.FC = () => {
     <FormScreen
       title="Agregar Vehículo"
       onBack={() => router.back()}
-      icon={<MaterialCommunityIcons name="archive-plus" size={150} color={theme.colors.white} />}
+      icon={<MaterialCommunityIcons name="archive-plus" size={22} color={theme.colors.white} />}
     >
       <Text style={styles.label}>Marca</Text>
       <Dropdown

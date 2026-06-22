@@ -91,6 +91,7 @@ const AddShipmentClient = () => {
         <View style={styles.container}>
           <CustomHeader
             title={'Agrega Cliente'}
+            moduleIcon={<FontAwesome6 name="user-group" size={22} color="#fff" />}
             backgroundColor="#71a780"
             color="#fff"
             onBackPress={() => setResetShipmentAlertVisible(true)}
@@ -131,12 +132,8 @@ const AddShipmentClient = () => {
               </Pressable>,
             ]}
           />
-          <Space vertical size={50} />
+          <Space vertical size={16} />
           <View style={{ flex: 1, justifyContent: 'space-between' }}>
-            <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
-              <FontAwesome6 name="user-group" size={100} color="#fff" />
-            </View>
-            <Space vertical size={80} />
             <View
               style={{
                 backgroundColor: '#71a780',
@@ -149,6 +146,7 @@ const AddShipmentClient = () => {
             >
               <FlatList
                 contentContainerStyle={styles.flatListContainer}
+                keyboardShouldPersistTaps="handled"
                 data={[{ key: 'form' }]}
                 keyExtractor={(item) => item.key}
                 renderItem={() => (

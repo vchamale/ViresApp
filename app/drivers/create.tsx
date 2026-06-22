@@ -61,8 +61,7 @@ const CreateDriver: React.FC = () => {
     <FormScreen
       title="Agregar Piloto"
       onBack={() => router.back()}
-      icon={<MaterialIcons name="person-add-alt" size={150} color={theme.colors.white} />}
-      iconBottomSpace={50}
+      icon={<MaterialIcons name="person-add-alt" size={22} color={theme.colors.white} />}
     >
       <FormInput
         label="Nombres"

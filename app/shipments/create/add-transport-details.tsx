@@ -111,6 +111,7 @@ const AddTransportDetails = () => {
         <View style={styles.container}>
           <CustomHeader
             title={'Detalle del transporte'}
+            moduleIcon={<FontAwesome6 name="drivers-license" size={22} color="#fff" />}
             backgroundColor="#71a780"
             color="#fff"
             isSinglePage={isSingleShipmentCreatePage}
@@ -123,13 +124,10 @@ const AddTransportDetails = () => {
               router.back();
             }}
           />
-          <Space vertical size={50} />
-          <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
-            <FontAwesome6 name="drivers-license" size={100} color="#fff" />
-          </View>
-          <Space vertical size={100} />
+          <Space vertical size={16} />
           <FlatList
             contentContainerStyle={styles.flatListContainer}
+            keyboardShouldPersistTaps="handled"
             data={[{ key: 'form' }]}
             keyExtractor={(item) => item.key}
             renderItem={() => (

@@ -38,7 +38,7 @@ const CreateOrigin: React.FC = () => {
     <FormScreen
       title="Agregar Punto de Partida"
       onBack={() => router.back()}
-      icon={<MaterialIcons name="add-location-alt" size={150} color={theme.colors.white} />}
+      icon={<MaterialIcons name="add-location-alt" size={22} color={theme.colors.white} />}
     >
       <FormInput
         label="Lugar (Nombre)"

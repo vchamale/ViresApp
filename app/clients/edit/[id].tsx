@@ -88,7 +88,7 @@ const EditClient: React.FC = () => {
     <FormScreen
       title="Editar Cliente"
       onBack={() => router.back()}
-      icon={<FontAwesome5 name="user-plus" size={150} color={theme.colors.white} />}
+      icon={<FontAwesome5 name="user-plus" size={22} color={theme.colors.white} />}
     >
       <ConfirmDialog
         visible={isAlertVisible}

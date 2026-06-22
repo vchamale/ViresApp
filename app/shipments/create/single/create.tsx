@@ -7,6 +7,8 @@ import {
   ScrollView,
   StyleSheet,
   Pressable,
+  KeyboardAvoidingView,
+  Platform,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
@@ -177,9 +179,9 @@ const SinglePageShipmentForm = () => {
   return (
     <BackgroundView>
       <SafeAreaView style={{ flex: 1 }}>
-        <Space vertical size={15} />
         <CustomHeader
           title="Crear Viaje"
+          moduleIcon={<MaterialCommunityIcons name="truck-fast" size={22} color="#fff" />}
           backgroundColor="#71a780"
           color="#fff"
           onBackPress={() => setResetShipmentAlertVisible(true)}
@@ -214,12 +216,15 @@ const SinglePageShipmentForm = () => {
             </Pressable>,
           ]}
         />
-        <Space vertical size={50} />
-        <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
-          <MaterialCommunityIcons name="truck-fast" size={150} color="#fff" />
-        </View>
-        <Space vertical size={120} />
-        <ScrollView contentContainerStyle={{ padding: 20 }}>
+        <KeyboardAvoidingView
+          style={{ flex: 1 }}
+          behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        >
+          <ScrollView
+            contentContainerStyle={{ padding: 20 }}
+            keyboardShouldPersistTaps="handled"
+            showsVerticalScrollIndicator={false}
+          >
           <DropdownWrapper
             label="Cliente"
             isLoading={isLoadingClients}
@@ -379,7 +384,8 @@ const SinglePageShipmentForm = () => {
           >
             <Text style={{ color: '#fff', textAlign: 'center' }}>Guardar y Continuar</Text>
           </TouchableOpacity>
-        </ScrollView>
+          </ScrollView>
+        </KeyboardAvoidingView>
       </SafeAreaView>
     </BackgroundView>
   );

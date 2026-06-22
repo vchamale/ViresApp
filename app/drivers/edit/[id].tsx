@@ -96,8 +96,7 @@ const EditDriver: React.FC = () => {
     <FormScreen
       title="Editar Conductor"
       onBack={() => router.back()}
-      icon={<MaterialIcons name="edit" size={150} color={theme.colors.white} />}
-      iconBottomSpace={70}
+      icon={<MaterialIcons name="edit" size={22} color={theme.colors.white} />}
     >
       <ConfirmDialog
         visible={isAlertVisible}
