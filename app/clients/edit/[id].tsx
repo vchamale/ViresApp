@@ -24,7 +24,7 @@ const EditClient: React.FC = () => {
 
   const router = useRouter();
 
-  const [updateClient] = useUpdateClientMutation();
+  const [updateClient, { isLoading: isUpdating }] = useUpdateClientMutation();
 
   useEffect(() => {
     if (parsedClient) {
@@ -93,6 +93,7 @@ const EditClient: React.FC = () => {
       <ConfirmDialog
         visible={isAlertVisible}
         text="Estas a punto de modificar la poliza, deseas continuar?"
+        loading={isUpdating}
         onCancel={() => setAlertVisible(false)}
         onConfirm={handleUpdateClient}
       />

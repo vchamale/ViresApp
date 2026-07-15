@@ -22,7 +22,7 @@ const EditPolicy: React.FC = () => {
   const router = useRouter();
 
   // mutations
-  const [updateDocument] = useUpdateDocumentMutation();
+  const [updateDocument, { isLoading: isUpdating }] = useUpdateDocumentMutation();
 
   // effects
   useEffect(() => {
@@ -66,6 +66,7 @@ const EditPolicy: React.FC = () => {
       <ConfirmDialog
         visible={isAlertVisible}
         text="Estas a punto de modificar la poliza, deseas continuar?"
+        loading={isUpdating}
         onCancel={() => setAlertVisible(false)}
         onConfirm={updatePolicy}
       />

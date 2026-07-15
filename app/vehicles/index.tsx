@@ -1,10 +1,10 @@
 import React, { FC, useCallback, useEffect, useState } from 'react';
 import {
+  ActivityIndicator,
   FlatList,
   RefreshControl,
   StyleSheet,
   Text,
-  TextInput,
   TouchableOpacity,
   View,
 } from 'react-native';
@@ -22,9 +22,8 @@ const VehicleList: FC = () => {
 
   const router = useRouter();
 
-  const [trigger, { data: vehicles, isLoading, isError, error }] = useLazyGetAllTrucksQuery();
-  console.log('vehicles ', vehicles);
-  console.log('error ', error);
+  const [trigger, { data: vehicles, isLoading, isFetching, isError }] =
+    useLazyGetAllTrucksQuery();
 
   const onRefresh = useCallback(() => {
     setRefreshing(true);
@@ -88,13 +87,24 @@ const VehicleList: FC = () => {
           </View>
         </View>
         <Space vertical size={15} />
-        <FlatList
-          data={vehicles}
-          keyExtractor={(item) => item.truckId}
-          contentContainerStyle={styles.listContainer}
-          renderItem={renderItem}
-          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
-        />
+        {isLoading || isFetching ? (
+          <ActivityIndicator size="large" color="#5db075" style={styles.loader} />
+        ) : (
+          <FlatList
+            data={vehicles}
+            keyExtractor={(item) => String(item.truckId)}
+            contentContainerStyle={styles.listContainer}
+            renderItem={renderItem}
+            refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+            ListEmptyComponent={
+              <Text style={styles.emptyText}>
+                {isError
+                  ? 'Ocurrió un error al cargar los vehículos. Desliza hacia abajo para reintentar.'
+                  : 'No se encontraron vehículos.'}
+              </Text>
+            }
+          />
+        )}
       </View>
     </SafeAreaView>
   );
@@ -104,6 +114,15 @@ const styles = StyleSheet.create({
   listContainer: {
     flexGrow: 1,
     marginTop: 10,
+  },
+  loader: {
+    marginTop: 40,
+  },
+  emptyText: {
+    textAlign: 'center',
+    color: '#555',
+    marginTop: 40,
+    paddingHorizontal: 20,
   },
   vehicleCard: {
     backgroundColor: '#f8f9fa',

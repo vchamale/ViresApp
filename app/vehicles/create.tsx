@@ -11,13 +11,21 @@ import FormInput from '@components/form/FormInput';
 import AppButton from '@components/ui/AppButton';
 import Space from '@components/Space';
 import { theme } from '@constants/theme';
+import {
+  PLATE_MAX_LENGTH,
+  sanitizePlate,
+  sanitizeYear,
+  validatePlate,
+  validateYear,
+  YEAR_MAX_LENGTH,
+} from 'utils/vehicleValidation';
 
 const AddVehicle: React.FC = () => {
   const [plate, setPlate] = useState<string>('');
   const [vin, setVin] = useState<string>('');
   const [year, setYear] = useState<string>('');
-  const [makeSelected, setMakeSelected] = useState(null);
-  const [modelSelected, setModelSelected] = useState(null);
+  const [makeSelected, setMakeSelected] = useState<any>(null);
+  const [modelSelected, setModelSelected] = useState<any>(null);
 
   const router = useRouter();
 
@@ -29,9 +37,17 @@ const AddVehicle: React.FC = () => {
   // mutations
   const [create, { isLoading }] = useCreateTruckMutation();
 
+  const plateError = plate ? validatePlate(plate) : null;
+  const yearError = year ? validateYear(year) : null;
+
   const handleSubmit = async () => {
     if (!plate || !year || !modelSelected?.modelId) {
       alert('Por favor completa todos los campos obligatorios');
+      return;
+    }
+
+    if (plateError || yearError) {
+      alert(plateError ?? yearError);
       return;
     }
 
@@ -42,9 +58,13 @@ const AddVehicle: React.FC = () => {
       modelId: modelSelected?.modelId,
     };
 
-    const response = await create(vehicleDetails);
-    console.log('response ', response);
-    router.back();
+    try {
+      await create(vehicleDetails).unwrap();
+      router.back();
+    } catch (error) {
+      console.error('Error creating vehicle:', error);
+      alert('Hubo un error al crear el vehículo. Intenta de nuevo.');
+    }
   };
 
   const handleMakeSelected = (item: any) => {
@@ -60,10 +80,10 @@ const AddVehicle: React.FC = () => {
     >
       <Text style={styles.label}>Marca</Text>
       <Dropdown
-        items={makeList}
+        items={makeList ?? []}
         placeholder="Selecciona una marca"
         placeholderColor={theme.colors.primary}
-        renderItemText={(item) => `${item?.name}`}
+        renderItemText={(item) => item?.name ?? ''}
         onItemSelected={(item) => handleMakeSelected(item)}
         initialSelectedItem={makeSelected ?? undefined}
       />
@@ -72,10 +92,11 @@ const AddVehicle: React.FC = () => {
         <>
           <Text style={styles.label}>Modelo</Text>
           <Dropdown
-            items={modelList}
+            key={makeSelected?.makeId ?? 'no-make'}
+            items={modelList ?? []}
             placeholder="Selecciona un modelo"
             placeholderColor={theme.colors.primary}
-            renderItemText={(item) => `${item?.name}`}
+            renderItemText={(item) => item?.name ?? ''}
             onItemSelected={(item) => setModelSelected(item)}
             initialSelectedItem={modelSelected ?? undefined}
           />
@@ -88,8 +109,12 @@ const AddVehicle: React.FC = () => {
         label="Placa"
         required
         value={plate}
-        onChangeText={(text) => setPlate(text.toUpperCase())}
-        placeholder="Ingrese la placa del vehículo"
+        onChangeText={(text) => setPlate(sanitizePlate(text))}
+        placeholder="Ej. ABC123"
+        autoCapitalize="characters"
+        autoCorrect={false}
+        maxLength={PLATE_MAX_LENGTH}
+        error={plateError ?? undefined}
       />
       <FormInput
         label="vin"
@@ -101,9 +126,11 @@ const AddVehicle: React.FC = () => {
         label="Año"
         required
         value={year}
-        onChangeText={setYear}
-        keyboardType="numeric"
+        onChangeText={(text) => setYear(sanitizeYear(text))}
+        keyboardType="number-pad"
+        maxLength={YEAR_MAX_LENGTH}
         placeholder="Ingrese el año del vehículo"
+        error={yearError ?? undefined}
       />
 
       <AppButton title="Guardar Vehículo" onPress={handleSubmit} loading={isLoading} />

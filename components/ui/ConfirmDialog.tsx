@@ -1,5 +1,5 @@
 import React from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, Pressable, StyleSheet, Text, View } from 'react-native';
 import CustomAlert from '@components/CustomAlert';
 import { theme } from '@constants/theme';
 
@@ -9,6 +9,8 @@ export type ConfirmDialogProps = {
   text: string;
   confirmText?: string;
   cancelText?: string;
+  /** Muestra un spinner en el botón de confirmar y bloquea el diálogo mientras la acción está en curso. */
+  loading?: boolean;
   onCancel: () => void;
   onConfirm: () => void;
 };
@@ -24,6 +26,7 @@ const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
   text,
   confirmText = 'Modificar',
   cancelText = 'Cancelar',
+  loading = false,
   onCancel,
   onConfirm,
 }) => {
@@ -33,16 +36,20 @@ const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
       title={title}
       titleColor="#ff0809bd"
       text={text}
-      onClose={onCancel}
+      onClose={loading ? () => {} : onCancel}
       buttons={[
-        <Pressable onPress={onCancel}>
-          <View style={styles.cancelButton}>
+        <Pressable onPress={onCancel} disabled={loading}>
+          <View style={[styles.cancelButton, loading && styles.buttonDisabled]}>
             <Text style={styles.buttonText}>{cancelText}</Text>
           </View>
         </Pressable>,
-        <Pressable onPress={onConfirm}>
+        <Pressable onPress={onConfirm} disabled={loading}>
           <View style={styles.confirmButton}>
-            <Text style={styles.buttonText}>{confirmText}</Text>
+            {loading ? (
+              <ActivityIndicator size="small" color={theme.colors.white} />
+            ) : (
+              <Text style={styles.buttonText}>{confirmText}</Text>
+            )}
           </View>
         </Pressable>,
       ]}
@@ -64,6 +71,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 35,
     borderRadius: theme.radius.sm,
     marginTop: 20,
+    minHeight: 39,
+    justifyContent: 'center',
+  },
+  buttonDisabled: {
+    opacity: 0.5,
   },
   buttonText: {
     color: theme.colors.white,
