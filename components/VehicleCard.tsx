@@ -6,7 +6,9 @@ type VehicleCardProps = {
   onViewPress: () => void;
 };
 
+
 const VehicleCard: React.FC<VehicleCardProps> = ({ vehicle, onViewPress }) => {
+
   return (
     <View style={styles.card}>
       <View style={styles.row}>
@@ -15,18 +17,18 @@ const VehicleCard: React.FC<VehicleCardProps> = ({ vehicle, onViewPress }) => {
           <Text style={styles.text}>{vehicle.plate}</Text>
         </View>
         <View style={styles.column}>
-          <Text style={styles.label}>VIN</Text>
-          <Text style={styles.text}>{vehicle.vin}</Text>
+          <Text style={styles.label}>Marca</Text>
+          <Text style={styles.text}>{vehicle.model.make.name}</Text>
         </View>
       </View>
       <View style={styles.row}>
         <View style={styles.column}>
-          <Text style={styles.label}>Año</Text>
-          <Text style={styles.text}>{vehicle.year}</Text>
-        </View>
-        <View style={styles.column}>
           <Text style={styles.label}>Modelo</Text>
           <Text style={styles.text}>{vehicle.model.name}</Text>
+        </View>
+        <View style={styles.column}>
+          <Text style={styles.label}>Año</Text>
+          <Text style={styles.text}>{vehicle.year}</Text>
         </View>
       </View>
       <TouchableOpacity onPress={onViewPress} style={styles.viewButton}>
