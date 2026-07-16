@@ -1,6 +1,10 @@
 node_modules/
 .expo/
 dist/
+
+# native folders are generated with `npx expo prebuild` (CNG)
+/android
+/ios
 npm-debug.*
 *.jks
 *.p8
