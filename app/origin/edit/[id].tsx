@@ -20,7 +20,7 @@ const EditOrigin: React.FC = () => {
   const router = useRouter();
 
   // mutations
-  const [updateOrigin] = useUpdateOriginMutation();
+  const [updateOrigin, { isLoading: isUpdating }] = useUpdateOriginMutation();
 
   // Inicializar los valores con los datos existentes del origen
   useEffect(() => {
@@ -64,6 +64,7 @@ const EditOrigin: React.FC = () => {
       <ConfirmDialog
         visible={isAlertVisible}
         text="Estas a punto de modificar la poliza, deseas continuar?"
+        loading={isUpdating}
         onCancel={() => setAlertVisible(false)}
         onConfirm={handleUpdateOrigin}
       />

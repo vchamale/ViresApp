@@ -28,7 +28,7 @@ const EditDriver: React.FC = () => {
   const router = useRouter();
 
   // Mutation para actualizar el conductor
-  const [updateDriver] = useUpdateDriverMutation();
+  const [updateDriver, { isLoading: isUpdating }] = useUpdateDriverMutation();
 
   // queries
   const { currentData: trucks } = useGetAllTrucksQuery({});
@@ -101,6 +101,7 @@ const EditDriver: React.FC = () => {
       <ConfirmDialog
         visible={isAlertVisible}
         text="Estás a punto de modificar la información del conductor, ¿deseas continuar?"
+        loading={isUpdating}
         onCancel={() => setAlertVisible(false)}
         onConfirm={handleUpdateDriver}
       />

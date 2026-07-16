@@ -1,5 +1,12 @@
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import {
+  ActivityIndicator,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import Space from '@components/Space';
@@ -17,7 +24,7 @@ const VehicleView = () => {
   const handleEdit = () => {
     router.push({
       pathname: `/vehicles/edit/[id]`,
-      params: { id, vehicle: JSON.stringify(vehicle) },
+      params: { id },
     });
   };
 
@@ -36,44 +43,53 @@ const VehicleView = () => {
           onEditPress={handleEdit}
         />
         <Space vertical size={20} />
-        <View style={styles.card}>
-          <View style={[styles.row]}>
-            <Text style={styles.label}>Placa</Text>
-            <Text style={styles.text}>{vehicle?.plate || 'N/A'}</Text>
-          </View>
-          <Space vertical size={10} />
-        </View>
-        <View style={{ flexDirection: 'row', paddingHorizontal: 0, marginHorizontal: 10 }}>
-          <View style={{ width: '50%' }} />
-          <View style={{ width: '50%' }}>
-            <TouchableOpacity style={styles.createButton} onPress={handleEdit}>
-              <Text style={styles.buttonText}>Editar</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-        <Space vertical size={150} />
-        <ScrollView style={styles.container}>
-          <View>
-            <View>
-              <Text style={styles.label}>VIN</Text>
-              <Space vertical size={5} />
-              <Text style={styles.text}>{vehicle?.vin || 'N/A'}</Text>
+        {isLoading ? (
+          <ActivityIndicator size="large" color="#71a780" style={styles.loader} />
+        ) : isError ? (
+          <Text style={styles.errorText}>
+            No se pudo cargar la información del vehículo. Intenta de nuevo.
+          </Text>
+        ) : (
+          <>
+            <View style={styles.card}>
+              <View style={[styles.row]}>
+                <Text style={styles.label}>Placa</Text>
+                <Text style={styles.text}>{vehicle?.plate || 'N/A'}</Text>
+              </View>
+              <Space vertical size={10} />
             </View>
-            <Space vertical size={15} />
-            <View>
-              <Text style={styles.label}>Año</Text>
-              <Space vertical size={5} />
-              <Text style={styles.text}>{vehicle?.year}</Text>
+            <View style={{ flexDirection: 'row', paddingHorizontal: 0, marginHorizontal: 10 }}>
+              <View style={{ width: '50%' }} />
+              <View style={{ width: '50%' }}>
+                <TouchableOpacity style={styles.createButton} onPress={handleEdit}>
+                  <Text style={styles.buttonText}>Editar</Text>
+                </TouchableOpacity>
+              </View>
             </View>
-            <Space vertical size={15} />
-            <View>
-              <Text style={styles.label}>Modelo</Text>
-              <Space vertical size={5} />
-              <Text style={styles.text}>{vehicle?.model?.name}</Text>
-            </View>
-          </View>
-          {/* </View> */}
-        </ScrollView>
+            <Space vertical size={150} />
+            <ScrollView style={styles.container}>
+              <View>
+                <View>
+                  <Text style={styles.label}>VIN</Text>
+                  <Space vertical size={5} />
+                  <Text style={styles.text}>{vehicle?.vin || 'N/A'}</Text>
+                </View>
+                <Space vertical size={15} />
+                <View>
+                  <Text style={styles.label}>Año</Text>
+                  <Space vertical size={5} />
+                  <Text style={styles.text}>{vehicle?.year ?? 'N/A'}</Text>
+                </View>
+                <Space vertical size={15} />
+                <View>
+                  <Text style={styles.label}>Modelo</Text>
+                  <Space vertical size={5} />
+                  <Text style={styles.text}>{vehicle?.model?.name ?? 'N/A'}</Text>
+                </View>
+              </View>
+            </ScrollView>
+          </>
+        )}
       </SafeAreaView>
     </BackgroundView>
   );
@@ -125,6 +141,15 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     color: '#5db075',
     fontSize: 14,
+  },
+  loader: {
+    marginTop: 60,
+  },
+  errorText: {
+    textAlign: 'center',
+    color: '#333',
+    marginTop: 60,
+    paddingHorizontal: 20,
   },
   text: {
     fontSize: 14,

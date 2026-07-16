@@ -4,7 +4,7 @@ import { handleTokenValidation } from '../../utils/handleTokenValidation';
 const createBaseQuery = (baseUrl: string) => {
   const baseQuery = fetchBaseQuery({
     baseUrl,
-    timeout: 3000,
+    timeout: 10000,
     headers: { 'Content-type': 'application/json' },
     prepareHeaders: async (headers, { dispatch }: any) => {
       const token = await handleTokenValidation(dispatch); // Validar token antes de la petición

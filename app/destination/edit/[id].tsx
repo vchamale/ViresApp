@@ -24,7 +24,7 @@ const EditDestination: React.FC = () => {
   const router = useRouter();
 
   // mutations
-  const [updateDestination] = useUpdateDestinationMutation();
+  const [updateDestination, { isLoading: isUpdating }] = useUpdateDestinationMutation();
 
   const { data: clientList } = useGetAllClientsQuery({});
 
@@ -93,6 +93,7 @@ const EditDestination: React.FC = () => {
       <ConfirmDialog
         visible={isAlertVisible}
         text="Estas a punto de modificar la poliza, deseas continuar?"
+        loading={isUpdating}
         onCancel={() => setAlertVisible(false)}
         onConfirm={handleUpdateDestination}
       />

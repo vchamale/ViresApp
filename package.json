@@ -28,6 +28,7 @@
     "expo": "^56.0.11",
     "expo-blur": "~56.0.3",
     "expo-constants": "~56.0.18",
+    "expo-dev-client": "~56.0.22",
     "expo-font": "~56.0.6",
     "expo-linking": "~56.0.14",
     "expo-local-authentication": "~56.0.4",
@@ -60,6 +61,9 @@
     "react-redux": "^9.1.2",
     "redux-persist": "^6.0.0",
     "zod": "^3.25.76"
+  },
+  "overrides": {
+    "react-native-webview": "13.16.1"
   },
   "devDependencies": {
     "@types/jest": "29.5.14",
